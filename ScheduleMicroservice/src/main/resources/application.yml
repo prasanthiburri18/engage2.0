@@ -1,0 +1,18 @@
+spring:
+  profiles.active: default
+
+---
+spring:
+  profiles: default
+  jmx.enabled: false
+  
+example:
+  scheduledJob: 
+    enabled: true
+  incoming:
+    comments:
+      dir: /tmp/comments
+twlilio:
+  ACCOUNT_SID: "AC276ef5c19c36c80bd019e2d549aabc1a"
+  AUTH_TOKEN: "3079e3d3873a9d6eaaf4224bb4ab9bb3"
+  phone: +14102202543

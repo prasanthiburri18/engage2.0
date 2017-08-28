@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quantified Care</title>
+
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/jquery.toast.css" rel="stylesheet">
+        <link href="css/fonts.css" rel="stylesheet">
+        <link href="css/font-awesome.css" rel="stylesheet">
+  </head>
+  <body>
+      <div class="container">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="loginlogo">
+                      <img src="images/logo.jpg"/>
+                  </div>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-12">
+                  <section id="regisucc">
+                    <div class="formtitle">
+                        <h2>Please wait while redirecting..</h2>
+                    </div>
+                  <div class="loginlogo">
+                      <img src="images/engage-logo.png"/>
+                  </div>
+                      
+                    </section>
+              </div>
+              <div class="col-md-12">
+                  <div class="copyright">
+                       &#169; 2017 Quantified Care, Inc. All Rights Reserved.
+                  </div>
+          </div>
+      </div>
+                </div>          
+
+    <script src="js/jquery.js"></script>
+<script src="js/engageconfig.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.toast.js"></script>
+    <script>
+        var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+        $('document').ready(function ()
+{
+    console.log('signup midlle ware page');
+    var tech = getUrlParameter('keyconfirm');
+    console.log(tech);
+    if(tech.length > 0)
+    {
+   localStorage.setItem("changepasswordkey", tech);
+   setTimeout('window.location.href = "resetpassword.html"; ',1000);
+    }
+    else
+    {
+        alert('No COnfirmation Ker from API');
+    }
+    
+});
+        
+    </script>
+  </body>
+</html>

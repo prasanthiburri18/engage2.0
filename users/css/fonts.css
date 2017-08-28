@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'Exo2Regular';
+    src: url('../fonts/Exo2Regular.eot');
+    src: url('../fonts/Exo2Regular.eot') format('embedded-opentype'),
+         url('../fonts/Exo2Regular.woff2') format('woff2'),
+         url('../fonts/Exo2Regular.woff') format('woff'),
+         url('../fonts/Exo2Regular.ttf') format('truetype'),
+         url('../fonts/Exo2Regular.svg#Exo2Regular') format('svg');
+}
+@font-face {
+    font-family: 'Exo2Thin';
+    src: url('../fonts/Exo2Thin.eot');
+    src: url('../fonts/Exo2Thin.eot') format('embedded-opentype'),
+         url('../fonts/Exo2Thin.woff2') format('woff2'),
+         url('../fonts/Exo2Thin.woff') format('woff'),
+         url('../fonts/Exo2Thin.ttf') format('truetype'),
+         url('../fonts/Exo2Thin.svg#Exo2Thin') format('svg');
+}
+@font-face {
+    font-family: 'Exo2SemiBold';
+    src: url('../fonts/Exo2SemiBold.eot');
+    src: url('../fonts/Exo2SemiBold.eot') format('embedded-opentype'),
+         url('../fonts/Exo2SemiBold.woff2') format('woff2'),
+         url('../fonts/Exo2SemiBold.woff') format('woff'),
+         url('../fonts/Exo2SemiBold.ttf') format('truetype'),
+         url('../fonts/Exo2SemiBold.svg#Exo2SemiBold') format('svg');
+}

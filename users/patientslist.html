@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Quantified Care</title>
+     
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" href="jqueryui/jquery-ui.css">
+        <link href="css/datatables.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <link href="css/jquery.toast.css" rel="stylesheet">
+        <link href="css/fonts.css" rel="stylesheet">
+        <link href="css/font-awesome.css" rel="stylesheet">
+        <style type="text/css">
+.bs-example {
+	font-family: sans-serif;
+	position: relative;
+	margin: 100px;
+}
+.twitter-typeahead
+{
+    width:100%;
+}
+.typeahead, .tt-query, .tt-hint {
+	border: 2px solid #CCCCCC;
+	border-radius: 8px;
+	font-size: 22px; /* Set input font size */
+	height: 30px;
+	line-height: 30px;
+	outline: medium none;
+	padding: 8px 12px;
+	width: 100%;
+}
+.typeahead {
+	background-color: #FFFFFF;
+}
+.typeahead:focus {
+	border: 2px solid #0097CF;
+}
+.tt-query {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.tt-hint {
+	color: #999999;
+}
+.tt-menu {
+	background-color: #FFFFFF;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 8px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	margin-top: 12px;
+	padding: 8px 0;
+	width: 422px;
+}
+.tt-suggestion {
+	font-size: 22px;  /* Set suggestion dropdown font size */
+	padding: 3px 20px;
+}
+.tt-suggestion:hover {
+	cursor: pointer;
+	background-color: #0097CF;
+	color: #FFFFFF;
+}
+.tt-suggestion p {
+	margin: 0;
+}
+</style>
+    </head>
+    <body>
+        <div class="topheader">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="headerlogo">
+                        <a href="patientslist.html">     <img src="images/logo.jpg" alt="logo">
+                            <img src="images/engage-logo.png" alt="engage-logo" class="engage-logo"></a>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-6 profile-block">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="lguser"></span> <img src="images/dropdown-icon.png" alt="dropdown-icon">
+                        </a>
+                        <div class="dropdown-menu">
+                            <div class="docpro">
+
+                                <div class="docbio">
+                        <a  id="logoutbtn" class="logout" href="myaccount.html">Settings</a>
+   <button name="btn btn-login" id="logoutbtn" class="logout" value="LogOut" onclick="logout();">Log Out</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section>
+            <div class="headerbottom">
+                <div class="container">
+                    <a href="patientslist.html" class="active">Patients</a>
+                    <a href="pathwaylist.html" >Pathways</a>
+
+<a href="#" class="report-btn">Reports <span>*only for premium users</span></a>
+                </div>
+            </div>
+
+        </section>
+        <section>
+            <div class="maincontent patient-list">
+                <div class="container">
+                    <div class="title-block">
+                        <h3>View Patients</h3>
+                        <a class="import-btn" href="addpatients.html"><img src="images/plus-icon.png" alt="plus-icon">ADD PATIENT</a>
+                    </div>
+                    
+                    
+                    <div class="helpblock" style="display:none;">
+                        <p> In order to start sending automated messages, you’ll need to add a few patients. After you add a patient’s details you can assign them to a Pathway. 
+                            Don’t worry, patients can opt-out at any point. As a test, try sending a message to yourself.</p>
+                        <br>
+                        <p>Click on + Patient now!</p>
+                    </div>
+                    
+                    <div class="dashboardbox">
+                        <div  class="row display Filter-block">
+                            <div class="col-lg-12 Filter-Title">Search Patient</div>
+                            <div class="col-lg-4 col-md-4">
+
+                                <input type="text"   name="searchpatientname" placeholder="Name" id="searchpatientname"/>
+                            </div>
+                            <div class="col-lg-4 col-md-4">
+                                <input type="text" id="praname" placeholder="Pathway Name" name="practicename" class="string optional typeahead tt-query" autocomplete="off" spellcheck="false">
+                               
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <button name="searchbtn" class="import-btn" id="searchbtn"><img src="images/search-icon.png" alt="plus-icon">Search</button>
+							</div>
+							<div class="col-lg-2 col-md-2">
+								<!-- <button name="resetbtn" class="import-btn" id="resetbtn">Reset</button> -->
+
+                            </div>
+                        </div>
+                        <table width="100%" class="display" id="example">
+                            <thead>
+                                <tr>
+                                    <th width="20%">PATIENT</th>
+                                    <th width="17%">DAYS SINCE START</th>
+                                    <th width="15%">PATHWAY</th>
+                                    <th width="15%">EVENTS</th>
+                                    <th width="23%">DATE MODIFIED</th>
+                                    <th width="10%">ACTIONS</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+
+
+                    <div class="modal fade" id="psedit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                    <h4 class="modal-title custom_align" id="Heading">Edit Your Detail</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input class="form-control " type="text" placeholder="Lakshmi">
+                                    </div>
+                                    <div class="form-group">
+
+                                        <input class="form-control " type="text" placeholder="Test">
+                                    </div>
+                                    <div class="form-group">
+
+
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer ">
+                                    <button type="button" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Update</button>
+                                </div>
+                            </div>
+                       
+                        </div>
+                  
+                    </div>
+
+
+
+                    <div class="modal fade" id="psdelete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                    <h4 class="modal-title custom_align" id="Heading">Delete this entry</h4>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to delete this Patient?</div>
+
+                                </div>
+                                <div class="modal-footer ">
+                                    <button type="button" class="btn btn-success" onClick="patientdelete();"><span class="glyphicon glyphicon-ok-sign" ></span> Yes</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> No</button>
+                                </div>
+                            </div>
+                     
+                        </div>
+                      
+                    </div>
+                    
+
+                </div>
+            </div>
+        </section>
+
+
+        <script src="js/jquery.js"></script>
+
+        <script src="js/bootstrap.js"></script>
+        <script src="jqueryui/jquery-ui.js"></script>
+        <script src="js/engageconfig.js"></script>
+        <script src="js/moment.js"></script>
+        <script src="js/momenttimezone.js"></script>
+        <script src="js/timezonedata.js"></script>
+        
+         <script src="js/btypehead.js"></script>
+        <script src="js/datatables.js"></script>
+        <script src="js/datafilter.js"></script>
+        <script type="text/javascript" src="js/validation.min.js"></script>
+        <script type="text/javascript" src="js/loadingoverlay.min.js"></script>
+        <script src="js/jquery.toast.js"></script>
+        <script src="js/patientslist.js"></script>
+        <script src="js/timesession.js"></script>
+    </body>
+</html>

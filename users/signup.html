@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+       <title>Quantified Care</title>
+       <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <link href="css/jquery.toast.css" rel="stylesheet">
+        <link href="css/fonts.css" rel="stylesheet">
+        <link href="css/font-awesome.css" rel="stylesheet">
+        <style type="text/css">
+            .bs-example {
+                font-family: sans-serif;
+                position: relative;
+                margin: 100px;
+            }
+            .twitter-typeahead
+            {
+                width:100%;
+            }
+            .typeahead, .tt-query, .tt-hint {
+                border: 2px solid #CCCCCC;
+                border-radius: 8px;
+                font-size: 22px; /* Set input font size */
+                height: 30px;
+                line-height: 30px;
+                outline: medium none;
+                padding: 8px 12px;
+                width: 100%;
+            }
+            .typeahead {
+                background-color: #FFFFFF;
+            }
+            .typeahead:focus {
+                border: 2px solid #0097CF;
+            }
+            .tt-query {
+                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+            }
+            .tt-hint {
+                color: #999999;
+            }
+            .tt-menu {
+                background-color: #FFFFFF;
+                border: 1px solid rgba(0, 0, 0, 0.2);
+                border-radius: 8px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+                margin-top: 12px;
+                padding: 8px 0;
+                width: 422px;
+            }
+            .tt-suggestion {
+                font-size: 22px;  /* Set suggestion dropdown font size */
+                padding: 3px 20px;
+            }
+            .tt-suggestion:hover {
+                cursor: pointer;
+                background-color: #0097CF;
+                color: #FFFFFF;
+            }
+            .tt-suggestion p {
+                margin: 0;
+            }
+            .sminputs .tt-menu
+            {
+                top: 44px !important;
+                left: 0 !important;
+                right: 0px;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="loginlogo">
+                        <img src="images/logo.jpg">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="loginlogo">
+                        <img src="images/engage-logo.png" class="engage-logo">
+                    </div>
+                </div>
+            </div>
+            <div class="row signup-box">
+                <div class="col-md-6 padding-box">
+                    <section id="signupbox">
+                        <div class="formtitle">
+                            <h2>Sign Up for Free</h2>
+                        </div>
+                        <div class="alert alert-warning" id="emailexistswarn" style="display:none;">
+                            Email already taken. Please use another email.
+                        </div>
+                        <form accept-charset="utf-8" method="post" id="signupform" class="simform">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="sminputs">
+                                        <input class="string optional" maxlength="255" id="username" name="username" placeholder="Your Name" type="text" size="50" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="sminputs">
+                                        <input type="text" id="praname" placeholder="Practice Name" name="practicename" class="string optional typeahead tt-query" autocomplete="off" spellcheck="false">
+                                    
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="sminputs">
+                                        <input class="string optional" maxlength="255" id="useremail" name="useremail" placeholder="Email" type="email" size="50" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="sminputs">
+                                    
+                                        <input class="string optional" maxlength="255" id="userpassword" 
+                                               name="userpassword" placeholder="Password" type="password" size="50"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 simform__actions">
+                                    <span class="actions-sidetext">By Registering I agree to the  <a class="special" href="#">Terms of Use</a> and <a class="special" href="#">Privacy Policy</a></span>
+                                </div>
+                                <div class="col-md-12 simform__actions">
+                                    <div class="actions-sidetext recaptcha">
+                                        <div class="g-recaptcha" data-theme="light" data-sitekey="6LeaSRIUAAAAAETO04Px4ohUsrWoPUQj2l0W7OzG" data-callback="correctCaptcha" style="transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>
+                                    <input type="hidden" class="hiddenRecaptcha required" name="hiddenRecaptcha" id="hiddenRecaptcha">
+                                        <span id="captcha" style="color:red" />
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="simform__actions">
+                                        <button class="register" name="signup"  value="register" >Register</button>
+                                    </div> 
+                                </div>
+
+                            </div>
+                        </form>
+                    </section>
+                </div>
+                <div class="col-md-6 prebox padding-box">
+                    <section id="signupbox">
+                        <div class="formtitleclr">
+                            <h2>Go Premimum!</h2>
+                        </div>
+                        <div class="premimumbox">
+                            <ul>
+                                <li>Access to clinical videos, content and other  multimedia </li>
+                                <li>Deliver Care plan details through your app or email</li>
+                            </ul>
+                        </div>
+                        <div class="premimumadd">
+                            <h2>Contact Us</h2>
+                            <a href="tel:+918123204094">812-320-4094</a>
+                            <p>or</p>
+                            <a href=" mailto:sales@quantifiedcare.com?Subject=Testing">sales@quantifiedcare.com</a>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-md-12">
+                    <div class="copyright">
+                        &#169; 2017 Quantified Care, Inc. All Rights Reserved.
+                    </div>
+
+                </div>
+            </div>
+        </div>          
+
+        <script src="js/jquery.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/btypehead.js"></script>
+        <script src='https://www.google.com/recaptcha/api.js'></script>
+        <script type="text/javascript" src="js/validation.min.js"></script>
+        <script src="js/engageconfig.js"></script>
+        <script type="text/javascript" src="js/loadingoverlay.min.js"></script>
+        <script src="js/jquery.toast.js"></script>
+        <script type="text/javascript" src="js/script.js"></script>
+        <script type="text/javascript" src="js/signup.js"></script>
+        </body>
+</html>

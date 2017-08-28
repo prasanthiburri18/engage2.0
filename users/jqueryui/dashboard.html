@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Dashboard</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/fonts.css" rel="stylesheet">
+  </head>
+  <body>
+      <div class="topheader">
+          <div class="container">
+              <div class="row">
+                  <div class="col-md-6">
+                      <div class="headerlogo">
+                          <img src="images/logo.jpg">
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="docpro">
+                          <div class="docpic">
+                                      <img src="images/user.png">
+                                  </div>
+                          <div class="docbio">
+                                      <h1>Welcome</h1>
+                                      <h2 id="headerusername"></h2>
+<!--                                      <h3>Physician</h3>-->
+                                  </div>
+                          
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <section>
+      <div class="headerbottom">
+<!--          <div class="">
+              <button>Patients</button>
+              <button>Pathway</button>
+          </div>-->
+      </div>
+      </section>
+      <section>
+          <div class="maincontent">
+              <div class="container">
+                  <div class="dashboardbox">
+                 
+                   <!--<div class="mandatorytext"><span>* Mandatory fields</span></div>-->
+                  <div class="divtitle">User Information</div>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="col-md-12">
+                              
+                              <label>Full Name: </label><span id="fullname"></span>
+                          </div>
+                       
+                      </div>
+                      <div class="col-md-12">
+                          <div class="col-md-12">
+                              
+                              <label> Practice Name: </label><span id="practicename"></span>
+                          </div>
+                       
+                      </div>
+                      <div class="col-md-12">
+                          <div class="col-md-12">
+                              
+                              <label>Email: </label><span id="email"></span>
+                          </div>
+                       
+                      </div>
+                      
+                       <div class="row" style="margin-top:150px;">
+                          <div class="col-md-12 simform__actions">
+                              
+                            <button name="btn btn-login" id="logoutbtn" class="sumbit signup"
+                                    value="LogOut" >LogOut</button>
+                          </div>
+                       
+                      </div>
+                      
+                  </div>
+                  
+                  
+                  </div>
+             
+        
+              </div>
+                  </div>
+   
+      </section>
+      
+      
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.js"></script>
+    
+    <script type="text/javascript">
+$('document').ready(function()
+{ 
+        console.log('This is dashboard page');
+     if(localStorage.getItem("userinfo")==null && localStorage.getItem("authtoken")==null)
+     {
+         localStorage.clear();
+    console.log('logout functionality');
+   window.location.href = "index.html";
+         return;
+     }
+     console.log(localStorage.getItem("authtoken"));
+     console.log(localStorage.getItem("userinfo"));
+        var retrievedObject = localStorage.getItem('userinfo');
+var output=JSON.parse(retrievedObject);
+console.log(output);
+console.log(output.user_name);
+$("#headerusername").html(output.fullName);
+$("#fullname").html(output.fullName);
+$("#practicename").html(output.practiceName);
+$("#email").html(output.email);
+
+$("#logoutbtn").click(function(){
+    localStorage.clear();
+    console.log('logout functionality');
+   window.location.href = "index.html";
+});
+});
+
+      
+    </script>
+  </body>
+</html>
