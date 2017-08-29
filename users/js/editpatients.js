@@ -154,7 +154,7 @@ $('document').ready(function ()
 
     $.ajax({
         url: pathwayapibase + '/api/v1/listPathway',
-        type: 'POST',
+        type: 'GET',
         dataType: 'json',
         headers: {
             'Authorization': securitytoken,
@@ -382,7 +382,7 @@ $('document').ready(function ()
 
         $.ajax({
             url: patientapibase + '/api/v1/editPatient',
-            type: 'POST',
+            type: 'PUT',
             dataType: 'json',
             headers: {
                 'Authorization': securitytoken,
@@ -444,7 +444,7 @@ function ViewpatientDetails()
 {
     $.ajax({
         url: patientapibase + '/api/v1/view_Patient',
-        type: 'POST',
+        type: 'GET',
         dataType: 'json',
         headers: {
             'Authorization': securitytoken,
