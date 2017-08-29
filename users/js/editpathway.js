@@ -456,7 +456,7 @@ $('document').ready(function ()
      */
     $.ajax({
         url: pathwayapibase + '/api/v1/viewPathway',
-        type: 'GET',
+        type: 'POST',
         dataType: 'json',
         headers: {
             'Authorization': securitytoken,
