@@ -91,7 +91,7 @@ $('document').ready(function ()
 
         $.ajax({
             url: userapibase + '/api/v1/change_password',
-            type: 'POST',
+            type: 'PUT',
             dataType: 'json',
             contentType: "application/json",
             Accept: "application/json",
@@ -249,7 +249,7 @@ $('document').ready(function ()
 
         $.ajax({
             url: userapibase + '/api/v1/updateprofile',
-            type: 'POST',
+            type: 'PUT',
             dataType: 'json',
             headers: {
                 'Authorization': securitytoken,
