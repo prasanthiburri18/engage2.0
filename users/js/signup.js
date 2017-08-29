@@ -35,7 +35,7 @@ $('document').ready(function ()
 
     $.ajax({
         url: userapibase + '/getAllPraticeNames',
-        type: 'GET',
+        type: 'POST',
         dataType: 'json',
         contentType: "application/json",
         Accept: "application/json",
