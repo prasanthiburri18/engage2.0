@@ -418,34 +418,11 @@ $(document).ready(function () {
                 "eventPocRow": 1,
                 "eventPocCol": erw
             };
-//             $.ajax({
-//            url: pathwayapibase + '/api/v1/updateEvent',
-//            type: 'POST',
-//            dataType: 'json',
-//            contentType: "application/json",
-//            Accept: "application/json",
-//            data: JSON.stringify(evinputdata),
-//            beforeSend: function ()
-//            {
-//                $("#error").fadeOut();
-//                $.LoadingOverlay("show");
-//            },
-//            success: function (response)
-//            {
-//                $.LoadingOverlay("show");
-//                console.log(response);
-//            }
-//        });
-
-        } else
-        {
-
+        } else {
             if ($(this).index() != 0)
                 $("#addeventmodal").trigger("click");
             $('#eventname').focus()
-//       $("#addeventmodal").trigger("click"); 
         }
-
     });
 
 
