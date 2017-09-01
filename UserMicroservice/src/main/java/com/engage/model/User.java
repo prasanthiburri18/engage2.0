@@ -5,18 +5,23 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.Constraint;
-import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length.List;
+
+import com.engage.commons.validators.annotations.ValidPhoneNumber;
 
 @Entity
 @Table(name = "dt_users")
@@ -25,29 +30,46 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private BigInteger id;
-	@Email(message = "Email format is incorrect")
+	/**
+	 * @Email trims string then checks for pattern
+	 */
+	@Email(message = "Incorrect email format")
 	@NotNull(message = "Email cannot be null")
 	@NotBlank(message = "Email cannot be blank")
+	// @NotEmpty(message = "Email cannot be empty")
 	private String email;
 	@NotNull(message = "Password cannot be null")
 	@NotBlank(message = "Password cannot be blank")
 	private String password;
 	@NotNull(message = "Full name cannot be null")
 	@NotBlank(message = "Full name cannot be blank")
+	@Length(min = 2, max = 60, message = "The field must be at least 5 characters")
 	@Column(name = "full_name")
 	private String fullName;
 
-	@NotNull(message = "Full name cannot be null")
-	@NotBlank(message = "Full name cannot be blank")
+	@NotNull(message = "Phone number cannot be null")
+	@NotBlank(message = "Phone number cannot be blank")
+	@ValidPhoneNumber(message = "Invalid phone format")
 	private String phone;
 	@NotNull(message = "Practice cannot be null")
 	@NotBlank(message = "Practice name cannot be blank")
+	@List({ @Length(min = 2, message = "Full name should be a minimum of {min} characters."),
+			@Length(max = 60, message = "Full name exceeds {max} characters."), })
+	@Pattern(regexp = "^[a-zA-z\\s]*$", message = "Only alphabetic characters are allowed.")
+
 	@Column(name = "pratice_name")
 	private String practiceName;
+	/**
+	 * Validator are in compliance Max integer length Database should be align
+	 * accordingly Min as 0 and Max integer max value
+	 */
 	@NotNull(message = "Organization Id cannot be null")
-	//@NotBlank(message = "Organization Id cannot be blank")
+	@Digits(integer = 10, fraction = 0, message = "Invalid organization id")
+	@Min(value = 0, message = "Invalid organization id")
+	@Max(value = Integer.MAX_VALUE, message = "Invalid organization id")
 	@Column(name = "orgid")
 	private int orgid;
+	@Length(min = 1, max = 1, message = "Invalid user type")
 	@Column(name = "user_type")
 	private String userType;
 	private String status;
