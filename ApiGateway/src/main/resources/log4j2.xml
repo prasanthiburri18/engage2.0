@@ -4,23 +4,19 @@
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
-		<SMTP name="Mail" subject="Error Log" to="svprudhvi13@gmail.com"
-			from="svprudhvi13@brewcode.in" smtpHost="smtp.gmail.com" smtpPort="587"
-			bufferSize="50" smtpUsername="s.krishna@mindtechlabs.com"
-			smtpPassword="mindtechlabs">
-		</SMTP>
+		<!-- <SMTP name="Mail" subject="Error Log" to="svprudhvi13@gmail.com" from="svprudhvi13@brewcode.in" 
+			smtpHost="smtp.gmail.com" smtpPort="587" bufferSize="50" smtpUsername="s.krishna@mindtechlabs.com" 
+			smtpPassword="mindtechlabs"> </SMTP> -->
 	</Appenders>
 	<Loggers>
-		<!-- <Root level="info"> <AppenderRef ref="Console" /> </Root> <Logger 
-			name="com.engage" level="info" additivity="false"> <AppenderRef ref="Console" 
-			/> </Logger> -->
-		<Root level="error">
-			<AppenderRef ref="Mail" />
+		<Root level="info">
+			<AppenderRef ref="Console" />
 		</Root>
-		<Logger name="com.engage" level="error" additivity="false">
-			<AppenderRef ref="Mail" />
+		<Logger name="com.engage" level="info" additivity="false">
+			<AppenderRef ref="Console" />
 		</Logger>
-
+		<!-- <Root level="error"> <AppenderRef ref="Mail" /> </Root> <Logger name="com.engage" 
+			level="error" additivity="false"> <AppenderRef ref="Mail" /> </Logger> -->
 	</Loggers>
 
 
