@@ -4,6 +4,8 @@ package com.engage;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -25,7 +27,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-@SpringBootApplication
+//For now excluding SecurityAutoConfigurtion.class. As security is not implement. Just BCryptEncoder is used
+@SpringBootApplication//(exclude={SecurityAutoConfiguration.class})
 @EnableWebMvc
 public class Application extends SpringBootServletInitializer{
 //	@Bean
@@ -54,7 +57,25 @@ public class Application extends SpringBootServletInitializer{
 			}
         };
     }
-	
+	/**
+	 * Validator to check Javax and Hibernate validations
+	 * @return
+	 */
+	@Bean
+	public Validator getValidator(){
+		return  Validation.buildDefaultValidatorFactory().getValidator();
+	}
+	/**
+	 * Encoder for password hashing.
+	 * Changing logRounds is not advisable
+	 * @param args
+	 */
+	/*@Bean
+	public BCryptPasswordEncoder getPasswordEncoder(){
+		//5 log rounds hashing hardcoded.
+		final int logRounds =5;
+		return new BCryptPasswordEncoder(logRounds);
+	}*/
 	public static void main(String[] args) {
         SpringApplication.run(applicationClass, args);
     }

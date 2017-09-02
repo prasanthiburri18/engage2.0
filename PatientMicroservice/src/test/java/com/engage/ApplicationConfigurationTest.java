@@ -2,16 +2,16 @@ package com.engage;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Suite.SuiteClasses;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.engage.model.ValidateOrganizationEntityTest;
-import com.engage.model.ValidateUserTest;
-
+/**
+ * Test whether application context loads.
+ * @author mindtech-labs
+ *
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@SuiteClasses(value={ValidateUserTest.class, ValidateOrganizationEntityTest.class})
+//@SuiteClasses(value={ValidateUserTest.class, ValidateOrganizationEntityTest.class})
 public class ApplicationConfigurationTest {
 
 	@Test

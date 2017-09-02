@@ -1,6 +1,11 @@
 package com.engage.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -13,7 +18,9 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.junit4.SpringRunner;
-import static org.junit.Assert.*;
+import org.springframework.validation.ValidationUtils;
+
+import com.engage.commons.validators.utils.ConstraintValidationUtils;
 
 /**
  * Unit Test to validate User entity User id can be null, as hibernate inserts
@@ -74,10 +81,20 @@ public class ValidateUserTest {
 		User user = new User();
 		user.setEmail("@yd");
 
-		Set<ConstraintViolation<User>> set = validator.validateProperty(user, "email");
-
-		assertTrue(set.size()==1);
-		assertEquals(set.iterator().next().getMessage(), "Incorrect email format");
+		Set<ConstraintViolation<User>> set = validator.validate(user);//, "email");
+		
+		//assertTrue(set.size()==1);
+		//Map<Object, Object> errormessage = set.stream().collect(Collectors.toMap(ConstraintViolation::getConstraintDescriptor, ConstraintViolation::getMessage));
+		
+		
+		Set errormessage = set.stream().map(constraintViolation -> String.format("{\"%s\":\"%s\"}", constraintViolation.getPropertyPath(),
+               constraintViolation.getMessage()))
+        .collect(Collectors.toSet());
+		errormessage = ConstraintValidationUtils.getJsonArrayOfValidations(set);
+		logger.info(errormessage.toString());
+		Set<String> errormessages = set.stream().map(v->v.getMessage()).collect(Collectors.toSet());
+		//errormessages.forEach(c->logger.info(c+"\n"));
+		assertEquals(set.iterator().next().getMessage(), "Incorrect email format.");
 	}
 	
 	/**
@@ -112,7 +129,7 @@ public class ValidateUserTest {
 		Set<ConstraintViolation<User>> set = validator.validateProperty(user, "email");
 
 		org.junit.Assert.assertTrue(!set.isEmpty());
-		org.junit.Assert.assertEquals(set.iterator().next().getMessage(), "Incorrect email format");
+		org.junit.Assert.assertEquals(set.iterator().next().getMessage(), "Incorrect email format.");
 	}
 
 	/**
@@ -126,7 +143,7 @@ public class ValidateUserTest {
 		Set<ConstraintViolation<User>> set = validator.validateProperty(user, "email");
 
 		org.junit.Assert.assertTrue(!set.isEmpty());
-		org.junit.Assert.assertEquals(set.iterator().next().getMessage(), "Email cannot be blank");
+		org.junit.Assert.assertEquals(set.iterator().next().getMessage(), "Incorrect email format.");
 	}
 
 	/**
@@ -182,6 +199,8 @@ public class ValidateUserTest {
 		User user = new User();
 		Set<ConstraintViolation<User>> set = validator.validateProperty(user,"practiceName");		
 		logger.info(set.toString());
+		Set<String> errormessages = set.stream().map(v->v.getMessage()).collect(Collectors.toSet());
+		errormessages.forEach(c->logger.info(c));
 		org.junit.Assert.assertTrue(!set.isEmpty());
 	}
 	

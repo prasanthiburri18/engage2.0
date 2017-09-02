@@ -33,43 +33,44 @@ public class User {
 	/**
 	 * @Email trims string then checks for pattern
 	 */
-	@Email(message = "Incorrect email format")
-	@NotNull(message = "Email cannot be null")
-	@NotBlank(message = "Email cannot be blank")
+	@Email(message = "Incorrect email format.")
+	@NotNull(message = "Incorrect email format.")
+	@NotBlank(message = "Incorrect email format.")
 	// @NotEmpty(message = "Email cannot be empty")
 	private String email;
-	@NotNull(message = "Password cannot be null")
-	@NotBlank(message = "Password cannot be blank")
+	@NotNull(message = "Password cannot be empty.")
+	@NotBlank(message = "Password cannot be empty.")
 	private String password;
-	@NotNull(message = "Full name cannot be null")
-	@NotBlank(message = "Full name cannot be blank")
-	@Length(min = 2, max = 60, message = "The field must be at least 5 characters")
+	@NotNull(message = "Full name cannot be empty.")
+	@NotBlank(message = "Full name cannot be empty.")
+	@List({ @Length(min = 2, message = "Full name should be a minimum of {min} characters."),
+			@Length(max = 60, message = "Full name exceeds {max} characters."), })
 	@Column(name = "full_name")
 	private String fullName;
 
-	@NotNull(message = "Phone number cannot be null")
-	@NotBlank(message = "Phone number cannot be blank")
-	@ValidPhoneNumber(message = "Invalid phone format")
+	//@NotNull(message = "Phone number cannot be empty.")
+	//@NotBlank(message = "Phone number cannot be empty.")
+	@ValidPhoneNumber(message = "Invalid phone number format.")
 	private String phone;
-	@NotNull(message = "Practice cannot be null")
-	@NotBlank(message = "Practice name cannot be blank")
-	@List({ @Length(min = 2, message = "Full name should be a minimum of {min} characters."),
-			@Length(max = 60, message = "Full name exceeds {max} characters."), })
+	@NotNull(message = "Practice name cannot be empty.")
+	@NotBlank(message = "Practice name cannot be empty.")
+	@List({ @Length(min = 2, message = "Practice name should be a minimum of {min} characters."),
+			@Length(max = 60, message = "Practice exceeds {max} characters."), })
 	@Pattern(regexp = "^[a-zA-z\\s]*$", message = "Only alphabetic characters are allowed.")
-
 	@Column(name = "pratice_name")
 	private String practiceName;
 	/**
 	 * Validator are in compliance Max integer length Database should be align
 	 * accordingly Min as 0 and Max integer max value
 	 */
-	@NotNull(message = "Organization Id cannot be null")
-	@Digits(integer = 10, fraction = 0, message = "Invalid organization id")
-	@Min(value = 0, message = "Invalid organization id")
-	@Max(value = Integer.MAX_VALUE, message = "Invalid organization id")
+	
+	@Digits(integer = 10, fraction = 0, message = "Invalid organization id.")
+	@Min(value = 0, message = "Invalid organization id.")
+	@Max(value = Integer.MAX_VALUE, message = "Invalid organization id.")
 	@Column(name = "orgid")
 	private int orgid;
-	@Length(min = 1, max = 1, message = "Invalid user type")
+	@Pattern(regexp = "^[auAU]*$", message = "Invalid user type.")
+	@Length(min = 1, max = 1, message = "Invalid user type.")
 	@Column(name = "user_type")
 	private String userType;
 	private String status;
