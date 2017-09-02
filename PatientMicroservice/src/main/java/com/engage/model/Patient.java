@@ -13,6 +13,13 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length.List;
 
 import com.engage.util.AdvancedEncryptionStandard;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,11 +30,30 @@ public class Patient {
 	 @Id
 	  @GeneratedValue(strategy = GenerationType.AUTO)
 	  private long id;
+	 
+	 /**
+	  * Current not present in Client side
+	  */
 	  private String email;
+	  @NotNull(message = "First name name cannot be null")
+		@NotBlank(message = "First name cannot be blank")
+		@List({ @Length(min = 2, message = "First name should be a minimum of {min} characters."),
+				@Length(max = 60, message = "First name exceeds {max} characters."), })
+	  @Pattern(regexp = "^[a-zA-z\\s]*$", message = "Only alphabetic characters are allowed.")
 	  @Column(name="first_name")
 	  private String firstName;
+	  
+	  @NotNull(message = "Last name name cannot be null")
+		@NotBlank(message = "Last name cannot be blank")
+		@List({ @Length(min = 2, message = "Last name should be a minimum of {min} characters."),
+				@Length(max = 60, message = "Last name exceeds {max} characters."), })
+	  @Pattern(regexp = "^[a-zA-z\\s]*$", message = "Only Alphabet characters are allowed.")
 	  @Column(name="last_name")
 	  private String lastName;
+	  
+	  /**
+	   * Find whether phone gets saved in db
+	   */
 	  private String phone;
 	  @Column(name="device_token")
 	  private String deviceToken;
