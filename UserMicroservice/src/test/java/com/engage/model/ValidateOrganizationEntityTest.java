@@ -107,14 +107,12 @@ public class ValidateOrganizationEntityTest {
 		Organization org = new Organization();
 		org.setName(" ");
 		Set<ConstraintViolation<Organization>> violations = validator.validateProperty(org, "name");
-		Assert.assertTrue(!violations.isEmpty());
 		violations.stream().forEach(c -> logger.info(c.getMessage()));
-		Assert.assertEquals(violations.iterator().next().getMessage(), "Organization name should be a minimum of 2 characters.");;
-		
+		Assert.assertTrue(violations.size()==2);
 	}
 
 	/**
-	 * 60 alphabetic char - positive test
+	 * 60 alphabet chars - positive test
 	 */
 	@Test
 	public void maxOrganizationNameFormat() {

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="jqueryui/jquery-ui.css">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/jquery.toast.css" rel="stylesheet">
+    <link href="css/fonts.css" rel="stylesheet">
+    <link href="css/font-awesome.css" rel="stylesheet">
+  </head>
+  <body>
+      <div class="container">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="loginlogo">
+                      <img src="images/logo.jpg">
+                  </div>
+              </div>
+              <div class="col-md-12">
+                  <div class="loginlogo">
+                      <img src="images/engage-logo.png" class="engage-logo">
+                  </div>
+              </div>
+          </div>
+      <section id="loginbox">
+          <div class="formtitle">
+              <h2>Sign In</h2>
+          </div>
+             <div class="col-md-12">
+                       <span id="error"></span>
+                </div> 
+           <form accept-charset="utf-8" method="post" id="login-form" class="simform">
+               <div class="row">
+                   <div class="col-md-12">
+                       <div class="sminputs">
+                            <div class="input full">
+                            <input class="string optional" maxlength="255" id="user_email" name="user_email" placeholder="Email" type="email" size="50" />
+                            </div>
+                          </div>
+                   </div>
+                   <div class="col-md-12">
+                       <div class="sminputs">
+                        <div class="input full">
+                         
+                          <input class="string optional" maxlength="255" id="password" name="password" placeholder="Password" type="password" size="50" />
+                        </div>
+                      </div>
+                   </div>
+                   <div class="col-md-12">
+                       <div class="simform__actions">
+                            <button class="submit"  value="Log In" name="btn-login" id="btn-login"  >Log In</button>
+                </div> 
+                   </div>
+                   
+                
+                   </div>
+                   
+                   
+                   <div class="col-md-12 simform__actions">
+                       <span class="simform__actions-sidetext"><a class="special" role="link" href="forgotpassword.html">Forgot password?</a></span>
+                   </div>
+               
+          </form>
+      </section> 
+          <section>
+              <div class="row">
+                  <div class="col-md-12">
+                      <div class="signuptitle">
+                      <h2>New to Quantified Care's Engage?</h2>
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="simform__actions margintop">
+                         <a href="signup.html" class="signup" >Setup Free Account</a>
+                      </div>
+                  </div>
+              </div>
+          </section>    
+      <section>
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="copyright">
+                       &#169; 2017 Quantified Care, Inc. All Rights Reserved.
+                  </div>
+                 
+              </div>
+          </div>
+      </section>
+      </div>
+   <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/validation.min.js"></script>
+    <script src="js/engageconfig.js"></script>
+    <script type="text/javascript" src="js/loadingoverlay.min.js"></script>
+    <script src="js/jquery.toast.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+  </body>
+</html>

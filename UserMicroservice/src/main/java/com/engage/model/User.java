@@ -38,37 +38,46 @@ public class User {
 	@NotBlank(message = "Incorrect email format.")
 	// @NotEmpty(message = "Email cannot be empty")
 	private String email;
-	@NotNull(message = "Password cannot be empty.")
-	@NotBlank(message = "Password cannot be empty.")
-	private String password;
+
+	/**
+	 * Constraints removed as password is not passed when a team member adds In
+	 * case of registration, password is validated at controller layer
+	 */
+	/*
+	 * @NotNull(message = "Password cannot be empty.")
+	 * 
+	 * @NotBlank(message = "Password cannot be empty.")
+	 */private String password;
 	@NotNull(message = "Full name cannot be empty.")
 	@NotBlank(message = "Full name cannot be empty.")
-	@List({ @Length(min = 2, message = "Full name should be a minimum of {min} characters."),
+	@List({
+			@Length(min = 2, message = "Full name should be a minimum of {min} characters."),
 			@Length(max = 60, message = "Full name exceeds {max} characters."), })
+	@Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Only alphabet characters are allowed.")
 	@Column(name = "full_name")
 	private String fullName;
 
-	//@NotNull(message = "Phone number cannot be empty.")
-	//@NotBlank(message = "Phone number cannot be empty.")
+	// @NotNull(message = "Phone number cannot be empty.")
+	// @NotBlank(message = "Phone number cannot be empty.")
 	@ValidPhoneNumber(message = "Invalid phone number format.")
 	private String phone;
 	@NotNull(message = "Practice name cannot be empty.")
 	@NotBlank(message = "Practice name cannot be empty.")
-	@List({ @Length(min = 2, message = "Practice name should be a minimum of {min} characters."),
-			@Length(max = 60, message = "Practice exceeds {max} characters."), })
-	@Pattern(regexp = "^[a-zA-z\\s]*$", message = "Only alphabetic characters are allowed.")
+	@Length(max = 60, message = "Practice exceeds {max} characters.")
+	@Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Only alphabet characters are allowed.")
 	@Column(name = "pratice_name")
 	private String practiceName;
 	/**
 	 * Validator are in compliance Max integer length Database should be align
 	 * accordingly Min as 0 and Max integer max value
 	 */
-	
+
 	@Digits(integer = 10, fraction = 0, message = "Invalid organization id.")
 	@Min(value = 0, message = "Invalid organization id.")
 	@Max(value = Integer.MAX_VALUE, message = "Invalid organization id.")
 	@Column(name = "orgid")
 	private int orgid;
+	@NotNull(message = "User type cannot be empty")
 	@Pattern(regexp = "^[auAU]*$", message = "Invalid user type.")
 	@Length(min = 1, max = 1, message = "Invalid user type.")
 	@Column(name = "user_type")
@@ -85,8 +94,9 @@ public class User {
 		this.id = id;
 	}
 
-	public User(String email, String password, String fullName, String phone, String practiceName, int orgid,
-			String userType, String status, Date createDate, Date updateDate) {
+	public User(String email, String password, String fullName, String phone,
+			String practiceName, int orgid, String userType, String status,
+			Date createDate, Date updateDate) {
 		super();
 		this.email = email;
 
@@ -191,9 +201,11 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName=" + fullName + ", phone="
-				+ phone + ", practiceName=" + practiceName + ", userType=" + userType + ", status=" + status
-				+ ", createDate=" + createDate + ", updateDate=" + updateDate + "]";
+		return "User [id=" + id + ", email=" + email + ", password=" + password
+				+ ", fullName=" + fullName + ", phone=" + phone
+				+ ", practiceName=" + practiceName + ", userType=" + userType
+				+ ", status=" + status + ", createDate=" + createDate
+				+ ", updateDate=" + updateDate + "]";
 	}
 
 }

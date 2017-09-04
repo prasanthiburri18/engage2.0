@@ -1,6 +1,9 @@
 package com.engage.controller;
 
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -9,10 +12,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 
-import org.apache.logging.log4j.Logger;
-import org.hibernate.validator.internal.util.logging.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -26,22 +30,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.engage.commons.ConstraintViolationException;
+import com.engage.commons.validators.utils.ConstraintValidationUtils;
+import com.engage.dao.OrganizationDao;
 import com.engage.dao.UserDao;
 import com.engage.dao.UserRolesDao;
-import com.engage.dao.OrganizationDao;
-import com.engage.model.User;
 import com.engage.model.Organization;
+import com.engage.model.User;
 import com.engage.model.UserRoles;
 import com.engage.util.AdvancedEncryptionStandard;
 import com.engage.util.JsonMessage;
-
-
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.fasterxml.jackson.core.JsonToken;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 
 @RestController
@@ -58,12 +59,16 @@ public class LoginController {
 public String baseURL;
 @Value("${portal.URL}")
 public String portalURL;
-  @Autowired
+
+ @Autowired
   private UserDao _userDao;
   @Autowired
   private UserRolesDao _userRolesDao; 
   @Autowired 
   private OrganizationDao _organizationDao;
+  
+  @Autowired
+  private Validator validator;
   
   /**
    * User Login Method
@@ -76,7 +81,21 @@ public String portalURL;
   public @ResponseBody JsonMessage login(@RequestBody final User user) {
 	  JsonMessage response=new JsonMessage();
     try {
+    //Engage2.0 start
+    	//Check Validations for email and password only
+    	//Email violations
+    	Set<ConstraintViolation<User>> violations =validator.validateProperty(user,"email");
+    	//Password violations
+    	Set<ConstraintViolation<User>> passwordViolations = validator.validateProperty(user,"password");
+    	//Club both violations together
+    	violations.addAll(passwordViolations);
     	
+    	if(!violations.isEmpty()){
+    		//Map<String, ConstraintViolation<User>> errors = violations.stream().collect(Collectors.toMap(ConstraintViolation::getMessage, Function.identity()));
+    		Set<String> errormessages = ConstraintValidationUtils.getArrayOfValidations(violations);
+    		throw new ConstraintViolationException(errormessages.toString());
+    	}
+    //Engage2.0 end	
      User validateUser= _userDao.getByUserName(user.getEmail(),AdvancedEncryptionStandard.encrypt(user.getPassword()));
       if(!validateUser.getEmail().equalsIgnoreCase(null))
       { 
@@ -125,9 +144,17 @@ public String portalURL;
   {
 	JsonMessage response=new JsonMessage();
     try 
-    {
-    	
-    	System.out.println((_userDao.getByEmail(user.getEmail())).size());
+    {	//Engage2.0
+    	Set<ConstraintViolation<User>> violations =validator.validate(user);
+    	if(!violations.isEmpty()){
+    		//Map<String, ConstraintViolation<User>> errors = violations.stream().collect(Collectors.toMap(ConstraintViolation::getMessage, Function.identity()));
+    		Map<String,String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
+    		if(user.getPassword()==null ||user.getPassword().trim().equals("")){
+    			errormessages.put("password", "Password cannot be blank");
+    		}
+    		throw new ConstraintViolationException(errormessages.toString());
+    	}
+    	//Engage 2.0
     	if((_userDao.getByEmail(user.getEmail())).size()>0)
     	{
     		response.setMessage("Email already exists.");
@@ -166,8 +193,11 @@ public String portalURL;
 		 data1.put("text","Hi <b>"+user.getFullName()+",</b><br><br>Congratulations! Your account has been created. Please click on the link to verify your email address and start using Engage.<br><br><a href='"+portalURL+"/userconfirmation.html?keyconfirm="+AdvancedEncryptionStandard.encrypt(user.getEmail())+"'>Verify</a><br><br>Thank You,<br>Team Engage at Quantified Care");
 		 data1.put("status",true);
 //		 restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send", data1,String.class );
-		 restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send", data1,String.class );
-			
+		// restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send", data1,String.class );
+		//Engage2.0 
+		 final String simpleMailUrl = baseURL+"/mail/send";
+		 restTemplate.postForObject(simpleMailUrl, data1,String.class );
+		 //Engage2.0
 		 response.setMessage("User registred successfully");
 		response.setStatuscode(200);
 		return response;
@@ -426,7 +456,7 @@ public String portalURL;
    * @Inputparam organization JsonObject
    * @return JsonObject
    */
-  @RequestMapping(value="/verify_emailForgetpwd",method = RequestMethod.POST)
+  @RequestMapping(value="/verify_emailForgetpwd",method = RequestMethod.PUT)
   public @ResponseBody JsonMessage resetPassword(@RequestBody Map<String, String> json) 
   {
 	  JsonMessage response=new JsonMessage();

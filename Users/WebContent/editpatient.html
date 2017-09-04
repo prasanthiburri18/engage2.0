@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Quantified Care</title>
+       <link href="css/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" href="jqueryui/jquery-ui.css">
+        <link href="css/style.css" rel="stylesheet">
+        <link href="css/jquery.toast.css" rel="stylesheet">
+        <link href="css/fonts.css" rel="stylesheet">
+        <link href="css/font-awesome.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="topheader">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="headerlogo">
+                         <a href="patientslist.html">    <img src="images/logo.jpg" alt="logo">
+                             <img src="images/engage-logo.png" alt="engage-logo" class="engage-logo"></a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 profile-block">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="lguser"></span> <img src="images/dropdown-icon.png" alt="dropdown-icon">
+                        </a>
+                        <div class="dropdown-menu">
+                            <div class="docpro">
+
+                                <div class="docbio">
+                        <a  id="logoutbtn" class="logout" href="myaccount.html">Settings</a>
+   <button name="btn btn-login" id="logoutbtn" class="logout" value="LogOut" onclick="logout();">Log Out</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section>
+            <div class="headerbottom">
+                <div class="container">
+                    <a href="patientslist.html" class="active">Patients</a>
+                    <a href="pathwaylist.html">Pathways</a>
+<a href="#" class="report-btn">Reports <span>*only for premium users</span></a>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="maincontent">
+                <div class="container">
+                    <div class="title-block">
+                        <h3>Edit Patient</h3>
+             </div>
+                    <div class="dashboardbox">
+                        <form  accept-charset="utf-8" method="post" id="editpatient-form" class="simform">
+                            <div class="mandatorytext"><span>* Mandatory fields</span></div>
+                            <div class="divtitle">Personal Information</div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-3 col-sm-3">
+                                        <label>First Name</label><sup>*</sup>
+                                    </div>
+                                    <div class="col-md-9 col-sm-9">
+                                        <input type="text"  required name="editpatienfrmfirstname" id="editpatienfrmfirstname"/>
+                                        <input type="hidden"   name="editpatienid" id="editpatienid"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-3 col-sm-3">
+                                        <label>Last Name</label><sup>*</sup>
+                                    </div>
+                                    <div class="col-md-9 col-sm-9">
+                                        <input type="text" name="editpatienfrmlastname" id="editpatienfrmlastname" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-3 col-sm-3">
+                                        <label>Date of Birth</label><sup>*</sup>
+                                    </div>
+                                    <div class="col-md-9 col-sm-9">
+                                        <p class="datepicker-block"><input type="date" name="editpatientdob" id="editpatientdob" required="" /><span class="error"></span></p>
+                                        
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="divtitle">Select Channel</div>
+                            <div class="row bottom-padding">
+                                <div class="col-md-12">
+                                    <div class="col-md-3 col-sm-3">
+                                        <label>Mobile Number</label><sup>*</sup>
+                                    </div>
+                                    <div class="col-md-9 col-sm-9 mobile-format">
+                                        <input id="editphone1" class="phone" name="phone1" type="text" size="3" value="" maxlength = "3"/>
+                                        <span></span>
+                                        <input id="editphone2" class="phone" name="phone2" type="text" size="3" value="" maxlength = "3"/>
+                                        <span></span>
+                                        <input id="editphone3" class="phone" name="phone3" type="text" size="4" value="" maxlength = "4"/>
+                                        <br/>
+                                        <p id="pherr"></p>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="col-md-3 col-sm-3">
+                                        <label>Email</label>
+                                    </div>
+                                    <div class="col-md-9 col-sm-9">
+                                        <input type="text" required="" disabled class="disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-3 col-sm-3">
+                                        <label>Device Token</label>
+                                    </div>
+                                    <div class="col-md-9 col-sm-9">
+                                        <input type="text" required="" disabled class="disabled"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="divtitle">Select Pathway</div>
+                            <div class="row pathway-block" id="dpathways">
+
+                            </div>
+                             <a class="import-btn path-btn" href="addpathway.html" target="_blank" id="add_pathway"><img src="images/plus-icon.png" alt="plus-icon">ADD PATHWAY</a>
+                            <div class="divtitle">Select Events</div>
+                            <div class="row pathway-block" id="eventschec">
+                                
+
+                                
+                            </div>
+                            <div class="formbtn">
+                                <button id="cancel">Cancel</button>
+                                <button class="active">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        
+        <script src="js/jquery.js"></script>
+
+        
+        <script src="js/bootstrap.js"></script>
+        <script src="jqueryui/jquery-ui.js"></script>
+        <script src="js/engageconfig.js"></script>
+        <script type="text/javascript" src="js/validation.min.js"></script>
+        <script type="text/javascript" src="js/loadingoverlay.min.js"></script>
+        <script src="js/jquery.toast.js"></script>
+        <script src="js/editpatients.js"></script>
+        <script src="js/timesession.js"></script>
+    </body>
+</html>

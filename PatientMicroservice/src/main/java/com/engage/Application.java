@@ -4,6 +4,8 @@ package com.engage;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -54,6 +56,16 @@ public class Application extends SpringBootServletInitializer{
 			}
         };
     }
+	
+	/**
+	 * Validator to check Javax and Hibernate validations
+	 * @return
+	 */
+	@Bean
+	public Validator getValidator(){
+		return  Validation.buildDefaultValidatorFactory().getValidator();
+	}
+	
 	public static void main(String[] args) {
         SpringApplication.run(applicationClass, args);
     }

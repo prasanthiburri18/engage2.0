@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,10 +92,11 @@ public class UserController {
 	/**
 	 * Change Password Method
 	 * 
+	 * Note: Request method changed to PUT
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
-	@RequestMapping(value = "/change_password", method = RequestMethod.POST)
+	@RequestMapping(value = "/change_password", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage changePassword(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {
@@ -140,8 +142,10 @@ public class UserController {
     	Set<ConstraintViolation<User>> violations =validator.validate(user);
     	if(!violations.isEmpty()){
     		//Map<String, ConstraintViolation<User>> errors = violations.stream().collect(Collectors.toMap(ConstraintViolation::getMessage, Function.identity()));
-    		Set<String> errormessages = ConstraintValidationUtils.getArrayOfValidations(violations);
-    		throw new ConstraintViolationException(errormessages.toString());
+    		//Set<String> errormessages = ConstraintValidationUtils.getArrayOfValidations(violations);
+    		Map<String, String> errormessages= ConstraintValidationUtils.getMapOfValidations(violations);
+    		JSONObject json = new JSONObject(errormessages);
+    		throw new ConstraintViolationException(json.toString());
     	}
     //Engage2.0 end	
     	if((_userDao.getByEmail(user.getEmail())).size()>0)
@@ -267,7 +271,7 @@ public class UserController {
 	 * @Inputparam user JsonObject
 	 * @return JsonObject
 	 */
-	@RequestMapping(value = "/updateprofile", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateprofile", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage updateprofile(@RequestBody final User user) {
 		JsonMessage response = new JsonMessage();
 		try {

@@ -1,9 +1,7 @@
 package com.engage.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.validation.ValidationUtils;
 
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 
@@ -62,6 +59,20 @@ public class ValidateUserTest {
 	}
 	
 	/**
+	 * Entity validation negative test
+	 * User object cannot be null
+	 */
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void passNullUser(){
+		User user = null;;
+		Set<ConstraintViolation<User>> set = validator.validate(user);		
+		logger.info(set.toString());
+		org.junit.Assert.assertTrue(!set.isEmpty());
+	}
+	
+	
+	/**
 	  * Email validation -correct format
 	  */
 	@Test
@@ -77,7 +88,7 @@ public class ValidateUserTest {
 	  * Email validation -incorrect format1
 	  */
 	@Test
-	public void validateEmailInCorrectFormat1() {
+	public void validateEmailIncorrectFormat1() {
 		User user = new User();
 		user.setEmail("@yd");
 
@@ -87,10 +98,10 @@ public class ValidateUserTest {
 		//Map<Object, Object> errormessage = set.stream().collect(Collectors.toMap(ConstraintViolation::getConstraintDescriptor, ConstraintViolation::getMessage));
 		
 		
-		Set errormessage = set.stream().map(constraintViolation -> String.format("{\"%s\":\"%s\"}", constraintViolation.getPropertyPath(),
+		Set<String> errormessage = set.stream().map(constraintViolation -> String.format("{\"%s\":\"%s\"}", constraintViolation.getPropertyPath(),
                constraintViolation.getMessage()))
         .collect(Collectors.toSet());
-		errormessage = ConstraintValidationUtils.getJsonArrayOfValidations(set);
+		errormessage = ConstraintValidationUtils.getArrayOfValidations(set);
 		logger.info(errormessage.toString());
 		Set<String> errormessages = set.stream().map(v->v.getMessage()).collect(Collectors.toSet());
 		//errormessages.forEach(c->logger.info(c+"\n"));
@@ -160,7 +171,21 @@ public class ValidateUserTest {
 		org.junit.Assert.assertTrue("Phone format validated: " + set.iterator().next(), !set.isEmpty());
 
 	}
+	/**
+	 * Test for ConstraintValidationUtils
+	 */
+	@Test
+	public void validateEmptyUserAndConstraintValidationUtils(){
 
+		User user = new User();
+		user.setPhone("1ddfddfdf11-9999999");
+
+		Set<ConstraintViolation<User>> set = validator.validate(user);
+
+		logger.info(ConstraintValidationUtils.getMapOfValidations(set).toString());
+
+	}
+	
 	/**
 	 * Used 10 digits with no hyphens -constraint error
 	 */
@@ -203,9 +228,11 @@ public class ValidateUserTest {
 		errormessages.forEach(c->logger.info(c));
 		org.junit.Assert.assertTrue(!set.isEmpty());
 	}
-	
+	/**
+	 * Negative test - Full name more than 60 chars
+	 */
 	@Test
-	public void validateUserFullname(){
+	public void validateUserFullnameMoreThan60Chars(){
 		User user = new User();
 		user.setFullName("adfdf dfasdfadfdf dfasdfadfdf dfasdfadfdf dfasdfadfdf dfasdfadfdf dfasdf");
 		Set<ConstraintViolation<User>> set = validator.validateProperty(user,"fullName");

@@ -9,6 +9,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length.List;
 
 import com.engage.util.AdvancedEncryptionStandard;
 
@@ -18,8 +24,17 @@ public class PathwayEvents {
 	 @Id
 	  @GeneratedValue(strategy = GenerationType.AUTO)
 	  private long id;
+	 
+		@NotNull(message = "Event name cannot be empty.")
+		@NotBlank(message = "Event name cannot be empty.")
+		@List({ @Length(min = 2, message = "Event name should be a minimum of {min} characters."),
+				@Length(max = 30, message = "Event name exceeds {max} characters."), })
+		@Pattern(regexp = "^[a-zA-Z0-9\\s]*$", message = "Only alphanumeric characters are allowed.")
 	 @Column(name="event_name")
 	  private String eventName;
+		
+		@NotNull(message = "Pathway id cannot be empty.")
+		@NotBlank(message = "Pathway cannot be empty.")
 	  @Column(name="pathway_id")
 	  private long pathwayId;
 	  @Column(name="event_pos_row")

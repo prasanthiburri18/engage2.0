@@ -9,68 +9,71 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 
 @Entity
-@Table(name="dt_user_roles")
+@Table(name = "dt_user_roles")
 public class UserRoles {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private int id;
-  @Column(name="role_id")
-  private int roleId;
-  @Column(name="user_id")
-  private BigInteger userId;
-  private Date createdat;
-  
-  public UserRoles() { }
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
+	@Digits(integer = Integer.MAX_VALUE, message = "Invalid role id", fraction = 0)
+	@Min(value = 1, message = "Invalid role id")
+	@Column(name = "role_id")
+	private int roleId;
 
-  public UserRoles(int id) { 
-    this.id = id;
-  }
-  
+	@Digits(integer = Integer.MAX_VALUE, message = "Invalid user id", fraction = 0)
+	@Min(value = 1, message = "Invalid user id")
+	@Column(name = "user_id")
+	private BigInteger userId;
+	private Date createdat;
 
-public UserRoles(int roleId, BigInteger userId, Date createdat) {
-	super();
-	this.roleId = roleId;
-	this.userId = userId;
-	this.createdat = createdat;
-}
+	public UserRoles() {
+	}
 
-public int getId() {
-	return id;
-}
+	public UserRoles(int id) {
+		this.id = id;
+	}
 
-public void setId(int id) {
-	this.id = id;
-}
+	public UserRoles(int roleId, BigInteger userId, Date createdat) {
+		super();
+		this.roleId = roleId;
+		this.userId = userId;
+		this.createdat = createdat;
+	}
 
-public int getRoleId() {
-	return roleId;
-}
+	public int getId() {
+		return id;
+	}
 
-public void setRoleId(int roleId) {
-	this.roleId = roleId;
-}
+	public void setId(int id) {
+		this.id = id;
+	}
 
-public BigInteger getUserId() {
-	return userId;
-}
+	public int getRoleId() {
+		return roleId;
+	}
 
-public void setUserId(BigInteger userId) {
-	this.userId = userId;
-}
+	public void setRoleId(int roleId) {
+		this.roleId = roleId;
+	}
 
-public Date getCreatedat() {
-	return createdat;
-}
+	public BigInteger getUserId() {
+		return userId;
+	}
 
-public void setCreatedat(Date createdat) {
-	this.createdat = createdat;
-}
+	public void setUserId(BigInteger userId) {
+		this.userId = userId;
+	}
 
+	public Date getCreatedat() {
+		return createdat;
+	}
 
+	public void setCreatedat(Date createdat) {
+		this.createdat = createdat;
+	}
 
 }

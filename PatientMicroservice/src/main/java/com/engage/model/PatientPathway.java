@@ -6,14 +6,26 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name="qc_patient_pathway")
 public class PatientPathway {
 	 @Id
 	  @GeneratedValue(strategy = GenerationType.AUTO)
 	 private long id;
+	 @NotNull(message ="Patient id cannot be empty")
+	  @NotBlank(message ="Patient id cannot be empty")
+	  @Digits(fraction=0, integer=Integer.MAX_VALUE, message="Invalid Patient Id")
 	 @Column(name="patient_id")
 	 private long patientid;
+	 
+
+	 @NotNull(message ="Pathway id cannot be empty")
+	  @NotBlank(message ="Pathway id cannot be empty")
+	  @Digits(fraction=0, integer=Integer.MAX_VALUE, message="Invalid Pathway Id")
 	 @Column(name="pathway_id")
 	 private long pathwayId;
 	 @Column(name="event_id")

@@ -7,26 +7,25 @@ import static org.junit.Assert.assertNotNull;
 
 import javax.transaction.Transactional;
 
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
-import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.engage.dao.UserDao;
 import com.engage.dao.UserRolesDao;
 import com.engage.model.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import junit.framework.Assert;
 
 /**
  * @author mindtech-labs
@@ -40,12 +39,52 @@ public class UserControllerTest {
 	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(UserControllerTest.class);
 	
 	@Autowired
-	MockMvc mockmvc;
+	private MockMvc mockmvc;
 
 	@Autowired
-	UserDao userDao;
+	private UserDao userDao;
 	
-	ObjectMapper objectMapper = new ObjectMapper();
+	
+	private ObjectMapper objectMapper = new ObjectMapper();
+	
+	@Before
+	public void init(){
+		
+		final User user = new User();
+		user.setEmail("s.krishna@mindtechlabs.com");
+		user.setFullName("Somisetti Krishna");
+		user.setOrgid(1);
+		user.setPassword("password");
+		user.setPhone("1234567890");
+		user.setPracticeName("Medicine");
+		user.setUserType("U");
+		userDao.save(user);
+	}
+	/**
+	 * To check functionality from Engage1.0
+	 * @throws Exception 
+	 * @throws JsonProcessingException 
+	 */
+	@Test
+	public void userAlreadyExistsTestWithValidUser() throws JsonProcessingException, Exception{
+		final User user = new User();
+		user.setEmail("s.krishna@mindtechlabs.com");
+		user.setFullName("Somisetti Krishna");
+		user.setOrgid(1);
+		user.setPassword("password");
+		user.setPhone("1234567890");
+		user.setPracticeName("Medicine");
+		user.setUserType("U");
+		MvcResult result =mockmvc.perform(
+				MockMvcRequestBuilders.post("/api/v1/addteammember")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsBytes(user)))
+				.andReturn();
+				//.andExpect(MockMvcResultMatchers.status().is(203));
+		logger.info(result.getResponse().getContentAsString());
+		org.junit.Assert.assertTrue(result.getResponse().getContentAsString().indexOf("208")>0);
+	
+	}
 	/**
 	 * Checking whether mock beans are created
 	 */
@@ -64,6 +103,7 @@ public class UserControllerTest {
 				.andReturn();
 				//.andExpect(MockMvcResultMatchers.status().is(203));
 		logger.info(result.getResponse().getContentAsString());
+		//Due to design flaw in Engage1.0. Status of response is 200.
 		org.junit.Assert.assertTrue(result.getResponse().getContentAsString().indexOf("203")>0);
 		
 	}
@@ -77,7 +117,7 @@ public class UserControllerTest {
 		user.setEmail("afdk@kdf.com");
 		user.setFullName("Somisetti Krishna");
 		user.setOrgid(1);
-		user.setPassword("password");
+		user.setPassword("");
 		user.setPhone("1234567890");
 		user.setPracticeName("Medicine");
 		user.setUserType("U");
@@ -89,6 +129,60 @@ public class UserControllerTest {
 				.andReturn();
 		logger.info("Test info "+mvcResult.getResponse().getContentAsString());
 		
+		org.junit.Assert.assertEquals(mvcResult.getResponse().getStatus(), 200);
+		org.junit.Assert.assertTrue(mvcResult.getResponse().getContentAsString().indexOf("Team Member added successfully")>0);
 	}
-
-}
+	/**
+	 * Invalid Phone format
+	 * @throws Exception
+	 */
+	@Test
+	public void userAdditionInvalidPhoneFormatTest() throws Exception {
+		final User user = new User();
+		user.setEmail("afdk@kdf.com");
+		user.setFullName("Somisetti Krishna");
+		user.setOrgid(1);
+		user.setPassword("password");
+		//9 digits
+		user.setPhone("123456780");
+		user.setPracticeName("Medicine");
+		user.setUserType("U");
+		
+		MvcResult mvcResult =mockmvc.perform(
+				MockMvcRequestBuilders.post("/api/v1/addteammember")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsBytes(user)))
+				.andReturn();
+		logger.info("Test info "+mvcResult.getResponse().getContentAsString());
+		
+		org.junit.Assert.assertEquals(mvcResult.getResponse().getStatus(), 200);
+		org.junit.Assert.assertTrue(mvcResult.getResponse().getContentAsString().indexOf("Invalid phone number format")>0);
+	}
+	
+	@Test
+	public void userAdditionInvalidFullNameFormatTest() throws Exception {
+		final User user = new User();
+		user.setEmail("afdk@kdf.com");
+		user.setFullName("6Somisetti Krishna");
+		user.setOrgid(1);
+		user.setPassword("password");
+		//9 digits
+		user.setPhone("123456780");
+		user.setPracticeName("Medicine");
+		user.setUserType("U");
+		
+		MvcResult mvcResult =mockmvc.perform(
+				MockMvcRequestBuilders.post("/api/v1/addteammember")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsBytes(user)))
+				.andReturn();
+		logger.info("Test info "+mvcResult.getResponse().getContentAsString());
+		
+		Assert.assertEquals(mvcResult.getResponse().getStatus(), 200);
+		Assert.assertTrue(mvcResult.getResponse().getContentAsString().indexOf("Invalid phone number format")>0);
+		Assert.assertTrue(mvcResult.getResponse().getContentAsString().indexOf("Only alphabet characters are allowed.")>0);
+	}
+	
+	
+	
+	}
