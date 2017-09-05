@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -67,8 +68,17 @@ public String portalURL;
   @Autowired 
   private OrganizationDao _organizationDao;
   
+  /**
+   * Used for validating model objects
+   */
   @Autowired
   private Validator validator;
+  
+  /**
+   * For encrypting password. Removed previous encoder. 
+   */
+  @Autowired
+  private PasswordEncoder passwordEncoder;
   
   /**
    * User Login Method
@@ -96,8 +106,8 @@ public String portalURL;
     		throw new ConstraintViolationException(errormessages.toString());
     	}
     //Engage2.0 end	
-     User validateUser= _userDao.getByUserName(user.getEmail(),AdvancedEncryptionStandard.encrypt(user.getPassword()));
-      if(!validateUser.getEmail().equalsIgnoreCase(null))
+     User validateUser= _userDao.getByUserName(user.getEmail(),passwordEncoder.encode(user.getPassword()));
+      if(!(validateUser.getEmail()==null ||validateUser.getEmail().equals("") ))
       { 
     	if(validateUser.getStatus()=="N" )
     	{
@@ -169,7 +179,9 @@ public String portalURL;
     	
     		Integer orgid=_organizationDao.save(org);
     		user.setOrgid(orgid);
-		user.setPassword(AdvancedEncryptionStandard.encrypt(user.getPassword()));
+		//user.setPassword(AdvancedEncryptionStandard.encrypt(user.getPassword()));
+		//Engage2.0 added BCryptEncoder
+    		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setUserType("A");
 		user.setStatus("Y");
 		
@@ -195,8 +207,8 @@ public String portalURL;
 //		 restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send", data1,String.class );
 		// restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send", data1,String.class );
 		//Engage2.0 
-		 final String simpleMailUrl = baseURL+"/email/send";
-		 restTemplate.postForObject(simpleMailUrl, data1,String.class );
+		 //final String simpleMailUrl = baseURL+"/email/send";
+		// restTemplate.postForObject(simpleMailUrl, data1,String.class );
 		 //Engage2.0
 		 response.setMessage("User registered successfully");
 		response.setStatuscode(200);

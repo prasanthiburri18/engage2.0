@@ -15,6 +15,8 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,17 +67,18 @@ public class Application extends SpringBootServletInitializer{
 	public Validator getValidator(){
 		return  Validation.buildDefaultValidatorFactory().getValidator();
 	}
+	
 	/**
 	 * Encoder for password hashing.
 	 * Changing logRounds is not advisable
 	 * @param args
 	 */
-	/*@Bean
-	public BCryptPasswordEncoder getPasswordEncoder(){
-		//5 log rounds hashing hardcoded.
-		final int logRounds =5;
+	@Bean
+	public PasswordEncoder getPasswordEncoder(){
+		//Don't change 10 log rounds hashing hardcoded.
+		final int logRounds =10;
 		return new BCryptPasswordEncoder(logRounds);
-	}*/
+	}
 	public static void main(String[] args) {
         SpringApplication.run(applicationClass, args);
     }

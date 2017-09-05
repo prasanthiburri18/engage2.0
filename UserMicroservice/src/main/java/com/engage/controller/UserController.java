@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -58,6 +59,12 @@ public class UserController {
 	@Autowired
 	private Validator validator;
 
+	 /**
+	   * For encrypting password. Removed previous encoder. 
+	   */
+	  @Autowired
+	  private PasswordEncoder passwordEncoder;
+	
 	/**
 	 * Load user Profile Method
 	 * 
@@ -106,7 +113,9 @@ public class UserController {
 				// user=_userDao.getByUserName(json.get("emailid"),AdvancedEncryptionStandard.decrypt(json.get("oldpassword")));
 				BigInteger uid = new BigInteger(json.get("userid"));
 				User user = _userDao.getByUserByUid(uid);
-				user.setPassword(AdvancedEncryptionStandard.encrypt(json.get("password")));
+				final String password = json.get("password");
+				//Engage2.0 change
+				user.setPassword(passwordEncoder.encode(user.getPassword()));
 				_userDao.update(user);
 				response.setMessage("Password updated successfully.");
 				response.setStatuscode(200);
@@ -156,9 +165,12 @@ public class UserController {
 				return response;
 			} else {
 
-				String pp = Long.toHexString(Double.doubleToLongBits(Math.random()));
-
-				user.setPassword(AdvancedEncryptionStandard.encrypt(pp));
+				//String pp = Long.toHexString(Double.doubleToLongBits(Math.random()));
+//				user.setPassword(AdvancedEncryptionStandard.encrypt(pp));
+				
+				//Engage 2.0
+				final String password = user.getPassword();			
+				user.setPassword(passwordEncoder.encode(password));
 
 				user.setStatus("Y");
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -191,7 +203,7 @@ public class UserController {
 
 				response.setMessage("Team Member added successfully");
 				response.setStatuscode(200);
-				response.setData(pp);
+				//response.setData(pp);
 				return response;
 			}
 		} catch (ConstraintViolationException ex) {
@@ -293,6 +305,9 @@ public class UserController {
 				// Set<String> errormessages =
 				// ConstraintValidationUtils.getArrayOfValidations(violations);
 				Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
+				if(user.getId()==null || user.getId().toString().matches("[0-9]")){
+					errormessages.put("id", "Invalid user id format");					
+				}
 				throw new ConstraintViolationException(errormessages);
 			}
 			// Engage2.0 end
