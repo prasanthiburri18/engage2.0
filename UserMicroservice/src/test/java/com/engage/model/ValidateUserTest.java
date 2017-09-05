@@ -10,6 +10,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Unit Test to validate User entity User id can be null, as hibernate inserts
@@ -92,7 +95,7 @@ public class ValidateUserTest {
 		User user = new User();
 		user.setEmail("@yd");
 
-		Set<ConstraintViolation<User>> set = validator.validate(user);//, "email");
+		Set<ConstraintViolation<User>> set = validator.validateProperty(user,"email");//, "email");
 		
 		//assertTrue(set.size()==1);
 		//Map<Object, Object> errormessage = set.stream().collect(Collectors.toMap(ConstraintViolation::getConstraintDescriptor, ConstraintViolation::getMessage));
@@ -240,4 +243,5 @@ public class ValidateUserTest {
 	
 		
 	}
+
 }

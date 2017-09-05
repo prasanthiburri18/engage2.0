@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers={UserController.class, UserDao.class, UserRolesDao.class }, excludeAutoConfiguration={SecurityAutoConfiguration.class})
 @Transactional
+@Ignore
 public class UserControllerTest {
 
 	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(UserControllerTest.class);

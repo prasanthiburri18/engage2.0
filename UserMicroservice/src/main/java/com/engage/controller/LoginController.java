@@ -152,7 +152,7 @@ public String portalURL;
     		if(user.getPassword()==null ||user.getPassword().trim().equals("")){
     			errormessages.put("password", "Password cannot be blank");
     		}
-    		throw new ConstraintViolationException(errormessages.toString());
+    		throw new ConstraintViolationException(errormessages);
     	}
     	//Engage 2.0
     	if((_userDao.getByEmail(user.getEmail())).size()>0)
@@ -195,13 +195,18 @@ public String portalURL;
 //		 restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send", data1,String.class );
 		// restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send", data1,String.class );
 		//Engage2.0 
-		 final String simpleMailUrl = baseURL+"/mail/send";
+		 final String simpleMailUrl = baseURL+"/email/send";
 		 restTemplate.postForObject(simpleMailUrl, data1,String.class );
 		 //Engage2.0
-		 response.setMessage("User registred successfully");
+		 response.setMessage("User registered successfully");
 		response.setStatuscode(200);
 		return response;
     	}
+    } catch(ConstraintViolationException ex){
+    	response.setData(ex.getJsonObject().toString());
+    	response.setStatuscode(400);
+    	response.setMessage("Invalid team member format");
+    	return response;
     }
     catch(Exception ex) 
     {

@@ -1,11 +1,10 @@
 package com.engage.controller;
 
-import com.engage.util.JsonMessage;
-import com.engage.dao.PatientPathwayDao;
-import com.engage.model.PatientPathway;
-
 import java.util.List;
 import java.util.Map;
+
+import javax.validation.Validator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.engage.dao.PatientPathwayDao;
+import com.engage.model.PatientPathway;
+import com.engage.util.JsonMessage;
 
 
 /**
@@ -31,6 +34,9 @@ public class PatientPathwayController {
 	  private static Logger log = LoggerFactory.getLogger(PatientPathwayController.class);
   @Autowired
   private PatientPathwayDao _patientPathwayDao;
+  
+  @Autowired
+  private Validator validator;
   /**
    * Add PatientPathway Method
    * 
@@ -42,7 +48,7 @@ public class PatientPathwayController {
   {
 	JsonMessage response=new JsonMessage();
     try 
-    {
+    {	
 		long id=_patientPathwayDao.save(user);
 		response.setMessage("PatientPathway saved successfully");
 		response.setStatuscode(200);

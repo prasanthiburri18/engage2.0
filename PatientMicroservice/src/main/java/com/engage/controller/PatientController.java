@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.engage.commons.InvalidAccessException;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.PathwayDao;
 import com.engage.dao.PathwayEventsDao;
@@ -46,14 +48,13 @@ import com.engage.util.UtilityFunctions;
 /**
  * Patient MicroServices for Patient API Operations
  * 
- * @author  StartUP Labs
+ * @author StartUP Labs
  * @version 1.0
  * 
  */
 @RequestMapping(value = "/api/v1")
 public class PatientController {
-	private static Logger log = LoggerFactory
-			.getLogger(PatientController.class);
+	private static Logger log = LoggerFactory.getLogger(PatientController.class);
 	@Autowired
 	private PatientDao _patientDao;
 	@Autowired
@@ -63,6 +64,8 @@ public class PatientController {
 	@Autowired
 	private PathwayEventsDao _pathwayEventsDao;
 
+	@Value("scheduleMicroserviceBaseUrl")
+	private String scheduleMicroserviceBaseUrl;
 	@Autowired
 	private Validator validator;
 
@@ -75,19 +78,15 @@ public class PatientController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/addPatient", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage create(
-			@RequestBody final PatientDto patientDto) {
+	public @ResponseBody JsonMessage create(@RequestBody final PatientDto patientDto) {
 		JsonMessage response = new JsonMessage();
 		try {
 			// Engage2.0
-			Set<ConstraintViolation<PatientDto>> errors = validator
-					.validate(patientDto);
+			Set<ConstraintViolation<PatientDto>> errors = validator.validate(patientDto);
 			if (!errors.isEmpty()) {
-				Map<String, String> errorBody = ConstraintValidationUtils
-						.getMapOfValidations(errors);
+				Map<String, String> errorBody = ConstraintValidationUtils.getMapOfValidations(errors);
 				JSONObject json = new JSONObject(errorBody);
-				throw new com.engage.commons.ConstraintViolationException(
-						json.toString());
+				throw new com.engage.commons.ConstraintViolationException(json.toString());
 			}
 			Patient user = PatientDtoToModelUtils.convertDtoToModel(patientDto);
 			// Engage2.0s
@@ -100,8 +99,7 @@ public class PatientController {
 			RestTemplate restTemplate = new RestTemplate();
 
 			if (user.getPathwayId() != 0) {
-				ArrayList outs = (ArrayList) _patientDao
-						.getPathwayFirstMessageforpatient(user.getPathwayId());
+				ArrayList outs = (ArrayList) _patientDao.getPathwayFirstMessageforpatient(user.getPathwayId());
 				String mm = outs.get(0).toString();
 				orgmessage = mm.replaceAll("#FN", user.getFirstName());
 				for (int i = 0; i < user.getEvents().length; i++) {
@@ -118,15 +116,12 @@ public class PatientController {
 				// String results =
 				// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
 				// String.class);
-				String results = restTemplate
-						.getForObject(
-								"http://localhost:8080/PathwayMicroservice/api/v1/patientpathwaycron",
-								String.class);
+				String results = restTemplate.getForObject(
+						"http://localhost:8080/PathwayMicroservice/api/v1/patientpathwaycron", String.class);
 				// data1.put("toNumber", "+91"+user.getPhone());
 				data1.put("toNumber", "+1" + user.getPhone());// for us
 				if (orgmessage.equals("")) {
-					sms = "Hi "
-							+ UtilityFunctions.toTitleCase(user.getFirstName())
+					sms = "Hi " + UtilityFunctions.toTitleCase(user.getFirstName())
 							+ ", Congrats on completing your surgery! Your Doctor has set up a new text messaging program to help you with your recovery. Reply with Y to accept. Contact CaringOne anytime to stop this service.";
 				} else {
 					sms = orgmessage;
@@ -136,10 +131,9 @@ public class PatientController {
 				// String
 				// Str=restTemplate.postForObject("http://35.166.195.23:8080/ScheduleMicroservice/api/v1/sendSms",
 				// data1,String.class );
-				String Str = restTemplate
-						.postForObject(
-								"http://localhost:8080/ScheduleMicroservice/api/v1/sendSms",
-								data1, String.class);
+				final String sendSmsUrl = scheduleMicroserviceBaseUrl+"/api/v1/sendSms";
+				String Str = restTemplate.postForObject("http://localhost:8080/ScheduleMicroservice/api/v1/sendSms",
+						data1, String.class);
 			} else {
 				// ignore
 			}
@@ -167,17 +161,17 @@ public class PatientController {
 		String sms = "";
 		String newpathway = "no";
 		try {
-			
-			//Engage2.0
-			Set<ConstraintViolation<PatientDto>> errors =validator.validate(patientDto);	
-			if(!errors.isEmpty()){
+
+			// Engage2.0
+			Set<ConstraintViolation<PatientDto>> errors = validator.validate(patientDto);
+			if (!errors.isEmpty()) {
 				Map<String, String> errorBody = ConstraintValidationUtils.getMapOfValidations(errors);
 				JSONObject json = new JSONObject(errorBody);
 				throw new com.engage.commons.ConstraintViolationException(json.toString());
-				}
+			}
 			Patient user = PatientDtoToModelUtils.convertDtoToModel(patientDto);
-			//Engage2.0s
-		    
+			// Engage2.0s
+
 			PatientPathway patentPathway = new PatientPathway();
 			Patient patient = _patientDao.getById(user.getId());
 
@@ -187,8 +181,7 @@ public class PatientController {
 				mtime = timestamp.getTime();
 				user.setUpdateDate(timestamp);
 				_patientDao.update(user);
-				ArrayList<Long> patientPathway = _patientPathwayDao
-						.getPathwayById(user.getId());
+				ArrayList<Long> patientPathway = _patientPathwayDao.getPathwayById(user.getId());
 				if (patientPathway.get(0) != null) {
 					newpathway = "no";
 				} else {
@@ -208,25 +201,19 @@ public class PatientController {
 				if (newpathway.equals("yes")) {
 					RestTemplate restTemplate = new RestTemplate();
 					if (user.getPathwayId() != 0) {
-						ArrayList outs = (ArrayList) _patientDao
-								.getPathwayFirstMessageforpatient(user
-										.getPathwayId());
+						ArrayList outs = (ArrayList) _patientDao.getPathwayFirstMessageforpatient(user.getPathwayId());
 						String mm = outs.get(0).toString();
 						orgmessage = mm.replaceAll("#FN", user.getFirstName());
 						Map<String, Object> data1 = new HashMap<String, Object>();
 						// String results =
 						// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
 						// String.class);
-						String results = restTemplate
-								.getForObject(
-										"http://localhost:8080/PathwayMicroservice/api/v1/patientpathwaycron",
-										String.class);
+						String results = restTemplate.getForObject(
+								"http://localhost:8080/PathwayMicroservice/api/v1/patientpathwaycron", String.class);
 						// data1.put("toNumber", "+91"+user.getPhone());
 						data1.put("toNumber", "+1" + user.getPhone());// for us
 						if (orgmessage.equals("")) {
-							sms = "Hi "
-									+ UtilityFunctions.toTitleCase(user
-											.getFirstName())
+							sms = "Hi " + UtilityFunctions.toTitleCase(user.getFirstName())
 									+ ", Congrats on completing your surgery! Your Doctor has set up a new text messaging program to help you with your recovery. Reply with Y to accept. Contact CaringOne anytime to stop this service.";
 						}
 
@@ -239,10 +226,8 @@ public class PatientController {
 						// String
 						// Str=restTemplate.postForObject("http://35.166.195.23:8080/ScheduleMicroservice/api/v1/sendSms",
 						// data1,String.class );
-						String Str = restTemplate
-								.postForObject(
-										"http://localhost:8080/ScheduleMicroservice/api/v1/sendSms",
-										data1, String.class);
+						String Str = restTemplate.postForObject(
+								"http://localhost:8080/ScheduleMicroservice/api/v1/sendSms", data1, String.class);
 
 					}
 
@@ -271,16 +256,20 @@ public class PatientController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/view_Patient", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage viewPatient(
-			@RequestBody Map<String, Long> json) {
+	public @ResponseBody JsonMessage viewPatient(@RequestBody Map<String, Long> json) {
 		JsonMessage response = new JsonMessage();
 		try {
 			Patient patient = _patientDao.getById(json.get("id"));
+			// Engage2.0
+			final Long orgId = json.get("orgId");
+			if (!(orgId == patient.getorgId())) {
+				throw new InvalidAccessException("You don't have privileges to view this patient");
+			}
+			// Engage2.0
+
 			if (patient.getId() > 0) {
-				ArrayList<Long> patientPathway = _patientPathwayDao
-						.getPathwayById(patient.getId());
-				ArrayList<Long> events = _patientPathwayDao
-						.getEventsById(patient.getId());
+				ArrayList<Long> patientPathway = _patientPathwayDao.getPathwayById(patient.getId());
+				ArrayList<Long> events = _patientPathwayDao.getEventsById(patient.getId());
 				Map<String, Object> data = new HashMap<String, Object>();
 				data.put("patient", patient);
 				RestTemplate restTemplate = new RestTemplate();
@@ -290,10 +279,9 @@ public class PatientController {
 				// Map<String,Object> pathway=(Map<String, Object>)
 				// restTemplate.postForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/listPathwayEventForPatients",
 				// data1,Object.class );
-				Map<String, Object> pathway = (Map<String, Object>) restTemplate
-						.postForObject(
-								"http://localhost:8080/PathwayMicroservice/api/v1/listPathwayEventForPatients",
-								data1, Object.class);
+				Map<String, Object> pathway = (Map<String, Object>) restTemplate.postForObject(
+						"http://localhost:8080/PathwayMicroservice/api/v1/listPathwayEventForPatients", data1,
+						Object.class);
 
 				data.put("pathwayInfo", pathway);
 				response.setMessage("Patient data");
@@ -305,6 +293,11 @@ public class PatientController {
 				response.setStatuscode(204);
 				return response;
 			}
+
+		} catch (InvalidAccessException ex) {
+			response.setMessage(ex.getMessage());
+			response.setStatuscode(203);
+			return response;
 		} catch (Exception ex) {
 			response.setMessage("Patient doen't exists.");
 			response.setStatuscode(203);
@@ -319,17 +312,14 @@ public class PatientController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/list_Patient", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage viewPatients(
-			@RequestBody Map<String, Long> json) {
+	public @ResponseBody JsonMessage viewPatients(@RequestBody Map<String, Long> json) {
 		JsonMessage response = new JsonMessage();
 		try {
 			List<Patient> patient = _patientDao.getAll(json.get("orgid"));
 			List<Object> patientsData = new ArrayList<Object>();
 			for (Patient p : patient) {
-				ArrayList<Long> patientPathway = _patientPathwayDao
-						.getPathwayById(p.getId());
-				ArrayList<Long> events = _patientPathwayDao.getEventsById(p
-						.getId());
+				ArrayList<Long> patientPathway = _patientPathwayDao.getPathwayById(p.getId());
+				ArrayList<Long> events = _patientPathwayDao.getEventsById(p.getId());
 
 				Map<String, Object> data = new HashMap<String, Object>();
 
@@ -341,10 +331,9 @@ public class PatientController {
 				// Map<String,Object> pathway=(Map<String, Object>)
 				// restTemplate.postForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/listPathwayEventForPatients",
 				// data1,Object.class );
-				Map<String, Object> pathway = (Map<String, Object>) restTemplate
-						.postForObject(
-								"http://localhost:8080/PathwayMicroservice/api/v1/listPathwayEventForPatients",
-								data1, Object.class);
+				Map<String, Object> pathway = (Map<String, Object>) restTemplate.postForObject(
+						"http://localhost:8080/PathwayMicroservice/api/v1/listPathwayEventForPatients", data1,
+						Object.class);
 
 				data.put("pathwayInfo", pathway);
 
@@ -368,8 +357,7 @@ public class PatientController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/delete_Patient", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage deletePatient(
-			@RequestBody Map<String, Long> json) {
+	public @ResponseBody JsonMessage deletePatient(@RequestBody Map<String, Long> json) {
 		JsonMessage response = new JsonMessage();
 		try {
 			if (_patientDao.verifyId(json.get("id")).size() > 0) {
@@ -398,8 +386,7 @@ public class PatientController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/getPatientsCountByPathwayId", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage getPatientsCountByPathwayId(
-			@RequestBody Map<String, Long> json) {
+	public @ResponseBody JsonMessage getPatientsCountByPathwayId(@RequestBody Map<String, Long> json) {
 		Integer count = 0;
 		JsonMessage response = new JsonMessage();
 		try {
@@ -422,8 +409,7 @@ public class PatientController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/getPatientsPathwayIdAndEventId", method = RequestMethod.POST)
-	public @ResponseBody Patient getPatientsPathwayIdAndEventId(
-			@RequestBody Map<String, Long> json) {
+	public @ResponseBody Patient getPatientsPathwayIdAndEventId(@RequestBody Map<String, Long> json) {
 		Patient patient = null;
 		Integer count = 0;
 		JsonMessage response = new JsonMessage();
@@ -454,8 +440,7 @@ public class PatientController {
 	 */
 
 	@RequestMapping(value = "/getPatientByphone", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage getPatientByphone(
-			@RequestBody Map<String, Integer> json) {
+	public @ResponseBody JsonMessage getPatientByphone(@RequestBody Map<String, Integer> json) {
 		JsonMessage response = new JsonMessage();
 		try {
 			Integer pid = json.get("patientid");
@@ -481,8 +466,7 @@ public class PatientController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/getPatientBydob", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage getPatientBydob(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage getPatientBydob(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {
 			String pdob = json.get("dob");
@@ -507,13 +491,11 @@ public class PatientController {
 	 */
 
 	@RequestMapping(value = "/getPatientpathwayinfocheck", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage getPatientpathwayinfocheck(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage getPatientpathwayinfocheck(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {
 			int pi = 1;
-			ArrayList<Long> patientPathway = _patientPathwayDao
-					.getPathwayById(pi);
+			ArrayList<Long> patientPathway = _patientPathwayDao.getPathwayById(pi);
 			int pids = Integer.parseInt(patientPathway.get(0).toString());
 			response.setData(pids);
 			response.setStatuscode(200);
@@ -534,8 +516,7 @@ public class PatientController {
 	 */
 
 	@RequestMapping(value = "/twiliorReplayAPI", method = RequestMethod.POST)
-	public ResponseEntity<String> receiveBody(
-			@RequestParam("From") String From, @RequestParam("Body") String Body) {
+	public ResponseEntity<String> receiveBody(@RequestParam("From") String From, @RequestParam("Body") String Body) {
 		JsonMessage response = new JsonMessage();
 		HttpHeaders responseHeaders = new HttpHeaders();
 		try {
@@ -551,36 +532,29 @@ public class PatientController {
 
 					return new ResponseEntity<String>("someResponse", null);
 				}
-				ArrayList<Long> patientPathway = _patientPathwayDao
-						.getPathwayById(patient.getId());
+				ArrayList<Long> patientPathway = _patientPathwayDao.getPathwayById(patient.getId());
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				// will print like 2014-02-20
 				String dd = dateFormat.format(new Date());
 
 				_patientDao.updatePatientInfofprpathway(patient.getId(),
-						Integer.parseInt(patientPathway.get(0).toString()),
-						"Y", dd, Body.toUpperCase());
+						Integer.parseInt(patientPathway.get(0).toString()), "Y", dd, Body.toUpperCase());
 				RestTemplate restTemplate = new RestTemplate();
 				Map<String, Object> data1 = new HashMap<String, Object>();
 				// String results =
 				// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
 				// String.class);
-				String results = restTemplate
-						.getForObject(
-								"http://localhost:8080/PathwayMicroservice/api/v1/patientpathwaycron",
-								String.class);
+				String results = restTemplate.getForObject(
+						"http://localhost:8080/PathwayMicroservice/api/v1/patientpathwaycron", String.class);
 				response.setMessage("Thank you for joining. You will start receiving messages");
 				response.setStatuscode(200);
-				return new ResponseEntity<String>(
-						"Thank you for joining. You will start receiving messages.",
+				return new ResponseEntity<String>("Thank you for joining. You will start receiving messages.",
 						responseHeaders, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<String>("Thank you for your reply.",
-						responseHeaders, HttpStatus.OK);
+				return new ResponseEntity<String>("Thank you for your reply.", responseHeaders, HttpStatus.OK);
 			}
 		} catch (Exception ex) {
-			return new ResponseEntity<String>("Error", responseHeaders,
-					HttpStatus.OK);
+			return new ResponseEntity<String>("Error", responseHeaders, HttpStatus.OK);
 		}
 
 	}
@@ -592,8 +566,7 @@ public class PatientController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/patientreply", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage patientreply(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage patientreply(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		HttpHeaders responseHeaders = new HttpHeaders();
 		try {
@@ -610,22 +583,18 @@ public class PatientController {
 					return response;
 
 				}
-				ArrayList<Long> patientPathway = _patientPathwayDao
-						.getPathwayById(patient.getId());
+				ArrayList<Long> patientPathway = _patientPathwayDao.getPathwayById(patient.getId());
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				String dd = dateFormat.format(new Date());
 				_patientDao.updatePatientInfofprpathway(patient.getId(),
-						Integer.parseInt(patientPathway.get(0).toString()),
-						"Y", dd, Body.toUpperCase());
+						Integer.parseInt(patientPathway.get(0).toString()), "Y", dd, Body.toUpperCase());
 				RestTemplate restTemplate = new RestTemplate();
 				Map<String, Object> data1 = new HashMap<String, Object>();
 				// String results =
 				// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
 				// String.class);
-				String results = restTemplate
-						.getForObject(
-								"http://localhost:8080/PathwayMicroservice/api/v1/patientpathwaycron",
-								String.class);
+				String results = restTemplate.getForObject(
+						"http://localhost:8080/PathwayMicroservice/api/v1/patientpathwaycron", String.class);
 				response.setMessage("Thank you for joining. You will start receiving messages.");
 				response.setStatuscode(200);
 				return response;

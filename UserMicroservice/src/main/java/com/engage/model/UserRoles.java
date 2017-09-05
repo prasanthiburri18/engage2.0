@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 @Entity
@@ -19,13 +19,14 @@ public class UserRoles {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	@Digits(integer = Integer.MAX_VALUE, message = "Invalid role id", fraction = 0)
 	@Min(value = 1, message = "Invalid role id")
+
+	@Max(value = Integer.MAX_VALUE, message = "Invalid user id")
 	@Column(name = "role_id")
 	private int roleId;
 
-	@Digits(integer = Integer.MAX_VALUE, message = "Invalid user id", fraction = 0)
 	@Min(value = 1, message = "Invalid user id")
+	@Max(value = Integer.MAX_VALUE, message = "Invalid user id")
 	@Column(name = "user_id")
 	private BigInteger userId;
 	private Date createdat;

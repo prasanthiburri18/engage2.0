@@ -93,6 +93,7 @@ public class UserController {
 	 * Change Password Method
 	 * 
 	 * Note: Request method changed to PUT
+	 * 
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
@@ -124,78 +125,86 @@ public class UserController {
 	}
 
 	/**
-   * Added @Valid and Binding Errors as part of Engage2.0
-   * Add Team member Method
-   * @Inputparam user JsonObject
-   * @return JsonObject
-   */
+	 * Added @Valid and Binding Errors as part of Engage2.0 Add Team member
+	 * Method
+	 * 
+	 * @Inputparam user JsonObject
+	 * @return JsonObject
+	 */
 
-  @RequestMapping(value="/addteammember",method = RequestMethod.POST)
-  public @ResponseBody JsonMessage addteammember(@RequestBody final User user) 
-  {
-	JsonMessage response=new JsonMessage();
-    try 
-    {
-    	
-    //Engage2.0 start
-    	
-    	Set<ConstraintViolation<User>> violations =validator.validate(user);
-    	if(!violations.isEmpty()){
-    		//Map<String, ConstraintViolation<User>> errors = violations.stream().collect(Collectors.toMap(ConstraintViolation::getMessage, Function.identity()));
-    		//Set<String> errormessages = ConstraintValidationUtils.getArrayOfValidations(violations);
-    		Map<String, String> errormessages= ConstraintValidationUtils.getMapOfValidations(violations);
-    		JSONObject json = new JSONObject(errormessages);
-    		throw new ConstraintViolationException(json.toString());
-    	}
-    //Engage2.0 end	
-    	if((_userDao.getByEmail(user.getEmail())).size()>0)
-    	{
-    		response.setMessage("Email already exists.");
-       	  	response.setStatuscode(208);
-       	  	return response;
-    	}else
-    	{
-    		
-    	
-    		String pp=Long.toHexString(Double.doubleToLongBits(Math.random()));
-    
-		user.setPassword(AdvancedEncryptionStandard.encrypt(pp));
-	
-		user.setStatus("Y");
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		 
-		  user.setCreateDate(timestamp);
-		  user.setUpdateDate(timestamp);
-		BigInteger id=_userDao.save(user);
+	@RequestMapping(value = "/addteammember", method = RequestMethod.POST)
+	public @ResponseBody JsonMessage addteammember(@RequestBody final User user) {
+		JsonMessage response = new JsonMessage();
+		try {
 
-		UserRoles userRoles=new UserRoles();
-		userRoles.setUserId(id);
-		userRoles.setRoleId(1);
-		_userRolesDao.save(userRoles);
-		
-		RestTemplate restTemplate = new RestTemplate();
-		Map<String,Object> data1=new HashMap<String,Object>();
-//		 data1.put("from","EngageApp<support@quantifiedcare.com>");
-//		 data1.put("to",user.getEmail());
-//		 data1.put("subject","Added as team member");
-//		 data1.put("text","Hi <b>"+user.getFullName()+",</b><br><br>Congratulations! Your have been added as team member. Please login with your email and password is  "+pp+" <br> For Login <a href='"+portalURL+"'>Click Here</a><br>Thank You,<br>Team Engage at Quantified Care");
-//		 data1.put("status",true);
-//		 restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send", data1,String.class );
-		 //restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send", data1,String.class );
-			
-		 response.setMessage("Team Member added successfully");
-		response.setStatuscode(200);
-		response.setData(pp);
-		return response;
-    	}
-    }
-    catch(Exception ex) 
-    {
-    	  response.setMessage(ex.getMessage());
-    	  response.setStatuscode(203);
-    	  return response;
-    }
-  }
+			// Engage2.0 start
+
+			Set<ConstraintViolation<User>> violations = validator.validate(user);
+			if (!violations.isEmpty()) {
+				// Map<String, ConstraintViolation<User>> errors =
+				// violations.stream().collect(Collectors.toMap(ConstraintViolation::getMessage,
+				// Function.identity()));
+				// Set<String> errormessages =
+				// ConstraintValidationUtils.getArrayOfValidations(violations);
+				Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
+				throw new ConstraintViolationException(errormessages);
+			}
+			// Engage2.0 end
+			if ((_userDao.getByEmail(user.getEmail())).size() > 0) {
+				response.setMessage("Email already exists.");
+				response.setStatuscode(208);
+				return response;
+			} else {
+
+				String pp = Long.toHexString(Double.doubleToLongBits(Math.random()));
+
+				user.setPassword(AdvancedEncryptionStandard.encrypt(pp));
+
+				user.setStatus("Y");
+				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+				user.setCreateDate(timestamp);
+				user.setUpdateDate(timestamp);
+				BigInteger id = _userDao.save(user);
+
+				UserRoles userRoles = new UserRoles();
+				userRoles.setUserId(id);
+				userRoles.setRoleId(1);
+				_userRolesDao.save(userRoles);
+
+				RestTemplate restTemplate = new RestTemplate();
+				Map<String, Object> data1 = new HashMap<String, Object>();
+				// data1.put("from","EngageApp<support@quantifiedcare.com>");
+				// data1.put("to",user.getEmail());
+				// data1.put("subject","Added as team member");
+				// data1.put("text","Hi
+				// <b>"+user.getFullName()+",</b><br><br>Congratulations! Your
+				// have been added as team member. Please login with your email
+				// and password is "+pp+" <br> For Login <a
+				// href='"+portalURL+"'>Click Here</a><br>Thank You,<br>Team
+				// Engage at Quantified Care");
+				// data1.put("status",true);
+				// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
+				// data1,String.class );
+				// restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send",
+				// data1,String.class );
+
+				response.setMessage("Team Member added successfully");
+				response.setStatuscode(200);
+				response.setData(pp);
+				return response;
+			}
+		} catch (ConstraintViolationException ex) {
+			response.setData(ex.getJsonObject().toString());
+			response.setStatuscode(400);
+			response.setMessage("Invalid team member format");
+			return response;
+		} catch (Exception ex) {
+			response.setMessage(ex.getMessage());
+			response.setStatuscode(203);
+			return response;
+		}
+	}
 
 	/**
 	 * Sending an email for created team member
@@ -274,7 +283,19 @@ public class UserController {
 	@RequestMapping(value = "/updateprofile", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage updateprofile(@RequestBody final User user) {
 		JsonMessage response = new JsonMessage();
-		try {
+		try {// Engage2.0 start
+
+			Set<ConstraintViolation<User>> violations = validator.validate(user);
+			if (!violations.isEmpty()) {
+				// Map<String, ConstraintViolation<User>> errors =
+				// violations.stream().collect(Collectors.toMap(ConstraintViolation::getMessage,
+				// Function.identity()));
+				// Set<String> errormessages =
+				// ConstraintValidationUtils.getArrayOfValidations(violations);
+				Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
+				throw new ConstraintViolationException(errormessages);
+			}
+			// Engage2.0 end
 			Organization org = new Organization();
 			org.setId(user.getOrgid());
 			org.setName(user.getPracticeName());
@@ -291,6 +312,11 @@ public class UserController {
 			response.setStatuscode(200);
 			return response;
 
+		} catch (ConstraintViolationException ex) {
+			response.setData(ex.getJsonObject().toString());
+			response.setStatuscode(400);
+			response.setMessage("Invalid team member format");
+			return response;
 		} catch (Exception e) {
 			response.setMessage("Email not registered.");
 			response.setStatuscode(204);

@@ -50,9 +50,7 @@ public class User {
 	 */private String password;
 	@NotNull(message = "Full name cannot be empty.")
 	@NotBlank(message = "Full name cannot be empty.")
-	@List({
-			@Length(min = 2, message = "Full name should be a minimum of {min} characters."),
-			@Length(max = 60, message = "Full name exceeds {max} characters."), })
+			@Length(max = 60, message = "Full name exceeds {max} characters.")
 	@Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Only alphabet characters are allowed.")
 	@Column(name = "full_name")
 	private String fullName;
@@ -72,7 +70,6 @@ public class User {
 	 * accordingly Min as 0 and Max integer max value
 	 */
 
-	@Digits(integer = 10, fraction = 0, message = "Invalid organization id.")
 	@Min(value = 0, message = "Invalid organization id.")
 	@Max(value = Integer.MAX_VALUE, message = "Invalid organization id.")
 	@Column(name = "orgid")

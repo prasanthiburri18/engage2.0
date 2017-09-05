@@ -17,6 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Email of Patient is not present on client side. 
  * @author mindtech-labs
@@ -87,4 +90,18 @@ public class ValidatePathwayTest {
 		
 		org.junit.Assert.assertEquals(errors.size(), 1);
 		}
+	
+	
+	@Test
+	public void outputJson() throws JsonProcessingException{
+	
+		PatientPathway patientPathway = new PatientPathway();
+		
+		
+		ObjectMapper mapper = new ObjectMapper();
+
+		logger.info(mapper.writeValueAsString(patientPathway));
+		}
+	
+	
 }
