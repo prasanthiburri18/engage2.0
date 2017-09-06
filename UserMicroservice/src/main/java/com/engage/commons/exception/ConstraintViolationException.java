@@ -1,4 +1,4 @@
-package com.engage.commons;
+package com.engage.commons.exception;
 
 import java.util.Map;
 

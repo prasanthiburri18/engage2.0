@@ -1,9 +1,6 @@
 package com.engage.controller;
 
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -22,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.engage.commons.ConstraintViolationException;
+import com.engage.commons.exception.ConstraintViolationException;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.OrganizationDao;
 import com.engage.dao.UserDao;
@@ -44,6 +42,9 @@ import com.engage.util.JsonMessage;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 
 @RestController
@@ -67,6 +68,9 @@ public String portalURL;
   private UserRolesDao _userRolesDao; 
   @Autowired 
   private OrganizationDao _organizationDao;
+  
+  @Autowired
+  private UserDetailsService userDetailsService;
   
   /**
    * Used for validating model objects
@@ -102,11 +106,14 @@ public String portalURL;
     	
     	if(!violations.isEmpty()){
     		//Map<String, ConstraintViolation<User>> errors = violations.stream().collect(Collectors.toMap(ConstraintViolation::getMessage, Function.identity()));
-    		Set<String> errormessages = ConstraintValidationUtils.getArrayOfValidations(violations);
+    		//Set<String> errormessages = ConstraintValidationUtils.getArrayOfValidations(violations);
+    		Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
     		throw new ConstraintViolationException(errormessages.toString());
     	}
     //Engage2.0 end	
      User validateUser= _userDao.getByUserName(user.getEmail(),passwordEncoder.encode(user.getPassword()));
+     
+    // User validateUser= _userDao.getByUserName(user.getEmail(),passwordEncoder.encode(user.getPassword()));
       if(!(validateUser.getEmail()==null ||validateUser.getEmail().equals("") ))
       { 
     	if(validateUser.getStatus()=="N" )
@@ -136,7 +143,7 @@ public String portalURL;
       return response;
       }
     }
-    catch(Exception ex) {
+      catch(Exception ex) {
     	response.setMessage(ex.getMessage());
     	 
     	  response.setStatuscode(204);
@@ -150,11 +157,15 @@ public String portalURL;
    * @return JsonObject
    */
   @RequestMapping(value="/registration",method = RequestMethod.POST)
-  public @ResponseBody JsonMessage create(@RequestBody final User user) 
+  public @ResponseBody JsonMessage create(@RequestBody User user) 
   {
 	JsonMessage response=new JsonMessage();
     try 
     {	//Engage2.0
+    	if(user!=null){
+    		user.setUserType("A");
+    		user.setStatus("Y");
+    	}
     	Set<ConstraintViolation<User>> violations =validator.validate(user);
     	if(!violations.isEmpty()){
     		//Map<String, ConstraintViolation<User>> errors = violations.stream().collect(Collectors.toMap(ConstraintViolation::getMessage, Function.identity()));
@@ -179,11 +190,10 @@ public String portalURL;
     	
     		Integer orgid=_organizationDao.save(org);
     		user.setOrgid(orgid);
-		//user.setPassword(AdvancedEncryptionStandard.encrypt(user.getPassword()));
-		//Engage2.0 added BCryptEncoder
-    		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setUserType("A");
-		user.setStatus("Y");
+		user.setPassword(AdvancedEncryptionStandard.encrypt(user.getPassword()));
+	
+		//user.setUserType("A");
+		//user.setStatus("Y");
 		
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		 

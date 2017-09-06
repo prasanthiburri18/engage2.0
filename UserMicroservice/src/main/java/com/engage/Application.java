@@ -25,6 +25,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.google.common.html.HtmlEscapers;
+
  
 @Configuration
 @ComponentScan
@@ -68,17 +70,8 @@ public class Application extends SpringBootServletInitializer{
 		return  Validation.buildDefaultValidatorFactory().getValidator();
 	}
 	
-	/**
-	 * Encoder for password hashing.
-	 * Changing logRounds is not advisable
-	 * @param args
-	 */
-	@Bean
-	public PasswordEncoder getPasswordEncoder(){
-		//Don't change 10 log rounds hashing hardcoded.
-		final int logRounds =10;
-		return new BCryptPasswordEncoder(logRounds);
-	}
+
+	
 	public static void main(String[] args) {
         SpringApplication.run(applicationClass, args);
     }

@@ -1,6 +1,6 @@
 package com.engage.controller;
 
-import com.engage.commons.ConstraintViolationException;
+import com.engage.commons.exception.ConstraintViolationException;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.EventsDao;
 import com.engage.model.Blocks;

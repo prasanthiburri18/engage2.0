@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,8 +35,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers={UserController.class, UserDao.class, UserRolesDao.class }, excludeAutoConfiguration={SecurityAutoConfiguration.class})
+
 @Transactional
-@Ignore
+//@Ignore
 public class UserControllerTest {
 
 	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(UserControllerTest.class);
@@ -106,7 +108,7 @@ public class UserControllerTest {
 				//.andExpect(MockMvcResultMatchers.status().is(203));
 		logger.info(result.getResponse().getContentAsString());
 		//Due to design flaw in Engage1.0. Status of response is 200.
-		org.junit.Assert.assertTrue(result.getResponse().getContentAsString().indexOf("203")>0);
+		org.junit.Assert.assertTrue(result.getResponse().getContentAsString().indexOf("400")>0);
 		
 	}
 	/**

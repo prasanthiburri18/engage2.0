@@ -58,11 +58,39 @@ public class BlocksTest {
 	@Test
 	public void punctuationInBody() {
 		Blocks blocks = new Blocks();
-		blocks.setBodyOfMessage("Abcd.,?!:;'\"");
+		blocks.setBodyOfMessage("Abcd.,     ?!:;'#\"");
 
 		Set<ConstraintViolation<Blocks>> errors = validator.validateProperty(
 				blocks, "bodyOfMessage");
 		Assert.assertTrue(errors.size() == 0);
+
+	}
+	
+	/**
+	 * Special chars not allowed in Block name
+	 */
+	@Test
+	public void punctuationInSubject() {
+		Blocks blocks = new Blocks();
+		blocks.setSubjectOfMessage("#_A~`b  ?|");
+
+		Set<ConstraintViolation<Blocks>> errors = validator.validateProperty(
+				blocks, "subjectOfMessage");
+		Assert.assertTrue(errors.size() == 0);
+
+	}
+
+	/**
+	 * Umlaut in the string
+	 */
+	@Test
+	public void umlautInSubject() {
+		Blocks blocks = new Blocks();
+		blocks.setSubjectOfMessage("tréma");
+
+		Set<ConstraintViolation<Blocks>> errors = validator.validateProperty(
+				blocks, "subjectOfMessage");
+		Assert.assertTrue(errors.size() == 1);
 
 	}
 
@@ -94,7 +122,7 @@ public class BlocksTest {
 				blocks, "bodyOfMessage");
 		logger.info(errors.toString());
 
-		Assert.assertTrue(errors.size() == 1);
+		Assert.assertTrue(errors.size() == 0);
 
 	}
 	

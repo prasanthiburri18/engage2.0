@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.engage.commons.InvalidAccessException;
+import com.engage.commons.exception.InvalidAccessException;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.PathwayDao;
 import com.engage.dao.PathwayEventsDao;
@@ -86,7 +86,7 @@ public class PatientController {
 			if (!errors.isEmpty()) {
 				Map<String, String> errorBody = ConstraintValidationUtils.getMapOfValidations(errors);
 				JSONObject json = new JSONObject(errorBody);
-				throw new com.engage.commons.ConstraintViolationException(json.toString());
+				throw new com.engage.commons.exception.ConstraintViolationException(json.toString());
 			}
 			Patient user = PatientDtoToModelUtils.convertDtoToModel(patientDto);
 			// Engage2.0s
@@ -167,7 +167,7 @@ public class PatientController {
 			if (!errors.isEmpty()) {
 				Map<String, String> errorBody = ConstraintValidationUtils.getMapOfValidations(errors);
 				JSONObject json = new JSONObject(errorBody);
-				throw new com.engage.commons.ConstraintViolationException(json.toString());
+				throw new com.engage.commons.exception.ConstraintViolationException(json.toString());
 			}
 			Patient user = PatientDtoToModelUtils.convertDtoToModel(patientDto);
 			// Engage2.0s

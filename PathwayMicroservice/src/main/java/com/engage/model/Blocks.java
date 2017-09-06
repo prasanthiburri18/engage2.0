@@ -55,14 +55,17 @@ public class Blocks {
 	private long DeliveryDaysAfterTigger;
 	@Column(name = "repeat_for_number_of_days")
 	private long repeatForNoOfDays;
+	@Length(max = 500, message = "Subject of the message exceeds {max} characters.")
+	@Pattern(regexp = "^[\\p{Alnum}\\p{Punct}\\s]*$", message = "Only alphanumeric characters and punctuations are allowed.")
 	@Column(name = "subject_of_message")
 	private String subjectOfMessage;
 	private String status;
 
-	@NotNull(message = "Block message name cannot be empty.")
-	@NotBlank(message = "Block message name cannot be empty.")
+	@NotNull(message = "Block message cannot be empty.")
+	@NotBlank(message = "Block message cannot be empty.")
 	@Length(max = 500, message = "Block message name exceeds {max} characters.")
-	@Pattern(regexp = "^[a-zA-z0-9\\.\\?\\!,\\:\\;\"\']*$", message = "Only alphanumeric characters and punctuations are allowed.")
+	//@Pattern(regexp = "^[a-zA-z0-9\\.\\?\\!,\\:\\;\"\']*$", message = "Only alphanumeric characters and punctuations are allowed.")
+	@Pattern(regexp = "^[\\p{Alnum}\\p{Punct}\\s]*$", message = "Only alphanumeric characters and punctuations are allowed.")
 	@Column(name = "body_of_message")
 	private String bodyOfMessage;
 
@@ -70,8 +73,16 @@ public class Blocks {
 	private String phiSecured;
 	@Column(name = "block_appointment_parent")
 	private long blockAppointmentParent;
+	
+	@Length(max = 500, message = "Reminder message name exceeds {max} characters.")
+	@Pattern(regexp = "^[\\p{Alnum}\\p{Punct}\\s]*$", message = "Only alphanumeric characters and punctuations are allowed.")
+	//@Pattern(regexp = "^[a-zA-z0-9\\.\\?\\!,\\:\\;\"\']*$", message = "Only alphanumeric characters and punctuations are allowed.")
 	@Column(name = "remainder_of_message")
 	private String remainderOfMessage;
+	
+	@Length(max = 500, message = "Follow up message  exceeds {max} characters.")
+	@Pattern(regexp = "^[\\p{Alnum}\\p{Punct}\\s]*$", message = "Only alphanumeric characters and punctuations are allowed.")
+	//@Pattern(regexp = "^[a-zA-z0-9\\.\\?\\!,\\:\\;\"\']*$", message = "Only alphanumeric characters and punctuations are allowed.")
 	@Column(name = "followup_of_message")
 	private String followupOfMessage;
 
