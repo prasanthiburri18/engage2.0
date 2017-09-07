@@ -111,7 +111,7 @@ public String portalURL;
     		throw new ConstraintViolationException(errormessages.toString());
     	}
     //Engage2.0 end	
-     User validateUser= _userDao.getByUserName(user.getEmail(),passwordEncoder.encode(user.getPassword()));
+     User validateUser= _userDao.getByUserName(user.getEmail(),AdvancedEncryptionStandard.encrypt(user.getPassword()));
      
     // User validateUser= _userDao.getByUserName(user.getEmail(),passwordEncoder.encode(user.getPassword()));
       if(!(validateUser.getEmail()==null ||validateUser.getEmail().equals("") ))

@@ -18,7 +18,7 @@ import com.engage.dao.UserRolesDao;
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers={LoginController.class, UserDao.class, UserRolesDao.class }, excludeAutoConfiguration={SecurityAutoConfiguration.class})
 @Transactional
-
+@Ignore
 public class LoginControllerTest {
 
 }
