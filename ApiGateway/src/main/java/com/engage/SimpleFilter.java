@@ -30,7 +30,8 @@ public class SimpleFilter extends ZuulFilter {
   public Object run() {
     RequestContext ctx = RequestContext.getCurrentContext();
     HttpServletRequest request = ctx.getRequest();
-
+    log.info("Http Version "+ request.getProtocol());
+    log.info("Request scheme http/https: "+request.getScheme());
     log.info(String.format("%s request to %s", request.getMethod(), request.getRequestURL().toString()));
 
     return null;
