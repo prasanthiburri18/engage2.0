@@ -33,17 +33,20 @@ public class Patient {
 	 * Current not present in Client side
 	 */
 	private String email;
-	@NotNull(message = "First name cannot be empty")
+	//removed validations from entity. All validation are present on PatientDto
+	/*@NotNull(message = "First name cannot be empty")
 	@NotBlank(message = "First name cannot be empty")
 	@Length(max = 60, message = "First name exceeds {max} characters.")
-	@Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Only alphabet characters are allowed.")
+	@Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Only alphabet characters are allowed.")*/
 	@Column(name = "first_name")
 	private String firstName;
 
+	//removed validations from entity. All validation are present on PatientDto
+	/*
 	@NotNull(message = "Last name cannot be empty")
 	@NotBlank(message = "Last name cannot be empty")
 	@Length(max = 60, message = "Last name exceeds {max} characters.")
-	@Pattern(regexp = "^[a-zA-z\\s]*$", message = "Only alphabet characters are allowed.")
+	@Pattern(regexp = "^[a-zA-z\\s]*$", message = "Only alphabet characters are allowed.")*/
 	@Column(name = "last_name")
 	private String lastName;
 

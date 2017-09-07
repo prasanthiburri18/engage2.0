@@ -1,5 +1,6 @@
 package com.engage.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,10 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.engage.commons.exception.ConstraintViolationException;
+import com.engage.commons.util.HtmlEscapeUtil;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.BlocksDao;
 import com.engage.model.Blocks;
 import com.engage.util.JsonMessage;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
  * Pathway MicroServices for Blocks API Operations
@@ -49,7 +53,7 @@ public class BlocksController {
 	 */
 
 	@RequestMapping(value = "/addBlock", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage addBlock(@RequestBody final Blocks pathwayBlock) {
+	public @ResponseBody JsonMessage addBlock(@RequestBody Blocks pathwayBlock) {
 		JsonMessage response = new JsonMessage();
 		try {
 			// Engage2.0 start
@@ -68,6 +72,10 @@ public class BlocksController {
 				response.setStatuscode(208);
 				return response;
 			} else {
+				// Engage2.0
+				//Not verifying for null check as it already passed above validations
+				pathwayBlock = sanitizeMessagesOfBlock(pathwayBlock);
+				// Engage2.0
 				Long id = _blocksDao.save(pathwayBlock);
 				response.setMessage("Block has been created successfully.");
 				response.setData(id);
@@ -123,7 +131,7 @@ public class BlocksController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/updateBlock", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage updateBlock(@RequestBody final Blocks pathway) {
+	public @ResponseBody JsonMessage updateBlock(@RequestBody Blocks pathway) {
 		JsonMessage response = new JsonMessage();
 		try { // Engage2.0 start
 
@@ -133,6 +141,8 @@ public class BlocksController {
 				JSONObject json = new JSONObject(errormessages);
 				throw new ConstraintViolationException(json.toString());
 			}
+			
+			pathway = sanitizeMessagesOfBlock(pathway);
 			// Engage2.0 end
 
 			_blocksDao.update(pathway);
@@ -236,6 +246,28 @@ public class BlocksController {
 			response.setStatuscode(203);
 			return response;
 		}
+
+	}
+
+	/**
+	 * This method is used for escaping html characters in Blocks - body,
+	 * subject, follow up and reminder
+	 * 
+	 * @param pathwayBlock
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	private Blocks sanitizeMessagesOfBlock(Blocks pathwayBlock)
+			throws JsonParseException, JsonMappingException, IOException {
+		if (pathwayBlock != null) {
+			pathwayBlock.setBodyOfMessage(HtmlEscapeUtil.escapeHtml(pathwayBlock.getBodyOfMessage()));
+			pathwayBlock.setSubjectOfMessage(HtmlEscapeUtil.escapeHtml(pathwayBlock.getSubjectOfMessage()));
+			pathwayBlock.setRemainderOfMessage(HtmlEscapeUtil.escapeHtml(pathwayBlock.getRemainderOfMessage()));
+			pathwayBlock.setfollowupOfMessage(HtmlEscapeUtil.escapeHtml(pathwayBlock.getfollowupOfMessage()));
+		}
+		return pathwayBlock;
 
 	}
 

@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
 import org.json.JSONObject;
@@ -141,7 +140,13 @@ public class PatientController {
 			response.setMessage("Patient saved successfully");
 			response.setStatuscode(200);
 			return response;
-		} catch (Exception ex) {
+		}
+		catch (com.engage.commons.exception.ConstraintViolationException ex) {
+			response.setMessage(ex.getMessage());
+			response.setStatuscode(203);
+			return response;
+		}
+		catch (Exception ex) {
 			response.setMessage(ex.getMessage());
 			response.setStatuscode(203);
 			return response;
