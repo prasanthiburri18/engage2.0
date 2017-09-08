@@ -10,7 +10,7 @@
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
-		<!-- <SMTP name="Mail" subject="Error Log" to="svprudhvi13@gmail.com" from="svprudhvi13@brewcode.in" 
+<!-- 		<SMTP name="Mail" subject="Error Log" to="svprudhvi13@gmail.com" from="s.krishna@mindtechlabs.com" 
 			smtpHost="smtp.gmail.com" smtpPort="587" bufferSize="50" smtpUsername="s.krishna@mindtechlabs.com" 
 			smtpPassword="mindtechlabs"> </SMTP> -->
 		<RollingFile name="RollingFile-Appender" fileName="${logger-path}/rollingfile.log"

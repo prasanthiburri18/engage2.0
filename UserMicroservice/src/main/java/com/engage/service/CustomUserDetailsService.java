@@ -3,7 +3,12 @@
  */
 package com.engage.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	/**
 	 * Get user roles
 	 */
-	
+	@Autowired
 	private UserRolesDao userRolesDao;
 	/* (non-Javadoc)
 	 * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
@@ -52,14 +57,19 @@ public class CustomUserDetailsService implements UserDetailsService {
  */
 	private UserDetails convertToUserDetails(final User user, final UserRoles userRoles) {
 		
+		org.springframework.security.core.userdetails.User userDetails=null;
+		
 		
 		if(user!=null && userRoles!=null){
 			
+			Set<GrantedAuthority> grant = new HashSet<>();
+			SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getUserType());
+			userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(), grant);	
 		//	userRoles.getRoleId()
 		}
 		
 	//	UserDetails userDetails = new org.springframework.security.core.userdetails.User();
-		return null;
+		return userDetails;
 	}
 
 

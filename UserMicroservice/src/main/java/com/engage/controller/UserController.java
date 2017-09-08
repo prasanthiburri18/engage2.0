@@ -166,12 +166,12 @@ public class UserController {
 				return response;
 			} else {
 
-				String pp = Long.toHexString(Double.doubleToLongBits(Math.random()));
-				user.setPassword(AdvancedEncryptionStandard.encrypt(pp));
+				//String pp = Long.toHexString(Double.doubleToLongBits(Math.random()));
+				//user.setPassword(AdvancedEncryptionStandard.encrypt(pp));
 				
 				//Engage 2.0
-				//final String password = user.getPassword();			
-				//user.setPassword(passwordEncoder.encode(password));
+				final String password = user.getPassword();			
+				user.setPassword(passwordEncoder.encode(password));
 
 				user.setStatus("Y");
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
