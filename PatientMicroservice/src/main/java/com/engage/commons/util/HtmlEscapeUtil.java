@@ -1,11 +1,13 @@
 package com.engage.commons.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,12 +22,16 @@ public class HtmlEscapeUtil {
 
 	private static Map<String, String> whitelist;
 
+	private static String[] blacklist;
+
 	private static Logger logger = org.slf4j.LoggerFactory.getLogger(HtmlEscapeUtil.class);
 
 	/**
 	 * Whitelist consists of symbols and their html codes
 	 * 
 	 * On escapHtml, all the symbols are replaced by html codes
+	 * 
+	 * Included removeBlacklistedWords() function logic as well
 	 * 
 	 * @param htmlString
 	 * @return
@@ -36,11 +42,13 @@ public class HtmlEscapeUtil {
 
 	public static synchronized String escapeHtml(String htmlString)
 			throws JsonParseException, JsonMappingException, IOException {
-
-		Set<String> htmlChars = getWhitelist().keySet();
-		logger.debug("Is set size empty" + htmlChars.isEmpty());
-		// String escapedString = null;;
 		if (!(htmlString == null || htmlString.equals(""))) {
+			Set<String> htmlChars = getWhitelist().keySet();
+			logger.debug("Is set size empty" + htmlChars.isEmpty());
+			
+			
+			//Remove blacklisted words
+			htmlString = removeBlacklistedWords(htmlString);
 			for (String str : htmlChars) {
 				htmlString = htmlString.replaceAll(str, whitelist.get(str));
 			}
@@ -60,22 +68,23 @@ public class HtmlEscapeUtil {
 	 */
 	public static synchronized String unescapeHtml(String htmlString)
 			throws JsonParseException, JsonMappingException, IOException {
-		//values of whitelist
-		ArrayList<String> htmlChars = (ArrayList<String>) getWhitelist().values().stream().collect(Collectors.toList());
-
-		htmlChars.forEach(h -> logger.info(h));
-		// Reverse order of values in whitelist
-		Collections.reverse(htmlChars);
-
-		LinkedHashMap<String, String> reverseWhiteList = new LinkedHashMap<>();
-		//Reverse  key-value of whitelist to value-key and add to other map
-		whitelist.forEach((key, value) -> {
-			reverseWhiteList.put(value, key);
-		});
-
-		logger.debug("Is set size empty" + htmlChars.isEmpty());
-		// String escapedString = null;;
+		// values of whitelist
 		if (!(htmlString == null || htmlString.equals(""))) {
+			ArrayList<String> htmlChars = (ArrayList<String>) getWhitelist().values().stream()
+					.collect(Collectors.toList());
+
+			// Reverse order of values in whitelist
+			Collections.reverse(htmlChars);
+
+			LinkedHashMap<String, String> reverseWhiteList = new LinkedHashMap<>();
+			// Reverse key-value of whitelist to value-key and add to other map
+			whitelist.forEach((key, value) -> {
+				reverseWhiteList.put(value, key);
+			});
+
+			logger.debug("Is set size empty" + htmlChars.isEmpty());
+			// String escapedString = null;;
+
 			for (String str : htmlChars) {
 				htmlString = htmlString.replaceAll(str, reverseWhiteList.get(str));
 			}
@@ -84,7 +93,7 @@ public class HtmlEscapeUtil {
 		return htmlString;
 	}
 
-	public static synchronized Map<String, String> getWhitelist()
+	private static synchronized Map<String, String> getWhitelist()
 			throws JsonParseException, JsonMappingException, IOException {
 		if (whitelist == null) {
 			ObjectMapper mapper = new ObjectMapper();
@@ -97,10 +106,20 @@ public class HtmlEscapeUtil {
 		return whitelist;
 	}
 
-	public static synchronized String removeBlacklistedString(String evilString) {
+	public static synchronized String removeBlacklistedWords(String evilString) throws IOException {
+		if (!(evilString == null || evilString.equals(""))) {
+			if (blacklist == null) {
 
-		String goodString = "";
-
-		return goodString;
+				final FileInputStream blackListFile = new FileInputStream(
+						HtmlEscapeUtil.class.getClassLoader().getResource("blacklist.properties").getFile());
+				final Properties props = new Properties();
+				props.load(blackListFile);
+				blacklist = props.getProperty("blacklist.words").split(",");
+			}
+			for (String str : blacklist) {
+				evilString = evilString.replaceAll("(?i)" + str.trim(), "");
+			}
+		}
+		return evilString;
 	}
 }

@@ -132,7 +132,7 @@ public class LoginController {
 			// _userDao.getByUserName(user.getEmail(),AdvancedEncryptionStandard.encrypt(user.getPassword()));
 			// to comply with previous code
 			User validateUser = null;
-			logger.info("Is valid user" + isValidAuthentication);
+			logger.info("Is valid user?" + isValidAuthentication);
 
 			if (isValidAuthentication) {
 				validateUser = _userDao.getById(authentication.getName());
@@ -492,7 +492,10 @@ public class LoginController {
 		try {
 			if ((_userDao.getByEmail(AdvancedEncryptionStandard.decrypt(json.get("emailid"))).size() > 0)) {
 				User user = _userDao.getById(AdvancedEncryptionStandard.decrypt(json.get("emailid")));
-				user.setPassword(AdvancedEncryptionStandard.encrypt(json.get("password")));
+				//user.setPassword(AdvancedEncryptionStandard.encrypt(json.get("password")));
+				//Engage2.0 change
+				user.setPassword(passwordEncoder.encode(json.get("password")));
+				
 				_userDao.update(user);
 				response.setMessage("Password updated successfully.");
 				response.setStatuscode(200);

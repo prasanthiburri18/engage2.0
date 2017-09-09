@@ -115,8 +115,8 @@ public class UserController {
 				User user = _userDao.getByUserByUid(uid);
 				final String password = json.get("password");
 				//Engage2.0 change
-				//user.setPassword(passwordEncoder.encode(user.getPassword()));
-				user.setPassword(AdvancedEncryptionStandard.encrypt(password));
+				user.setPassword(passwordEncoder.encode(user.getPassword()));
+				//user.setPassword(AdvancedEncryptionStandard.encrypt(password));
 				_userDao.update(user);
 				response.setMessage("Password updated successfully.");
 				response.setStatuscode(200);
@@ -166,11 +166,11 @@ public class UserController {
 				return response;
 			} else {
 
-				//String pp = Long.toHexString(Double.doubleToLongBits(Math.random()));
+				String pp = Long.toHexString(Double.doubleToLongBits(Math.random()));
 				//user.setPassword(AdvancedEncryptionStandard.encrypt(pp));
 				
 				//Engage 2.0
-				final String password = user.getPassword();			
+				final String password = pp;//user.getPassword();			
 				user.setPassword(passwordEncoder.encode(password));
 
 				user.setStatus("Y");
@@ -204,7 +204,7 @@ public class UserController {
 
 				response.setMessage("Team Member added successfully");
 				response.setStatuscode(200);
-				//response.setData(pp);
+				response.setData(pp);
 				return response;
 			}
 		} catch (ConstraintViolationException ex) {
