@@ -1,3 +1,4 @@
+
 package com.engage.controller;
 
 import com.engage.commons.exception.ConstraintViolationException;
@@ -721,7 +722,7 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 
-	@RequestMapping(value = "/updatepathwayname", method = RequestMethod.POST)
+	@RequestMapping(value = "/updatepathwayname", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage updatepathwayname(
 			@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();

@@ -20,18 +20,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+
 	/**
 	 * Encoder for password hashing. Changing logRounds is not advisable
 	 * 
 	 * @param args
 	 */
-	
+
 	@Bean
-	 @Override
-	   public AuthenticationManager authenticationManagerBean() throws Exception {
-	       return super.authenticationManagerBean();
-	   }
-	
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
+
 	@Autowired
 	private UserDetailsService userDetailsService;
 
@@ -60,7 +61,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		logger.info("Overriding spring security.");
 
 		http// .authenticationProvider(getAuthenticationProvider())
-				.authorizeRequests().anyRequest().permitAll().and().csrf().disable().formLogin().and().httpBasic();
+				.authorizeRequests().anyRequest().permitAll()
+				.and().csrf().disable()
+				.formLogin().disable()
+				.httpBasic().disable();
+				;
 	}
 	// @formatter:on
 }
