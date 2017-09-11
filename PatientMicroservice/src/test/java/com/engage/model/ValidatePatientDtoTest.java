@@ -58,6 +58,7 @@ public class ValidatePatientDtoTest {
 		p.setLastName("adfdfd sf");
 		p.setorgId(1);
 		p.setDob(new Date(System.currentTimeMillis()-100000000));
+		p.setPhone("1231231234");
 		Set<ConstraintViolation<PatientDto>> errors = validator.validate(p);
 		logger.info(ConstraintValidationUtils.getMapOfValidations(errors).toString());
 		

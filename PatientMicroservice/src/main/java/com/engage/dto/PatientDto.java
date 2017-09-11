@@ -88,8 +88,8 @@ public class PatientDto {
 	@Past(message = "Invalid Date of birth")
 	private Date dob;
 
-	@Min(value = 1, message = "Invalid Clinician Id")
-	@Max(value = Integer.MAX_VALUE, message = "Invalid Clinician Id")
+	/*@Min(value = 1, message = "Invalid Clinician Id")
+	@Max(value = Integer.MAX_VALUE, message = "Invalid Clinician Id")*/
 	private long clinicianId;
 
 	@Min(value = 1, message = "Invalid Organization Id")
