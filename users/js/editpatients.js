@@ -53,7 +53,7 @@ $('document').ready(function ()
 
     var retrievedObject = localStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
-    orgid = output.orgid;
+    pvdata.orgId = output.orgid;
 
 
 
