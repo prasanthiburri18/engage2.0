@@ -159,7 +159,7 @@ public class PatientController {
 	 * @Inputparam Patient JsonObject
 	 * @return JsonObject
 	 */
-	@RequestMapping(value = "/editPatient", method = RequestMethod.POST)
+	@RequestMapping(value = "/editPatient", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage update(@RequestBody final PatientDto patientDto) {
 		JsonMessage response = new JsonMessage();
 		String orgmessage = "";
