@@ -15,6 +15,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Length.List;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.engage.commons.validators.annotations.ValidPhoneNumber;
 import com.engage.model.Patient;
 
 /**
@@ -53,6 +54,9 @@ public class PatientDto {
 	/**
 	 * Find whether phone gets saved in db
 	 */
+	@NotNull(message = "Phone number cannot be empty")
+	@NotBlank(message = "Phone number cannot be empty")
+	@ValidPhoneNumber(message = "Invalid phone number format.")
 	private String phone;
 	private String deviceToken;
 	private String status;
@@ -79,15 +83,14 @@ public class PatientDto {
 	}
 
 	private Timestamp updateDate;
-	
-	@NotNull(message="Invalid Date of birth")
-	@Past(message="Invalid Date of birth")
+
+	@NotNull(message = "Invalid Date of birth")
+	@Past(message = "Invalid Date of birth")
 	private Date dob;
 
-	@Min(value=1, message="Invalid Clinician Id")
-	@Max(value=Integer.MAX_VALUE, message="Invalid Clinician Id")
+	@Min(value = 1, message = "Invalid Clinician Id")
+	@Max(value = Integer.MAX_VALUE, message = "Invalid Clinician Id")
 	private long clinicianId;
-
 
 	@Min(value = 1, message = "Invalid Organization Id")
 	// Since db has bigint, it is safe to user Integer.MAX_VALUE
@@ -207,10 +210,8 @@ public class PatientDto {
 		this.orgId = orgId;
 	}
 
-	public PatientDto(String email, String firstName, String lastName,
-			String phone, String deviceToken, String status,
-			Timestamp createDate, Timestamp updateDate, Date dob,
-			long clinicianId, long orgId) {
+	public PatientDto(String email, String firstName, String lastName, String phone, String deviceToken, String status,
+			Timestamp createDate, Timestamp updateDate, Date dob, long clinicianId, long orgId) {
 		super();
 		this.email = email;
 		this.firstName = firstName;
