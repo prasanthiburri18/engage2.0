@@ -44,7 +44,8 @@ else{
 
 var retrievedObject = localStorage.getItem('userinfo');
 var output=JSON.parse(retrievedObject);
-
+//Organization Id Engage2.0
+pdata.orgId=output.orgid;
 
 $(".lguser").html(output.fullName);
 var dataSet=[];
