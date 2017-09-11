@@ -54,7 +54,8 @@ $('document').ready(function ()
     var retrievedObject = localStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
     pvdata.orgId = output.orgid;
-
+ 	orgid = output.orgid;
+    var clinicianId=output.id;
 
 
 
@@ -374,7 +375,7 @@ $('document').ready(function ()
         if (patientcreateddate == '')
             patientcreateddate = currenttime;
         var pnum = phone_aval.toString() + phone_bval.toString() + phone_cval.toString();
-        var pedidata = {id: peid, "orgId": orgid, email: "", "firstName": pfname,
+        var pedidata = {id: peid, "orgId": orgid, email: "", "firstName": pfname,"clinicianId":clinicianId,
             "lastName": plname, "phone": pnum, "deviceToken": "6384632", "dob": pdob, "status": "Y",
             "pathwayId": currentlyselectedpathwayid, events: checkedevents, pathwayName: currentlyselectedpathwayname, createDate: patientcreateddate, updateDate: currenttime}
 
