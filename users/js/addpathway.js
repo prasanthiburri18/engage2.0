@@ -2655,7 +2655,7 @@ function updatePathwayInfo(pid, pname)
 
     $.ajax({
         url: pathwayapibase + '/api/v1/updatepathwayname',
-        type: 'POST',
+        type: 'PUT',
         dataType: 'json',
         headers: {
             'Authorization': securitytoken,
