@@ -10,6 +10,7 @@
  * for user active. Otherwise the user would be in inactive mode only.
  * 
  */
+
 var correctCaptchares = '';
 var correctCaptcha = function (response) {
     if (response.length == 0)
@@ -150,7 +151,7 @@ $('document').ready(function ()
             "fullName": username,
             "practiceName": practicename,
             "email": useremail,
-            "phone": "00000000",
+            "phone": "",
             "createDate": currenttime,
             "updateDate": currenttime}
 
@@ -221,4 +222,5 @@ $('document').ready(function ()
     }
 
 });
+
 

@@ -1,5 +1,9 @@
 package com.engage;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -68,8 +72,11 @@ public class Application extends SpringBootServletInitializer{
 
 @RestController
 class GreetingController {
+	private static Logger logger = LoggerFactory.getLogger(GreetingController.class);
     @RequestMapping("/api/v1/{name}")
-    String hello(@PathVariable String name) {
+    String hello(@PathVariable String name, HttpServletRequest req) {
+    	logger.info("**" +req.getContextPath()+"**");
+    	logger.info("this is in greeting controller :" + name);
         return "Hello, " + name + "!";
     }
 }
