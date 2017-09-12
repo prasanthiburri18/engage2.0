@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Quantified Care</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+  </head>
+  <body>
+      <div class="container">
+      <section id="loginbox">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="loginlogo">
+                      <img src="images/logo.jpg"/>
+                  </div>
+                  
+              </div>
+          </div>
+          <form class="simform" method="post" id="login-form">
+              <div class="row">
+                  <div class="col-md-12">
+                  <div id="error">
+        <!-- error will be shown here ! -->
+        </div>
+                  </div>
+              </div>
+               <div class="row">
+                   <div class="col-md-12">
+                       <div class="sminputs">
+                            <div class="input full">
+                              <!--<label class="string optional" for="user-name">Email*</label>-->
+                              <input class="string optional" maxlength="255" 
+                                     name="user_email" id="user_email" placeholder="Email" type="text" size="50" />
+                             <!--<span id="check-e"></span>-->
+                            </div>
+                          </div>
+                   </div>
+                   <div class="col-md-12">
+                       <div class="sminputs">
+                        <div class="input full">
+                          <!--<label class="string optional" for="user-pw">Password *</label>-->
+                          <input class="string optional" maxlength="255" 
+                                 name="password" id="password" type="password" size="50" />
+                        </div>
+                      </div>
+                   </div>
+                   <div class="col-md-12">
+                       <div class="simform__actions">
+                           <button type="submit" name="btn-login" id="btn-login" class="sumbit" value="Log In" >Log In</button>
+                </div> 
+                   </div>
+                   <div class="col-md-12">
+                       <span class="simform__actions-sidetext"><a class="special" role="link" href="#">Forgot your password?  Click here</a></span>
+                   </div>
+               </div>
+          </form>
+          
+      </section>     
+      <section>
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="copyright">
+                       &copy; 2017 Quantified Care,Inc. All Rights Reserved
+                  </div>
+                 
+              </div>
+          </div>
+      </section>
+      </div>
+      
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/validation.min.js"></script>
+       <script type="text/javascript" src="js/script.js"></script>
+  
+  </body>
+</html>

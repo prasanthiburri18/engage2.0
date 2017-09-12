@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Quantified Care</title>
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" href="jqueryui/jquery-ui.css">
+        <link href="css/style.css" rel="stylesheet">
+        <link href="css/jquery.toast.css" rel="stylesheet">
+        <link href="css/fonts.css" rel="stylesheet">
+        <link href="css/font-awesome.css" rel="stylesheet">
+       <link href="engagecalci/style.css" rel="stylesheet">
+       <link href="engagecalci/fullcalendar.print.css" media="print" rel="stylesheet">
+        <link href="engagecalci/fullcalendar.css" rel="stylesheet">
+        <link href="engagecalci/spectrum.css" rel="stylesheet">    
+        <link href="engagecalci/jquery-ui-timepicker-addon.css" rel="stylesheet">
+<style type="text/css">
+a.disabled {
+    text-decoration: none;
+    color: black;
+    cursor: default;
+}
+#pathwaytable,
+#pathwaytable-pagination {
+    display: none;
+}
+</style>
+    </head>
+    <body class="Pathwaysblock patientpathway">
+        <div class="topheader">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="headerlogo">
+                            <img src="images/logo.jpg" alt="logo">
+                            <img src="images/engage-logo.png" alt="engage-logo" class="engage-logo">
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-6 profile-block">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="lguser"></span> <img src="images/dropdown-icon.png" alt="dropdown-icon">
+                        </a>
+                        <div class="dropdown-menu">
+                            <div class="docpro">
+
+                                <div class="docbio">
+                        <a  id="logoutbtn" class="logout" href="myaccount.html">Settings</a>
+   <button name="btn btn-login" id="logoutbtn" class="logout" value="LogOut" onclick="logout();">Log Out</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section>
+            <div class="headerbottom">
+                <div class="container">
+                    <a style="cursor: none !important;">Patient Pathway</a>
+
+                    <div class="updatelinks">
+                        <!--                        <span id="lastsavedtime">Last saved at 12:57 PM</span>-->
+                        <span id="lastsavedtime"></span>
+                        <a href="javascript:void(0);" id="savepathway" class="savebtn">Save Pathway</a>
+                        <a href="javascript:void(0);" id="exitpathway">Exit</a>
+                    </div>
+                    
+                </div>
+            </div>
+
+        </section>
+        <section>
+            <div class="maincontent scroll-outer">
+                <div class="container">
+                    <div class="pathwayheader">
+                        <div class="patientpathwayfilename"></div>
+                        
+              
+                        <button id="previouscols" ><img src="images/prev-icon.png" alt="prev"></button>
+                        <button  id="nextcols"><img src="images/next-icon.png" alt="next"></button>
+                
+                        <br/>
+                        <br/>
+                        <div id="patientname" class="patientnameinpathway"></div>
+                    </div>
+
+
+
+
+
+                
+                    <div class="modal fade" id="addeventModal" role="dialog">
+                        <div class="modal-dialog">
+
+                          
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">X</button>
+                                    <h4 class="modal-title">Add Event</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input type="text" name="eventname" id="eventname" class="form-control"/>
+                                    </div>
+                                   
+                                    <button type="button" id="createevent" class="savebtn">Save</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+              
+                    
+                    <div class="modal fade" id="editeventModal" role="dialog">
+                        <div class="modal-dialog">
+
+                      
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">X</button>
+                                    <h4 class="modal-title">Edit Event</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input type="text" name="editeventname" id="editeventname" class="form-control"/>
+                                        <input type="hidden" name="eventeditid" value="" id="eventeditid" class="form-control"/>
+                                        <input type="hidden" name="eventeditcolindex" value="" id="eventeditcolindex" class="form-control"/>
+                                    </div>
+                                   
+                                    <button type="button" id="editevent" class="savebtn">Save</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+               
+                    
+                    <div class="modal fade" id="editeventblockModal" role="dialog">
+                        <div class="modal-dialog">
+                     
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">X</button>
+                                    <h4 class="modal-title">Edit Block</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <div class="radio-inline radio active">
+                                                <input type="radio" checked name="editblocktype" id="editoptionsRadios1" value="M"/>
+                                                <label for="editoptionsRadios1"><span></span> Message </label>
+                                            </div>
+                                            <div class="radio-inline radio">
+                                                <input type="radio" name="editblocktype" id="editoptionsRadios2" value="A" disabled=""/>
+                                                <label for="editoptionsRadios1"><span></span> Appointment </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="usr">Name:</label>
+                                            <input type="text" name="editblockname" id="editblockname" class="form-control" >
+                                        </div>
+                                        <div class="form-group" id="editdeliverydaydisplay">
+                        <label for="usr">Delivery Trigger:</label>
+                        <input type="text" name="editdeliverytirgger" id="editdeliverytirgger" class="form-control" >
+                        </div>
+
+                                        <div class="form-group" id="aptgrp" >
+                                            <label>Date of Appointment</label><sup>*</sup>
+                                            <p class="datepicker-block"><input type="date" name="editappointmentdate" id="editappointmentdate" /></p>
+                                        </div>
+                                        <div class="form-group" id="bblockmessage">
+                                            <label for="sel1">Message:</label>
+                                            <textarea class="form-control" rows="5" id="editblockmessage" name="editblockmessage"></textarea>
+                                        <div class="upload-plus" id="ebblockuploadplus">+</div>
+                                            <div class="upload-block" id="ebblockupload">
+                                                <a class="upload-list"><i class="pdf-icon"></i><span>* Premium Only</span>Upload PDF </a>
+                                                <a class="upload-list"><i class="img-icon"></i><span>* Premium Only</span>Upload Images </a>
+                                                <a class="upload-list"><i class="video-icon"></i><span>* Premium Only</span>Upload Video </a>
+                                            </div>
+                                        </div>
+                                        
+                                     
+                                        <div class="form-group" id="editremindermessage" style="display:none;">
+                                            <label for="sel1">Reminder Message:</label>
+                                            <textarea class="form-control" rows="5" id="editremainderblockmessage" name="editblockmessage"></textarea>
+                                        </div>
+                                        <div class="form-group" id="editfollowupmessage" style="display:none;">
+                                            <label for="sel1">Follow Up Message</label>
+                                            <textarea class="form-control" rows="5" id="editappointmentfollowup" name="editappointmentfollowup"></textarea>
+                                        </div>
+                                  
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        <div class="form-group" id="editphisecuredgrp">
+                                             <div class="checkbox">
+                                                <input type="checkbox" value="Y" name="editphisecured" id="editphisecured">
+                                                <label for="phisecured"><span></span> PHI Secured</label>
+                                            </div>
+                                        </div>
+
+                                            <div class="form-group">
+                                            <label for="usr">Deliver on Day:</label>
+                                            <input type="text" name="editdeliveryday" id="editdeliveryday" class="form-control" >
+                                        </div>
+                    <button type="button" class="savebtn" id="editblocsumbtn">SAVE</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                
+                    <div class="modal fade" id="addeventblockModal" role="dialog">
+                        <div class="modal-dialog">
+                         
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">X</button>
+                                    <h4 class="modal-title">Create Block</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="addblocfrm">
+                                        <div class="form-group">
+                                            <div class="radio-inline radio active">
+                                                <input type="radio" checked name="blocktype" id="optionsRadios1" value="M"/>
+                                                <label for="optionsRadios1"><span></span> Message </label>
+                                            </div>
+                                            <div class="radio-inline radio">
+                                                <input type="radio" name="blocktype" id="optionsRadios2" value="A" disabled=""/>
+                                                <label for="optionsRadios2"><span></span> Appointment </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="usr">Name:</label>
+                                            <input type="text" name="blockname" id="blockname" class="form-control" id="usr">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="sel1">Trigger:</label>
+                                            <select class="form-control" id="blocktrigger" name="blocktrigger">
+                                          
+
+                                            </select>
+                                        </div>
+                                        <div class="form-group" id="aptgrp" style="display:none">
+                                            <label>Date of Appointment</label><sup>*</sup>
+                                            <p class="datepicker-block"><input type="date" name="appointmentdate" id="appointmentdate" /></p>
+                                        </div>
+                                        <div class="form-group" id="bblockmessage">
+                                            <label for="sel1">Messages:</label>
+                                            <textarea class="form-control" rows="5" id="blockmessage" name="blockmessage"></textarea>
+                                        
+                                            
+                                            <div class="upload-plus" id="bblockuploadplus">+</div>
+                                            <div class="upload-block" id="bblockupload">
+                                                <a class="upload-list"><i class="pdf-icon"></i><span>* Premium Only</span>Upload PDF </a>
+                                                <a class="upload-list"><i class="img-icon"></i><span>* Premium Only</span>Upload Images </a>
+                                                <a class="upload-list"><i class="video-icon"></i><span>* Premium Only</span>Upload Video </a>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <input type="checkbox" value="Y" name="phisecured" id="phisecured">
+                                                <label for="phisecured"><span></span> PHI Secured</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group text-center" id="pathwaydelivery">
+                                            <label class="leftlabel">Deliver</label>
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+
+                                                    <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="triggerdays" disabled>
+                                                        <span class="glyphicon glyphicon-minus"></span>
+                                                    </button>
+                                                </span>
+                                                <input type="text" id="triggerdays" name="triggerdays"  class="form-control input-number" value="1" min="0" max="100" disabled>
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="triggerdays">
+                                                        <span class="glyphicon glyphicon-plus"></span>
+
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <label class="rightlabel">Days After Trigger</label>
+                                        </div>
+                                        <div class="form-group text-center" id="pathwaydayrepeatevery">
+                                            <label class="leftlabel">Repeat Every</label>
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+
+                                                    <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="repeatdays">
+                                                        <span class="glyphicon glyphicon-minus"></span>
+                                                    </button>
+                                                </span>
+                                                <input type="text" id="repeatdays" name="repeatdays" class="form-control input-number" value="0" min="0" max="100">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="repeatdays">
+                                                        <span class="glyphicon glyphicon-plus"></span>
+
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <label class="rightlabel">Days</label>
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <label class="leftlabel">End after</label>
+                                            <div class="input-group" id="pathwaydayoccurances">
+                                                <span class="input-group-btn">
+                                           <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="occurrences">
+                                                        <span class="glyphicon glyphicon-minus"></span>
+                                                    </button>
+                                                </span>
+                                                <input type="text" id="occurrences" name="occurrences" class="form-control input-number" value="1" min="1" max="100">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="occurrences">
+                                                        <span class="glyphicon glyphicon-plus"></span>
+
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <label class="rightlabel">Occurrences</label>
+                                        </div>
+                                        <button type="button" class="savebtn" id="addblocsumbtn">SAVE</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                   
+                    <table id="pathwaytble">
+                        <thead>
+                            <tr id="headerrow">
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="pathwaytemplatemaincontent">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <script src="js/jquery.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="jqueryui/jquery-ui.js"></script>
+        <script src="js/engageconfig.js"></script>
+        <script type="text/javascript" src="js/validation.min.js"></script>
+        <script type="text/javascript" src="js/loadingoverlay.min.js"></script>
+        <script src="js/jquery.toast.js"></script>
+        <script src="js/moment.js"></script>
+        <script src="js/patientpathway.js"></script>
+        <script src="js/timesession.js"></script>
+    </body>
+</html>

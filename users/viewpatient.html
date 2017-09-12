@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Quantified Care</title>
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" href="jqueryui/jquery-ui.css">
+        <link href="css/datatables.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <link href="css/jquery.toast.css" rel="stylesheet">
+        <link href="css/fonts.css" rel="stylesheet">
+        <link href="css/font-awesome.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="topheader">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="headerlogo">
+                            <img src="images/logo.jpg" alt="logo">
+                            <img src="images/engage-logo.png" alt="engage-logo" class="engage-logo">
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-6 col-sm-6 profile-block">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="lguser"></span> <img src="images/dropdown-icon.png" alt="dropdown-icon">
+                        </a>
+                        <div class="dropdown-menu">
+                            <div class="docpro">
+
+                                <div class="docbio">
+                        <a  id="logoutbtn" class="logout" href="myaccount.html">Settings</a>
+   <button name="btn btn-login" id="logoutbtn" class="logout" value="LogOut" onclick="logout();">Log Out</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section>
+            <div class="headerbottom">
+                <div class="container">
+                    <a href="patientslist.html" class="active">Patients</a>
+                    <a href="pathwaylist.html" >Pathways</a>
+                    <a href="#" class="report-btn">Reports <span>*only for premium users</span></a>
+                </div>
+            </div>
+
+        </section>
+        <section>
+            <div class="maincontent patient-list patient-view">
+                <div class="container">
+                    <div class="patient-view-bg">
+                        <div class="row contact-details">
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+<h2 id="pname"></h2>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <a href="#" style="cursor: default !important;"><img src="images/phone-icon.png" alt="phone"><strong>Phone : </strong> <span id="pphone"></span></a>
+                                <a href="#" style="cursor: default !important;"><img src="images/gift-icon.png" alt="gift"><strong>DOB : </strong> <span id="pdob"></span></a>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <a href="#" style="cursor: default !important;"><img src="images/email-icon.png" alt="email"><strong>Email : </strong> <span>*Premium Only</span></a>
+                                <a href="#" style="cursor: default !important;"><img src="images/tag-icon.png" alt="tag"><strong>Token : </strong> <span>*Premium Only</span></a>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1">
+                            </div>
+                        </div>
+                        <div class="title-block">
+                            <span id="pathwayname"></span>
+                        </div>
+                        <div class="row HF-list-block" id="eventslist">
+                        </div>
+                        <div class="title-block">
+                            MESSAGE DETAILS
+                        </div>
+                        <div class="dashboardbox">
+                            <table id="example" class="display" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th width="30%">MESSAGE</th>
+                                        <th width="15%">DAY SINCE START</th>
+                                        <th width="15%">EVENT</th>
+                                        <th width="20%">DATE DELIVERED</th>
+                                        <th width="10%">CHANNEL</th>
+
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+       <script src="js/jquery.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="jqueryui/jquery-ui.js"></script>
+        <script src="js/moment.js"></script>
+<script src="js/engageconfig.js"></script>
+        <script src="js/datatables.js"></script>
+        <script type="text/javascript" src="js/validation.min.js"></script>
+        <script type="text/javascript" src="js/loadingoverlay.min.js"></script>
+<script src="js/jquery.toast.js"></script>
+
+<script src="js/viewpatient.js"></script>
+<script src="js/timesession.js"></script>
+    </body>
+</html>
