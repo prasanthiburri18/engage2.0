@@ -242,10 +242,10 @@ public class LoginController {
 				// restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send",
 				// data1,String.class );
 				// Engage2.0
-				// final String simpleMailUrl = baseURL+"/email/send";
-				// restTemplate.postForObject(simpleMailUrl, data1,String.class
-				// );
-				// Engage2.0
+				 final String simpleMailUrl = baseURL+"/email/send";
+				restTemplate.postForObject(simpleMailUrl, data1,String.class
+				 );
+				//Engage2.0
 				response.setMessage("User registered successfully");
 				response.setStatuscode(200);
 				return response;

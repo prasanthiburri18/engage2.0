@@ -73,7 +73,7 @@
                                 <h3>My Profile</h3>
                             </div>
                             <div class="dashboardbox">
-                                <form  accept-charset="utf-8" method="post" id="userprofile-form" class="simform">
+                                                             <form  accept-charset="utf-8" method="post" id="userprofile-form" class="simform">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="col-md-3 col-sm-3">
@@ -81,6 +81,7 @@
                                             </div>
                                             <div class="col-md-9 col-sm-9">
                                                 <input type="text"  required name="fullname" id="fullname"/>
+                                                <p id="error-fullname" class="error fieldError"></p>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -89,6 +90,7 @@
                                             </div>
                                             <div class="col-md-9 col-sm-9">
                                                 <input type="text" name="email" id="email" required/>
+                                                 <p id="error-email" class="error fieldError"></p>
                                             </div>
                                         </div>
                                         
@@ -106,7 +108,7 @@
                                         <!--<span></span>-->
                                         <input id="phone3" class="myphone" name="phone3" type="text" size="4" value="" maxlength="4"/>
                                         <input type="hidden" name="mob" id="mob"/>
-                                        
+                                        <p id="error-phone" class="error fieldError"></p> 
                                     </div>
 
                                 </div>
@@ -119,16 +121,17 @@
                                             </div>
                                             <div class="col-md-9 col-sm-9">
                                                 <input type="text" name="orgname" id="orgname" required/>
+                                                 <p id="error-practiceName" class="error fieldError"></p> 
                                             </div>
                                         </div>
                                         
-										<div class="col-md-12">&nbsp;</div>
+                                        <div class="col-md-12">&nbsp;</div>
                                         
                                         <div class="col-md-12">
-										  <div class="col-md-3">&nbsp</div>
-										  <div class="col-md-9">
+                                          <div class="col-md-3">&nbsp</div>
+                                          <div class="col-md-9">
                                             <a href="javascript:void(0);" id="changepasswordmodalevt" class="logout">Change Password</a>
-										  </div>
+                                          </div>
                                        </div>
                                         
                                         
@@ -138,50 +141,6 @@
                                         <button class="active">Save</button>
                                     </div>
                                 </form>
-                            </div>
-                        </div>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                                <!--Add change password modal popup-->
-                                <div class="modal fade" id="changepasswordmodal" role="dialog">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal">X</button>
-                                                <h4 class="modal-title">Change Password</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form accept-charset="utf-8" method="post" id="changepassword-form" class="simform">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="sminputs">
-                                         <div class="input full">
-                                           <!--<label class="string optional" for="user-name">Email*</label>-->
-                                           <input class="string optional" maxlength="255" id="newpassword" name="newpassword" placeholder="New Password" type="password" size="50" />
-                                         </div>
-                                       </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="sminputs">
-                                         <div class="input full">
-                                         
-               <input class="string optional" maxlength="255" id="password_again" name="password_again" placeholder="Confirm Password" type="password" size="50" />
-                                         </div>
-                                       </div>
-                                </div>
-                                <br/>
-                                <div class="col-md-12">
-                                        <div class="simform__actions">
-                      <button class="submit"  value="Log In" name="passchange-btn-login" id="changepass-btn-login">Save new password</button>
-                                 </div> 
-                                    </div>
-                            </div>
-                      </form>
                                             </div>
                                         </div>
 

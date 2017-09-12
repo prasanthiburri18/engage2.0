@@ -406,7 +406,28 @@ $('document').ready(function ()
                     $.LoadingOverlay("hide");
                     setTimeout('window.location.href = "patientslist.html";', 1000);
 
-                } else {
+                } else if (response.statuscode == 422) {
+                    var resData = $.parseJSON(response.data);
+                    if(typeof(resData.firstName) != "undefined" && resData.firstName !== null){
+                        $('#error-firstName').text(resData.firstName);
+                        $.LoadingOverlay("hide");
+                        
+                    }
+                    
+                    if(typeof(resData.lastName) != "undefined" && resData.lastName !== null){
+                        $('#error-lastName').text(resData.lastName);
+                        $.LoadingOverlay("hide");
+                    }
+                    
+                    if(typeof(resData.dob) != "undefined" && resData.dob !== null){
+                        $('#error-dob').text(resData.dob);
+                    }
+                    
+                    if(typeof(resData.phone) != "undefined" && resData.password !== null){
+                        $('#error-phone').text(resData.phone);
+                    }
+                    $.LoadingOverlay("hide");
+                }else {
 
                     $.LoadingOverlay("hide");
                     $("#error").fadeIn(500, function () {

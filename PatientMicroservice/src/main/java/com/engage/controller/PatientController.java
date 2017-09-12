@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.engage.commons.exception.ConstraintViolationException;
 import com.engage.commons.exception.InvalidAccessException;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.PathwayDao;
@@ -142,8 +143,9 @@ public class PatientController {
 			return response;
 		}
 		catch (com.engage.commons.exception.ConstraintViolationException ex) {
-			response.setMessage(ex.getMessage());
-			response.setStatuscode(203);
+			response.setData(ex.getMessage());
+			response.setMessage("Invalid Patient data");
+			response.setStatuscode(422);
 			return response;
 		}
 		catch (Exception ex) {
@@ -246,7 +248,13 @@ public class PatientController {
 				response.setStatuscode(204);
 				return response;
 			}
-		} catch (Exception ex) {
+		} catch (ConstraintViolationException ex) {
+			response.setData(ex.getMessage());
+			response.setMessage("Invalid Patient format");
+			response.setStatuscode(422);
+			return response;
+		} 
+		catch (Exception ex) {
 			response.setMessage(ex.getMessage());
 			response.setStatuscode(203);
 			return response;

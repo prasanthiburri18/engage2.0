@@ -62,7 +62,7 @@
   <p>Available only for  Premium users.</p>
 </div>
                     <div class="dashboardbox">
-                        <form  accept-charset="utf-8" method="post" id="addpatient-form" class="simform">
+                         <form  accept-charset="utf-8" method="post" id="addpatient-form" class="simform">
                             <div class="mandatorytext"><span>* Mandatory fields</span></div>
                             <div class="divtitle">Personal Information</div>
                             <div class="row">
@@ -71,7 +71,8 @@
                                         <label>First Name</label><sup>*</sup>
                                     </div>
                                     <div class="col-md-9 col-sm-9">
-                                        <input type="text"  required name="patienfrmfirstname" id="patienfrmfirstname"/>
+                                     <input type="text"  required name="patienfrmfirstname" id="patienfrmfirstname"/>
+                                     <p id="error-firstName" class="error fieldError"></p>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -79,7 +80,8 @@
                                         <label>Last Name</label><sup>*</sup>
                                     </div>
                                     <div class="col-md-9 col-sm-9">
-                                        <input type="text" name="patienfrmlastname" id="patienfrmlastname" required/>
+                                      <input type="text" name="patienfrmlastname" id="patienfrmlastname" required/>
+                                      <p id="error-lastName" class="error fieldError"></p>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -89,9 +91,9 @@
                                     <div class="col-md-9 col-sm-9">
                                         <p class="datepicker-block"><input type="date" name="patientdob" placeholder="mm/dd/yyyy" id="patientdob" required=""  />
                                         <span class="error"></span>
-                                        </p>
-
-                                    </div>
+                                        <p id="error-dob" class="error fieldError"></p>
+                                        
+                                  </div>
                                 </div>
                             </div>
 
@@ -110,6 +112,7 @@
                                         <input type="hidden" name="mob" id="mob"/>
                                         <br/>
                                         <p id="pherr"></p>
+                                         <p id="error-phone" class="error fieldError"></p>
                                         
                                     </div>
 
@@ -154,6 +157,7 @@
                                               <button class="active">Save</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>

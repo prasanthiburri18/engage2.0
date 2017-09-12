@@ -213,6 +213,24 @@ $('document').ready(function ()
 
 
                 }
+                   if (response.statuscode == 400) {
+                    var resData = $.parseJSON(response.data);
+                    if(typeof(resData.fullName) != "undefined" && resData.fullName !== null){
+                        $('#error-fullname').text(resData.fullName);
+                    }
+                    
+                    if(typeof(resData.practiceName) != "undefined" && resData.practiceName !== null){
+                        $('#error-praname').text(resData.practiceName);
+                    }
+                    
+                    if(typeof(resData.email) != "undefined" && resData.email !== null){
+                        $('#error-useremail').text(resData.email);
+                    }
+                    
+                    if(typeof(resData.password) != "undefined" && resData.password !== null){
+                        $('#error-userpassword').text(resData.password);
+                    }
+                }
 
 
             }

@@ -56,7 +56,7 @@
                         <h3>Edit Patient</h3>
              </div>
                     <div class="dashboardbox">
-                        <form  accept-charset="utf-8" method="post" id="editpatient-form" class="simform">
+                                              <form  accept-charset="utf-8" method="post" id="editpatient-form" class="simform">
                             <div class="mandatorytext"><span>* Mandatory fields</span></div>
                             <div class="divtitle">Personal Information</div>
                             <div class="row">
@@ -67,6 +67,7 @@
                                     <div class="col-md-9 col-sm-9">
                                         <input type="text"  required name="editpatienfrmfirstname" id="editpatienfrmfirstname"/>
                                         <input type="hidden"   name="editpatienid" id="editpatienid"/>
+                                        <p id="error-firstName" class="error fieldError"></p>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -75,6 +76,7 @@
                                     </div>
                                     <div class="col-md-9 col-sm-9">
                                         <input type="text" name="editpatienfrmlastname" id="editpatienfrmlastname" required/>
+                                    <p id="error-lastName" class="error fieldError"></p>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -83,7 +85,7 @@
                                     </div>
                                     <div class="col-md-9 col-sm-9">
                                         <p class="datepicker-block"><input type="date" name="editpatientdob" id="editpatientdob" required="" /><span class="error"></span></p>
-                                        
+                                        <p id="error-dob" class="error fieldError"></p>
 
                                     </div>
                                 </div>
@@ -103,6 +105,7 @@
                                         <input id="editphone3" class="phone" name="phone3" type="text" size="4" value="" maxlength = "4"/>
                                         <br/>
                                         <p id="pherr"></p>
+                                         <p id="error-phone" class="error fieldError"></p>
                                     </div>
 
                                 </div>
