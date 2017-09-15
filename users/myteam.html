@@ -118,16 +118,19 @@
                                                     <div class="form-group">
                                                         <label>Name</label><sup>*</sup>
                                                         <input type="text"  required name="teammembername" id="teammembername" class="form-control"/>
+                                                        <p id="error-fullname" class="error fieldError"></p>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label>Email</label><sup>*</sup>
                                                         <input type="text"  required name="teammemberemail" id="teammemberemail" class="form-control"/>
+                                                        <p id="error-email" class="error fieldError"></p>
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Date of Birth</label><sup>*</sup>
-                                                        <p class="datepicker-block"><input type="date" name="teammembernamedob" id="teammembernamedob" class="form-control" required="" /></p>
+                                                        <p class="datepicker-block"><input type="date" name="teammembernamedob" id="teammembernamedob" class="form-control"  required="" readonly="true" /></p>
                                                         <span class="error"></span>
+                                                        <p id="error-dob" class="error fieldError"></p>
                                                     </div>
                                                     <div class="form-group"> 
                                                         <div class="col-lg-12"> 
@@ -143,7 +146,7 @@
                                                             <input id="phone3" class="phone form-control" name="phone3" type="text" size="4" value="" maxlength="4"/>
                                                             <input type="hidden" name="mob" id="mob"/></div>
                                                             <br/>
-                                        <p id="pherr"></p>
+                                        <p id="pherr"></p><p id="error-phone" class="error fieldError"></p>
 
 
                                                     </div>

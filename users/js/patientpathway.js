@@ -185,9 +185,11 @@ var getUrlParameter = function getUrlParameter(sParam) {
 var pid = getUrlParameter('pathwayid');
 var patientid = getUrlParameter('patientid');
 
-var pdata = {"id": pid};
+var pdata = {"id": pid,"orgId":output.orgid};
 var ptdata = {};
 ptdata.id = patientid;
+ptdata.orgId=output.orgid;
+
 
 var maxRowNumber = 0;
 var maxColNumber = 0;
@@ -422,7 +424,22 @@ $('document').ready(function ()
         {
 
             $.LoadingOverlay("hide");
-
+            if(response.statuscode==203){
+                                //var msg_new=response.message;    
+                                //var res = msg_new.replace("patient", "pathway");
+                                        
+                                        $.toast({
+                                            heading: 'Pathway',
+                                            text: response.message,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+            }
             if (response.data != null)
             {
                 var results = response.data;

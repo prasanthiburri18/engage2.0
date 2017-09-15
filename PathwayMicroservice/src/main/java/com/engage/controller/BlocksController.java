@@ -177,7 +177,11 @@ public class BlocksController {
 		try {
 
 			List<Blocks> blocks = _blocksDao.verifyId(Long.parseLong(json.get("pathwayId")));
-
+			if(blocks!=null && blocks.size()>0){
+				for(Blocks block: blocks){
+					desanitizeMessagesOfBlock(block);
+				}
+			}
 			response.setMessage("Blocks list.");
 			response.setData(blocks);
 			response.setStatuscode(200);
@@ -236,7 +240,7 @@ public class BlocksController {
 
 			Long parentbid = Long.parseLong(json.get("parentblockid"));
 			List<Object> blocks = _blocksDao.getChildBlockdata(parentbid);
-
+//Desantization done at dao layer
 			response.setMessage("Child Blocks list.");
 			response.setData(blocks);
 			response.setStatuscode(200);
@@ -271,4 +275,15 @@ public class BlocksController {
 
 	}
 
+	private Blocks desanitizeMessagesOfBlock(Blocks pathwayBlock) throws JsonParseException, JsonMappingException, IOException
+			 {
+		if (pathwayBlock != null) {
+			pathwayBlock.setBodyOfMessage(HtmlEscapeUtil.unescapeHtml(pathwayBlock.getBodyOfMessage()));
+			pathwayBlock.setSubjectOfMessage(HtmlEscapeUtil.unescapeHtml(pathwayBlock.getSubjectOfMessage()));
+			pathwayBlock.setRemainderOfMessage(HtmlEscapeUtil.unescapeHtml(pathwayBlock.getRemainderOfMessage()));
+			pathwayBlock.setfollowupOfMessage(HtmlEscapeUtil.unescapeHtml(pathwayBlock.getfollowupOfMessage()));
+		}
+		return pathwayBlock;
+
+	}
 }

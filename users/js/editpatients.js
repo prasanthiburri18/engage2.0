@@ -487,6 +487,22 @@ function ViewpatientDetails()
 
             $.LoadingOverlay("hide");
 
+            if(response.statuscode==203){
+                                
+                                        
+                                        $.toast({
+                                            heading: 'Patients',
+                                            text: response.message,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+            }
+
             if (response.data != null)
             {
 

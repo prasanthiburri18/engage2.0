@@ -55,7 +55,7 @@ public class UserControllerTest {
 	public void init(){
 		
 		final User user = new User();
-		user.setEmail("s.krishna@mindtechlabs.com");
+		user.setEmail("s.krishna1@mindtechlabs.com");
 		user.setFullName("Somisetti Krishna");
 		user.setOrgid(1);
 		user.setPassword("password");
@@ -64,6 +64,23 @@ public class UserControllerTest {
 		user.setUserType("U");
 		userDao.save(user);
 	}
+	
+	
+
+	@Test
+	public void passwordChangeWithoutPhone(){
+		
+		 User user = userDao.getById("s.krishna1@mindtechlabs.com");
+		
+	
+		user.setFullName("Somisetti Krishna");
+		user.setPassword("password");
+		user.setPhone("");
+		user.setPracticeName("Medicine");
+		user.setUserType("U");
+		userDao.update(user);
+	}
+	
 	/**
 	 * To check functionality from Engage1.0
 	 * @throws Exception 
@@ -186,6 +203,7 @@ public class UserControllerTest {
 		Assert.assertTrue(mvcResult.getResponse().getContentAsString().indexOf("Invalid phone number format")>0);
 		Assert.assertTrue(mvcResult.getResponse().getContentAsString().indexOf("Only alphabet characters are allowed.")>0);
 	}
+	
 	
 	
 	

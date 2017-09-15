@@ -1,21 +1,10 @@
 
 package com.engage.controller;
 
-import com.engage.commons.exception.ConstraintViolationException;
-import com.engage.commons.validators.utils.ConstraintValidationUtils;
-import com.engage.dao.PathwayDao;
-import com.engage.dao.BlocksDao;
-import com.engage.dao.EventsDao;
-import com.engage.model.Pathway;
-import com.engage.model.ScheduleJson;
-import com.engage.model.Events;
-import com.engage.util.JsonMessage;
-
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.Period;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +14,6 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
-import org.hibernate.mapping.Array;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +23,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+
+import com.engage.commons.exception.ConstraintViolationException;
+import com.engage.commons.exception.InvalidAccessException;
+import com.engage.commons.util.HtmlEscapeUtil;
+import com.engage.commons.validators.utils.ConstraintValidationUtils;
+import com.engage.dao.BlocksDao;
+import com.engage.dao.EventsDao;
+import com.engage.dao.PathwayDao;
+import com.engage.model.Blocks;
+import com.engage.model.Events;
+import com.engage.model.Pathway;
+import com.engage.model.ScheduleJson;
+import com.engage.util.JsonMessage;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
  * Pathway MicroServices for Pathway API Operations
@@ -48,8 +50,7 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping(value = "/api/v1")
 public class PathwayController {
 
-	private static Logger log = LoggerFactory
-			.getLogger(PathwayController.class);
+	private static Logger log = LoggerFactory.getLogger(PathwayController.class);
 
 	@Autowired
 	private Validator validator;
@@ -69,25 +70,21 @@ public class PathwayController {
 	 */
 
 	@RequestMapping(value = "/addPathway", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage addPathway(
-			@RequestBody final Pathway pathway) {
+	public @ResponseBody JsonMessage addPathway(@RequestBody final Pathway pathway) {
 		JsonMessage response = new JsonMessage();
 		try {
 
 			// Engage2.0 start
 
-			Set<ConstraintViolation<Pathway>> violations = validator
-					.validate(pathway);
+			Set<ConstraintViolation<Pathway>> violations = validator.validate(pathway);
 			if (!violations.isEmpty()) {
-				Map<String, String> errormessages = ConstraintValidationUtils
-						.getMapOfValidations(violations);
+				Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
 				JSONObject json = new JSONObject(errormessages);
 				throw new ConstraintViolationException(json.toString());
 			}
 			// Engage2.0 end
 
-			Boolean isPathway = _pathwayDao.getByPathwayName(
-					pathway.getPathwayName(), pathway.getorgId());
+			Boolean isPathway = _pathwayDao.getByPathwayName(pathway.getPathwayName(), pathway.getorgId());
 			if (isPathway == true) {
 				response.setMessage("This pathway already exists");
 				response.setStatuscode(208);
@@ -122,12 +119,10 @@ public class PathwayController {
 	 */
 
 	@RequestMapping(value = "/deletePathway", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage deletePathway(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage deletePathway(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {
-			Pathway pathway = _pathwayDao
-					.getById(Long.parseLong(json.get("id")));
+			Pathway pathway = _pathwayDao.getById(Long.parseLong(json.get("id")));
 			if (pathway.getId() > 0) {
 				_pathwayDao.delete(pathway);
 				response.setMessage("Pathway deleted successfully.");
@@ -153,12 +148,10 @@ public class PathwayController {
 	 * @return Jsonobject
 	 */
 	@RequestMapping(value = "/deletepatientchildblockbyid", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage deletepatientchildblockbyid(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage deletepatientchildblockbyid(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {
-			Integer deres = _blocksDao.deletePatientChildBlock(Long
-					.parseLong(json.get("id")));
+			Integer deres = _blocksDao.deletePatientChildBlock(Long.parseLong(json.get("id")));
 
 			response.setMessage("Block deleted successfully.");
 			response.setData(deres);
@@ -181,18 +174,15 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/updatePathway", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage updatePathway(
-			@RequestBody final Pathway pathway) {
+	public @ResponseBody JsonMessage updatePathway(@RequestBody final Pathway pathway) {
 		JsonMessage response = new JsonMessage();
 		try {
 
 			// Engage2.0 start
 
-			Set<ConstraintViolation<Pathway>> violations = validator
-					.validate(pathway);
+			Set<ConstraintViolation<Pathway>> violations = validator.validate(pathway);
 			if (!violations.isEmpty()) {
-				Map<String, String> errormessages = ConstraintValidationUtils
-						.getMapOfValidations(violations);
+				Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
 				JSONObject json = new JSONObject(errormessages);
 				throw new ConstraintViolationException(json.toString());
 			}
@@ -226,12 +216,10 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/listPathway", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage listPathway(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage listPathway(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {
-			List<Pathway> patient = _pathwayDao.getAll(Long.parseLong(json
-					.get("orgId")));
+			List<Pathway> patient = _pathwayDao.getAll(Long.parseLong(json.get("orgId")));
 
 			response.setMessage("Pathway list.");
 			response.setData(patient);
@@ -251,12 +239,29 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/viewPathway", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage viewPathway(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage viewPathway(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {
-			List<Pathway> patient = _pathwayDao.verifyId(Long.parseLong(json
-					.get("id")));
+			final Long orgId = Long.parseLong(json.get("orgId"));
+			Pathway pathway =_pathwayDao.getById(Long.parseLong(json.get("id")));
+			
+			if (!(orgId == pathway.getorgId())) {
+				throw new InvalidAccessException("You don't have privileges to view this patient");
+			}
+			
+			List<Pathway> patient = _pathwayDao.verifyId(Long.parseLong(json.get("id")));
+			if (patient != null && patient.size()>0) {
+				for (Pathway p : patient) {
+					if (p.getEvents() != null && p.getEvents().size() > 0) {
+						for (Events e : p.getEvents()) {
+							if (e.getBlocks() != null && e.getBlocks().size() > 0)
+								for (Blocks b : e.getBlocks()) {
+									desanitizeMessagesOfBlock(b);
+								}
+						}
+					}
+				}
+			}
 			response.setMessage("Pathway data.");
 			response.setData(patient);
 			response.setStatuscode(200);
@@ -276,8 +281,7 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/listPathwayEventForPatients", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage listPathwayEventForPatients(
-			@RequestBody Map<String, ArrayList<Long>> json) {
+	public @ResponseBody JsonMessage listPathwayEventForPatients(@RequestBody Map<String, ArrayList<Long>> json) {
 
 		JsonMessage response = new JsonMessage();
 		try {
@@ -336,13 +340,11 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/pathwayfirstMessage", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage pathwayfirstMessage(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage pathwayfirstMessage(@RequestBody Map<String, String> json) {
 		List<Object> results = null;
 		JsonMessage response = new JsonMessage();
 		try {
-			Integer pathwayid = Integer.parseInt(json.get("pathwayid")
-					.toString());
+			Integer pathwayid = Integer.parseInt(json.get("pathwayid").toString());
 			Map<String, Object> data = new HashMap<String, Object>();
 			results = _blocksDao.getPathwayFirstMessage(pathwayid);
 			response.setMessage("Block Message Info.");
@@ -389,8 +391,7 @@ public class PathwayController {
 	 */
 
 	@RequestMapping(value = "/getPatientpathway", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage getPatientpathway(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage getPatientpathway(@RequestBody Map<String, String> json) {
 
 		JsonMessage response = new JsonMessage();
 		try {
@@ -418,8 +419,7 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/getPatientpathwayblockinfobyevent", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage getPatientpathwayblockinfobyevent(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage getPatientpathwayblockinfobyevent(@RequestBody Map<String, String> json) {
 
 		JsonMessage response = new JsonMessage();
 		try {
@@ -427,8 +427,7 @@ public class PathwayController {
 			Integer phtid = Integer.parseInt(json.get("pathwayid").toString());
 			Integer eid = Integer.parseInt(json.get("eventid").toString());
 
-			List resulst = _blocksDao.getPatientpathwayblocksByevent(ptid,
-					phtid, eid);
+			List resulst = _blocksDao.getPatientpathwayblocksByevent(ptid, phtid, eid);
 			response.setMessage("Block  data.");
 			response.setData(resulst);
 			response.setStatuscode(200);
@@ -450,8 +449,7 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/getPatientpathwayblockbyevent", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage getPatientpathwayblockbyevent(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage getPatientpathwayblockbyevent(@RequestBody Map<String, String> json) {
 
 		JsonMessage response = new JsonMessage();
 		try {
@@ -459,8 +457,7 @@ public class PathwayController {
 			Integer phtid = Integer.parseInt(json.get("pathwayid").toString());
 			Integer eid = Integer.parseInt(json.get("eventid").toString());
 
-			List resulst = _blocksDao
-					.getPatientpathwayByevent(ptid, phtid, eid);
+			List resulst = _blocksDao.getPatientpathwayByevent(ptid, phtid, eid);
 			response.setMessage("Block data.");
 			response.setData(resulst);
 			response.setStatuscode(200);
@@ -482,8 +479,7 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/getPatientpathwayblockbyId", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage getPatientpathwayblockbyId(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage getPatientpathwayblockbyId(@RequestBody Map<String, String> json) {
 
 		JsonMessage response = new JsonMessage();
 		try {
@@ -512,19 +508,16 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/createpatientpathwayblockrecord", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage createpatientpathwayblockrecord(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage createpatientpathwayblockrecord(@RequestBody Map<String, String> json) {
 
 		JsonMessage response = new JsonMessage();
 		try {
 
 			Integer pwid = Integer.parseInt(json.get("pathwayId").toString());
-			Integer patientid = Integer.parseInt(json.get("patientId")
-					.toString());
+			Integer patientid = Integer.parseInt(json.get("patientId").toString());
 			Integer blockid = Integer.parseInt(json.get("blockid").toString());
 			String appointmentdate = json.get("appointmentdate");
-			Integer blockappointmentparent = Integer.parseInt(json.get(
-					"blockAppointmentParent").toString());
+			Integer blockappointmentparent = Integer.parseInt(json.get("blockAppointmentParent").toString());
 			String bname = json.get("blockName");
 			String btype = json.get("blockType");
 			Integer brow = Integer.parseInt(json.get("blockPocRow").toString());
@@ -533,27 +526,20 @@ public class PathwayController {
 			String patientaccepteddate = json.get("patientaccepteddate");
 			String phisecured = json.get("phiSecured");
 			Integer bcol = Integer.parseInt(json.get("blockPocCol").toString());
-			Integer triggerid = Integer.parseInt(json.get("triggerId")
-					.toString());
-			Integer deliverydaysaftertrigger = Integer.parseInt(json.get(
-					"DeliveryDaysAfterTigger").toString());
-			Integer repeatfornumberofdays = Integer.parseInt(json.get(
-					"repeatForNoOfDays").toString());
+			Integer triggerid = Integer.parseInt(json.get("triggerId").toString());
+			Integer deliverydaysaftertrigger = Integer.parseInt(json.get("DeliveryDaysAfterTigger").toString());
+			Integer repeatfornumberofdays = Integer.parseInt(json.get("repeatForNoOfDays").toString());
 			String subjectofmessage = json.get("subjectOfMessage");
 			String bodyofmessage = json.get("bodyOfMessage");
 			String remaindermessage = json.get("remainderOfMessage");
 			String followupmessage = json.get("followupOfMessage");
 			String status = json.get("status");
 			Integer event_id = Integer.parseInt(json.get("eventId").toString());
-			Integer msenttime = Integer.parseInt(json.get("msenttime")
-					.toString());
-			Integer resulst = _blocksDao.insertpatientpathwayblocks(pwid,
-					patientid, blockid, appointmentdate,
-					blockappointmentparent, bname, btype, brow, messagesendat,
-					messeagesentstatus, patientaccepteddate, phisecured, bcol,
-					triggerid, deliverydaysaftertrigger, repeatfornumberofdays,
-					subjectofmessage, bodyofmessage, remaindermessage,
-					followupmessage, status, event_id, msenttime);
+			Integer msenttime = Integer.parseInt(json.get("msenttime").toString());
+			Integer resulst = _blocksDao.insertpatientpathwayblocks(pwid, patientid, blockid, appointmentdate,
+					blockappointmentparent, bname, btype, brow, messagesendat, messeagesentstatus, patientaccepteddate,
+					phisecured, bcol, triggerid, deliverydaysaftertrigger, repeatfornumberofdays, subjectofmessage,
+					bodyofmessage, remaindermessage, followupmessage, status, event_id, msenttime);
 			response.setMessage("Scheduled data.");
 			response.setData(resulst);
 			response.setStatuscode(200);
@@ -575,8 +561,7 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/getPatientblockinfo", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage getPatientblockinfo(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage getPatientblockinfo(@RequestBody Map<String, String> json) {
 
 		JsonMessage response = new JsonMessage();
 		try {
@@ -605,8 +590,7 @@ public class PathwayController {
 	 */
 
 	@RequestMapping(value = "/checkforpatientpathwayacceptance", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage checkforpatientpathwayacceptance(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage checkforpatientpathwayacceptance(@RequestBody Map<String, String> json) {
 
 		JsonMessage response = new JsonMessage();
 		try {
@@ -635,16 +619,14 @@ public class PathwayController {
 	 */
 
 	@RequestMapping(value = "/updatePatientPathwayblock", method = RequestMethod.PUT)
-	public @ResponseBody JsonMessage updatePatientPathwayblock(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage updatePatientPathwayblock(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {
 			Integer ptid = Integer.parseInt(json.get("patientid").toString());
 			Integer bid = Integer.parseInt(json.get("blockid").toString());
 			String bmtype = json.get("mtype").toString();
 			String bmessage = json.get("messagetxt").toString();
-			Integer results = _blocksDao.updatePatientblockmessagetxt(ptid,
-					bid, bmtype, bmessage);
+			Integer results = _blocksDao.updatePatientblockmessagetxt(ptid, bid, bmtype, bmessage);
 			response.setMessage("Pathway updated successfully");
 			response.setData(results);
 			response.setStatuscode(200);
@@ -665,8 +647,7 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/listpathwaysforclinicain", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage listpathwaysforclinicain(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage listpathwaysforclinicain(@RequestBody Map<String, String> json) {
 
 		JsonMessage response = new JsonMessage();
 		try {
@@ -694,8 +675,7 @@ public class PathwayController {
 	 * @return JsonObject
 	 */
 	@RequestMapping(value = "/listeventsforpathway", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage listeventsforpathway(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage listeventsforpathway(@RequestBody Map<String, String> json) {
 
 		JsonMessage response = new JsonMessage();
 		try {
@@ -723,8 +703,7 @@ public class PathwayController {
 	 */
 
 	@RequestMapping(value = "/updatepathwayname", method = RequestMethod.PUT)
-	public @ResponseBody JsonMessage updatepathwayname(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage updatepathwayname(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {
 
@@ -732,19 +711,33 @@ public class PathwayController {
 			String putime = (json.get("utime"));
 
 			String pname = (json.get("pname"));
-
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-					"yyyy-MM-dd HH:mm:ss");
+			if (pname != null) {
+				pname = pname.trim();
+				if (pname.equals("")) {
+					throw new ConstraintViolationException("{\"pathwayName\":\"Pathway name cannot be blank\"}");
+				} else if (!pname.matches("^[a-zA-Z0-9\\s]*$")) {
+					throw new ConstraintViolationException(
+							"{\"pathwayName\":\"Special characters are not allowed in pathway\"}");
+				} else if (pname.length() > 30) {
+					throw new ConstraintViolationException("{\"pathwayName\":\"Pathway name exceeds 30 characters\"}");
+				}
+			}
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String updstring = dateFormat.format(new Date());
 
-			Integer results = _pathwayDao.updatepathwayname(pid, pname,
-					updstring);
+			Integer results = _pathwayDao.updatepathwayname(pid, pname, updstring);
 
 			response.setMessage("Pathway Updated.");
 			response.setData(results);
 			response.setStatuscode(200);
 			return response;
+		} catch (ConstraintViolationException cex) {
+			response.setData(cex.getMessage());
+			response.setMessage("Invalid pathway name");
+			response.setStatuscode(204);
+			return response;
 		} catch (Exception ex) {
+
 			response.setMessage(ex.getMessage());
 			response.setStatuscode(203);
 			return response;
@@ -760,8 +753,7 @@ public class PathwayController {
 	 */
 
 	@RequestMapping(value = "/getorginfobypathwayid", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage getorginfobypathwayid(
-			@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage getorginfobypathwayid(@RequestBody Map<String, String> json) {
 
 		JsonMessage response = new JsonMessage();
 		try {
@@ -779,6 +771,18 @@ public class PathwayController {
 			return response;
 
 		}
+
+	}
+
+	private Blocks desanitizeMessagesOfBlock(Blocks pathwayBlock)
+			throws JsonParseException, JsonMappingException, IOException {
+		if (pathwayBlock != null) {
+			pathwayBlock.setBodyOfMessage(HtmlEscapeUtil.unescapeHtml(pathwayBlock.getBodyOfMessage()));
+			pathwayBlock.setSubjectOfMessage(HtmlEscapeUtil.unescapeHtml(pathwayBlock.getSubjectOfMessage()));
+			pathwayBlock.setRemainderOfMessage(HtmlEscapeUtil.unescapeHtml(pathwayBlock.getRemainderOfMessage()));
+			pathwayBlock.setfollowupOfMessage(HtmlEscapeUtil.unescapeHtml(pathwayBlock.getfollowupOfMessage()));
+		}
+		return pathwayBlock;
 
 	}
 

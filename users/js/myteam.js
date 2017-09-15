@@ -381,11 +381,31 @@ $(document).ready(function () {
                         hideAfter: 5000,
                     });
                 }
+
                 if (response.statuscode == 400) {
-                    $.LoadingOverlay("hide");
+                 /*   $.LoadingOverlay("hide");
                     $("#error").fadeIn(500, function () {
                         $("#error").html('<div class="alert alert-danger"> <span class="glyphicon glyphicon-info-sign"></span> &nbsp; ' + response.message + ' !</div>');
-                    });
+                    });*/
+                      $.LoadingOverlay("hide");
+
+                    var resData = $.parseJSON(response.data);
+                    if(typeof(resData.fullName) != "undefined" && resData.fullName !== null){
+                        $('#error-fullname').text(resData.fullName);
+                    }
+                    
+                    if(typeof(resData.dob) != "undefined" && resData.dob !== null){
+                        $('#error-dob').text(resData.dob);
+                    }
+                    
+                    if(typeof(resData.email) != "undefined" && resData.email !== null){
+                        $('#error-email').text(resData.email);
+                    }
+                    
+                    if(typeof(resData.password) != "undefined" && resData.password !== null){
+                        $('#error-userpassword').text(resData.password);
+                    
+                }
 
                 } else {
 

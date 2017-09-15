@@ -20,6 +20,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.engage.commons.util.HtmlEscapeUtil;
 import com.engage.model.Blocks;
 import com.engage.model.Events;
 import com.engage.model.ScheduleJson;
@@ -417,14 +419,15 @@ public String checkforpatientpathway(Integer patienid, Integer pathwayId) {
 			  assoc.put("delivery_days_after_trigger",delivery_days_after_trigger);
 			  Integer repeat_for_number_of_days=Integer.parseInt(row[15].toString());
 			  assoc.put("repeat_for_number_of_days",repeat_for_number_of_days);
+			 //Added desanitization
 			  String subject_of_message=row[16].toString();
-			  assoc.put("subject_of_message",subject_of_message);
+			  assoc.put("subject_of_message",HtmlEscapeUtil.unescapeHtml(subject_of_message));
 			  String body_of_message=row[17].toString();
-			  assoc.put("body_of_message",body_of_message);
+			  assoc.put("body_of_message",HtmlEscapeUtil.unescapeHtml(body_of_message));
 			  String remindermessage=row[18].toString();
-			  assoc.put("remainder_of_message",remindermessage);
+			  assoc.put("remainder_of_message",HtmlEscapeUtil.unescapeHtml(remindermessage));
 			  String fmessage=row[19].toString();
-			  assoc.put("followup_of_message",fmessage);
+			  assoc.put("followup_of_message",HtmlEscapeUtil.unescapeHtml(fmessage));
 			  String status=row[20].toString();
 			  assoc.put("status",status);
 			  String created_date=row[21].toString();

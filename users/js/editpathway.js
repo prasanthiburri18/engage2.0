@@ -424,7 +424,7 @@ $('document').ready(function ()
     });
     var pid = getUrlParameter('pathwayid');
 
-    var pdata = {"id": pid};
+    var pdata = {"id": pid,"orgId":output.orgid};
 
     var maxRowNumber = 0;
     var maxColNumber = 0;
@@ -473,8 +473,24 @@ $('document').ready(function ()
         {
             $.LoadingOverlay("hide");
 
-
+            if(response.statuscode==203){
+                                var msg_new=response.message;    
+                                var res = msg_new.replace("patient", "pathway");
+                                        
+                                        $.toast({
+                                            heading: 'Pathway',
+                                            text: res,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+            }
             pathswaysdata = response.data[0];
+
             currentpathwayname = pathswaysdata.pathwayName;
             var blocarrs = [];
             var blocarrscol = [];
@@ -816,13 +832,13 @@ $('document').ready(function ()
 
         if (eventname == '')
         {
-            alert('Please Enter the Event Name');
+            //alert('Please Enter the Event Name');
             $.toast({
                 heading: 'Add Event',
                 text: 'Please Enter the Event Name.',
                 textAlign: 'center',
                 position: 'top-center',
-                icon: 'warning',
+                icon: 'error',
                 loader: false,
                 stack: true
             });
@@ -907,13 +923,28 @@ $('document').ready(function ()
                         text: 'Event name is already taken.',
                         textAlign: 'center',
                         position: 'top-center',
-                        icon: 'warning',
+                        icon: 'error',
                         loader: false,
                         allowToastClose: false,
                         hideAfter: 5000,
                     });
                     return false;
                 }
+                if (response.statuscode == 204)
+                    {
+                        var msg=jQuery.parseJSON(response.message);
+                        $.toast({
+                            heading: 'Pathway',
+                            text: msg.eventName,
+                            textAlign: 'center',
+                            position: 'top-center',
+                            icon: 'error',
+                            loader: false,
+                            allowToastClose: false,
+                            hideAfter: 5000,
+                        });
+                        return false;
+                    }
                 cuurentfilledeventcolpos = createeventobj.eventPocCol;
                 var eventobj = {};
                 eventobj.id = eventid;
@@ -1328,6 +1359,30 @@ $('document').ready(function ()
                 },
                 success: function (response)
                 {
+                                    $.LoadingOverlay("hide");
+                                    
+                                    if(response.statuscode==204){
+                                        var newmsg='';
+                                        var msg=JSON.parse(response.message);
+                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                            newmsg=msg.blockName;
+                                        }
+                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                            newmsg=msg.bodyOfMessage;
+                                        }
+                                        
+                                        $.toast({
+                                            heading: 'Add Block',
+                                            text: newmsg,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+                                    }
 
                     var bid = response.data;
                     appointmentparentid = bid;
@@ -1422,6 +1477,29 @@ $('document').ready(function ()
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
+                                    
+                                    if(response.statuscode==204){
+                                        var newmsg='';
+                                        var msg=JSON.parse(response.message);
+                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                            newmsg=msg.blockName;
+                                        }
+                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                            newmsg=msg.bodyOfMessage;
+                                        }
+                                        
+                                        $.toast({
+                                            heading: 'Add Block',
+                                            text: newmsg,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+                                    }
 
                                     var bid = response.data;
                                     var blkclass = 'newcreateblock';
@@ -1489,6 +1567,30 @@ $('document').ready(function ()
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
+                                    
+                                    if(response.statuscode==204){
+                                        var newmsg='';
+                                        var msg=JSON.parse(response.message);
+                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                            newmsg=msg.blockName;
+                                        }
+                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                            newmsg=msg.bodyOfMessage;
+                                        }
+                                        
+                                        $.toast({
+                                            heading: 'Add Block',
+                                            text: newmsg,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+                                    }
+
 
                                     var bid = response.data;
                                     var blkclass = 'newcreateblock';
@@ -1557,6 +1659,30 @@ $('document').ready(function ()
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
+                                    
+                                    if(response.statuscode==204){
+                                        var newmsg='';
+                                        var msg=JSON.parse(response.message);
+                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                            newmsg=msg.blockName;
+                                        }
+                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                            newmsg=msg.bodyOfMessage;
+                                        }
+                                        
+                                        $.toast({
+                                            heading: 'Add Block',
+                                            text: newmsg,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+                                    }
+
 
                                     var bid = response.data;
                                     var blkclass = 'newcreateblock';
@@ -1634,7 +1760,31 @@ $('document').ready(function ()
                                 },
                                 success: function (response)
                                 {
-                                    $.LoadingOverlay("hide");
+                                     $.LoadingOverlay("hide");
+                                    
+                                    if(response.statuscode==204){
+                                        var newmsg='';
+                                        var msg=JSON.parse(response.message);
+                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                            newmsg=msg.blockName;
+                                        }
+                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                            newmsg=msg.bodyOfMessage;
+                                        }
+                                        
+                                        $.toast({
+                                            heading: 'Add Block',
+                                            text: newmsg,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+                                    }
+
 
                                     var bid = response.data;
                                     var blkclass = 'newcreateblock';
@@ -1701,7 +1851,30 @@ $('document').ready(function ()
                                 },
                                 success: function (response)
                                 {
-                                    $.LoadingOverlay("hide");
+                                     $.LoadingOverlay("hide");
+                                    
+                                    if(response.statuscode==204){
+                                        var newmsg='';
+                                        var msg=JSON.parse(response.message);
+                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                            newmsg=msg.blockName;
+                                        }
+                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                            newmsg=msg.bodyOfMessage;
+                                        }
+                                        
+                                        $.toast({
+                                            heading: 'Add Block',
+                                            text: newmsg,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+                                    }
 
                                     var bid = response.data;
                                     var blkclass = 'newcreateblock';
@@ -1768,7 +1941,31 @@ $('document').ready(function ()
                                 },
                                 success: function (response)
                                 {
-                                    $.LoadingOverlay("hide");
+                                     $.LoadingOverlay("hide");
+                                    
+                                    if(response.statuscode==204){
+                                        var newmsg='';
+                                        var msg=JSON.parse(response.message);
+                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                            newmsg=msg.blockName;
+                                        }
+                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                            newmsg=msg.bodyOfMessage;
+                                        }
+                                        
+                                        $.toast({
+                                            heading: 'Add Block',
+                                            text: newmsg,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+                                    }
+
 
                                     var bid = response.data;
                                     var blkclass = 'newcreateblock';
@@ -1850,6 +2047,29 @@ $('document').ready(function ()
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
+                                    
+                                    if(response.statuscode==204){
+                                        var newmsg='';
+                                        var msg=JSON.parse(response.message);
+                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                            newmsg=msg.blockName;
+                                        }
+                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                            newmsg=msg.bodyOfMessage;
+                                        }
+                                        
+                                        $.toast({
+                                            heading: 'Add Block',
+                                            text: newmsg,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+                                    }
 
                                     var bid = response.data;
                                     var blkclass = 'newcreateblock';
@@ -1918,7 +2138,31 @@ $('document').ready(function ()
                                 },
                                 success: function (response)
                                 {
-                                    $.LoadingOverlay("hide");
+                                     $.LoadingOverlay("hide");
+                                    
+                                    if(response.statuscode==204){
+                                        var newmsg='';
+                                        var msg=JSON.parse(response.message);
+                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                            newmsg=msg.blockName;
+                                        }
+                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                            newmsg=msg.bodyOfMessage;
+                                        }
+                                        
+                                        $.toast({
+                                            heading: 'Add Block',
+                                            text: newmsg,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+                                    }
+
 
                                     var bid = response.data;
                                     var blkclass = 'newcreateblock';
@@ -2002,7 +2246,30 @@ $('document').ready(function ()
                         },
                         success: function (response)
                         {
-                            $.LoadingOverlay("hide");
+                                   $.LoadingOverlay("hide");
+                                    
+                                    if(response.statuscode==204){
+                                        var newmsg='';
+                                        var msg=JSON.parse(response.message);
+                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                            newmsg=msg.blockName;
+                                        }
+                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                            newmsg=msg.bodyOfMessage;
+                                        }
+                                        
+                                        $.toast({
+                                            heading: 'Add Block',
+                                            text: newmsg,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+                                    }
 
                             var bid = response.data;
                             var blkclass = 'newcreateblock';
@@ -2069,6 +2336,30 @@ $('document').ready(function ()
                     },
                     success: function (response)
                     {
+                                    $.LoadingOverlay("hide");
+                                    
+                                    if(response.statuscode==204){
+                                        var newmsg='';
+                                        var msg=JSON.parse(response.message);
+                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                            newmsg=msg.blockName;
+                                        }
+                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                            newmsg=msg.bodyOfMessage;
+                                        }
+                                        
+                                        $.toast({
+                                            heading: 'Add Block',
+                                            text: newmsg,
+                                            textAlign: 'center',
+                                            position: 'top-center',
+                                            icon: 'error',
+                                            loader: false,
+                                            allowToastClose: false,
+                                            hideAfter: 5000,
+                                        });
+                                        return false;
+                                    }
 
                         var bid = response.data;
                         inputBloc.id = response.data;

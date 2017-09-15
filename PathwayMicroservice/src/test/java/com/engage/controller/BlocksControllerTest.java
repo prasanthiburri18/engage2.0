@@ -49,7 +49,9 @@ public class BlocksControllerTest {
 	 */
 	@Test
 	public void userAlreadyExistsTestWithValidUser() throws JsonProcessingException, Exception{
-		final Blocks blocks = new Blocks();
+		Blocks blocks = new Blocks();
+		blocks.setBodyOfMessage("EDD<crript> script");
+		
 		MvcResult result =mockmvc.perform(
 				MockMvcRequestBuilders.post("/api/v1/addBlock")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -60,7 +62,6 @@ public class BlocksControllerTest {
 		org.junit.Assert.assertTrue(result.getResponse().getContentAsString().indexOf("204")>0);
 	
 	}
-	
 	
 
 }
