@@ -14,41 +14,53 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
+
+/**
+ * 
+ * @author mindtech-labs
+ *
+ */
 @Component
 @PropertySource("classpath:host.properties")
+@Order(value = 5)
 public class HostFilter extends GenericFilterBean {
 	/**
 	 * Logger implemetation
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(HostFilter.class);
-	
-	/*@Autowired
-	private Environment environment;
-	*/
-	
+
+	/*
+	 * @Autowired private Environment environment;
+	 */
+
 	/**
 	 * Spring container wires valid.hosts from host.properties file
 	 */
-	@Value(value="${valid.hosts}")
+	@Value(value = "${valid.hosts}")
 	private String[] allowedHosts;
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	 */
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		final String host = req.getHeader("Host");
-		//allowedHosts =environment.getProperty("valid.hosts", String[].class);
-		List<String> listReferer = Arrays.asList(allowedHosts);
-		
-		if (host==null|| listReferer.stream().noneMatch(s->s.contains(host))){
+		// List of allowed hosts
+		// allowedHosts =environment.getProperty("valid.hosts", String[].class);
+		final List<String> listReferer = Arrays.asList(allowedHosts);
+
+		if (host == null || listReferer.stream().noneMatch(s -> s.contains(host))) {
 			// write logout logic here
-		
-			LOGGER.error("Invalid host: "+host);
-		}
-		else{
-			LOGGER.info("Host "+host+" is valid");
+
+			LOGGER.error("Invalid host: " + host);
+		} else {
+			LOGGER.info("Host " + host + " is valid");
 			chain.doFilter(request, response);
 		}
 

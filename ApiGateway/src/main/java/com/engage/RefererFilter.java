@@ -14,45 +14,56 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
+
+/**
+ * 
+ * @author mindtech-labs
+ *
+ */
 @Component
 @PropertySource("classpath:referer.properties")
+@Order(value = 4)
 public class RefererFilter extends GenericFilterBean {
 	/**
 	 * Logger implemetation
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(RefererFilter.class);
-	
-	/*@Autowired
-	private Environment environment;
-	
-	*/
+
+	/*
+	 * @Autowired private Environment environment;
+	 * 
+	 */
 	/**
 	 * Spring container wires valid.referers from referer.properties file
 	 */
-	@Value(value="${valid.referers}")
+	@Value(value = "${valid.referers}")
 	private String[] allowedReferers;
-	
+
 	/*
 	 * (non-Javadoc)
-	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	 * 
+	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
+	 * javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		final String referer = req.getHeader("Referer");
-		LOGGER.error("Invalid referer: "+referer);
-		//allowedReferers =environment.getProperty("valid.referers", String[].class);
-		List<String> listReferer = Arrays.asList(allowedReferers);
-		
-		if (referer==null|| listReferer.stream().noneMatch(s->referer.contains(s))){
-			//logout logic
-		
-			LOGGER.error("Invalid referer: "+referer);
-		}
-		else{
+
+		// allowedReferers =environment.getProperty("valid.referers",
+		// String[].class);
+		final List<String> listReferer = Arrays.asList(allowedReferers);
+
+		if (referer == null || listReferer.stream().noneMatch(s -> referer.contains(s))) {
+			// logout logic
+
+			LOGGER.error("Invalid referer: " + referer);
+		} else {
+			LOGGER.info("Referer "+referer+" is valid");
 			chain.doFilter(request, response);
 		}
 

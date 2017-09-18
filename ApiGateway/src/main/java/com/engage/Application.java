@@ -107,7 +107,7 @@ class GreetingController {
 	String hello(@PathVariable String name, HttpServletRequest req) {
 		LOGGER.info("**" + req.getContextPath() + "**");
 		LOGGER.info("this is in greeting controller :" + name);
-		LOGGER.error("this is in greeting controller :" + name);
+		//LOGGER.error("this is in greeting controller :" + name);
 		
 		return "Hello, " + name + "!";
 	}
