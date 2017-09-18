@@ -50,14 +50,15 @@ public class User {
 	 */private String password;
 	@NotNull(message = "Full name cannot be empty.")
 	@NotBlank(message = "Full name cannot be empty.")
-			@Length(max = 60, message = "Full name exceeds {max} characters.")
+	@Length(max = 60, message = "Full name exceeds {max} characters.")
 	@Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Only alphabet characters are allowed.")
 	@Column(name = "full_name")
 	private String fullName;
 
 	// @NotNull(message = "Phone number cannot be empty.")
 	// @NotBlank(message = "Phone number cannot be empty.")
-	@ValidPhoneNumber(message = "Invalid phone number format.")
+	//@ValidPhoneNumber(message = "Invalid phone number format.")
+	@Column(name = "phone")
 	private String phone;
 	@NotNull(message = "Practice name cannot be empty.")
 	@NotBlank(message = "Practice name cannot be empty.")
@@ -91,9 +92,8 @@ public class User {
 		this.id = id;
 	}
 
-	public User(String email, String password, String fullName, String phone,
-			String practiceName, int orgid, String userType, String status,
-			Date createDate, Date updateDate) {
+	public User(String email, String password, String fullName, String phone, String practiceName, int orgid,
+			String userType, String status, Date createDate, Date updateDate) {
 		super();
 		this.email = email;
 
@@ -198,11 +198,9 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", password=" + password
-				+ ", fullName=" + fullName + ", phone=" + phone
-				+ ", practiceName=" + practiceName + ", userType=" + userType
-				+ ", status=" + status + ", createDate=" + createDate
-				+ ", updateDate=" + updateDate + "]";
+		return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName=" + fullName + ", phone="
+				+ phone + ", practiceName=" + practiceName + ", userType=" + userType + ", status=" + status
+				+ ", createDate=" + createDate + ", updateDate=" + updateDate + "]";
 	}
 
 }

@@ -246,7 +246,7 @@ public class PathwayController {
 			Pathway pathway =_pathwayDao.getById(Long.parseLong(json.get("id")));
 			
 			if (!(orgId == pathway.getorgId())) {
-				throw new InvalidAccessException("You don't have privileges to view this patient");
+				throw new InvalidAccessException("You don't have privileges to view this pathway");
 			}
 			
 			List<Pathway> patient = _pathwayDao.verifyId(Long.parseLong(json.get("id")));

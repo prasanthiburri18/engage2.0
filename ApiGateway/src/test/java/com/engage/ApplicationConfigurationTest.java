@@ -22,11 +22,11 @@ public class ApplicationConfigurationTest {
 			return new ServerProperties();
 		}
 	}*/
-	private static final  Logger logger = LoggerFactory.getLogger(ApplicationConfigurationTest.class);
+	private static final  Logger LOGGER = LoggerFactory.getLogger(ApplicationConfigurationTest.class);
 	
 	@Test//@Ignore
 	public void testConfigTest(){
-		logger.info(" Application started");
-		logger.error("Smtp logger test");
+		LOGGER.info(" Application started");
+		LOGGER.error("Smtp logger test");
 	}
 }

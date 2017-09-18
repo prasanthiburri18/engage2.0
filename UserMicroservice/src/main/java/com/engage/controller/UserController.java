@@ -115,7 +115,7 @@ public class UserController {
 				User user = _userDao.getByUserByUid(uid);
 				final String password = json.get("password");
 				//Engage2.0 change
-				user.setPassword(passwordEncoder.encode(user.getPassword()));
+				user.setPassword(passwordEncoder.encode(password));
 				//user.setPassword(AdvancedEncryptionStandard.encrypt(password));
 				_userDao.update(user);
 				response.setMessage("Password updated successfully.");
