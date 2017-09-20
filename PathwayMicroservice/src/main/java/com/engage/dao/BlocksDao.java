@@ -131,7 +131,7 @@ public class BlocksDao {
 				scheduleJson.setPathwayId(Integer.parseInt(row[0].toString()));
 				scheduleJson.setEventId(Integer.parseInt(row[1].toString()));
 				scheduleJson.setBlockName(row[2].toString());
-				scheduleJson.setMessage(row[4].toString());
+				scheduleJson.setMessage(HtmlEscapeUtil.unescapeHtml(row[4].toString()));
 				scheduledData.add(scheduleJson);
 				
 			}
@@ -158,7 +158,7 @@ public class BlocksDao {
 				scheduleJson.setPathwayId(Integer.parseInt(row[0].toString()));
 				scheduleJson.setEventId(Integer.parseInt(row[1].toString()));
 				scheduleJson.setBlockName(row[2].toString());
-				scheduleJson.setMessage(row[4].toString());
+				scheduleJson.setMessage(HtmlEscapeUtil.unescapeHtml(row[4].toString()));
 				scheduledData.add(scheduleJson);
 				
 			}
@@ -315,9 +315,9 @@ public String checkforpatientpathway(Integer patienid, Integer pathwayId) {
 			  String repeat_for_number_of_days=row[11].toString();
 			  assoc.put("repeat_for_number_of_days",repeat_for_number_of_days);
 			  String subject_of_message=row[12].toString();
-			  assoc.put("subject_of_message",subject_of_message);
+			  assoc.put("subject_of_message",HtmlEscapeUtil.unescapeHtml(subject_of_message));
 			  String body_of_message=row[13].toString();
-			  assoc.put("body_of_message",body_of_message);
+			  assoc.put("body_of_message",HtmlEscapeUtil.unescapeHtml(body_of_message));
 			  String status=row[14].toString();
 			  assoc.put("status",status);
 			  String created_date=row[15].toString();
@@ -508,13 +508,13 @@ public String checkforpatientpathway(Integer patienid, Integer pathwayId) {
 			  Integer repeat_for_number_of_days=Integer.parseInt(row[15].toString());
 			  assoc.put("repeat_for_number_of_days",repeat_for_number_of_days);
 			  String subject_of_message=row[16].toString();
-			  assoc.put("subject_of_message",subject_of_message);
+			  assoc.put("subject_of_message",HtmlEscapeUtil.unescapeHtml(subject_of_message));
 			  String body_of_message=row[17].toString();
-			  assoc.put("body_of_message",body_of_message);
+			  assoc.put("body_of_message",HtmlEscapeUtil.unescapeHtml(body_of_message));
 			  String remindermessage=row[18].toString();
-			  assoc.put("remainder_of_message",remindermessage);
+			  assoc.put("remainder_of_message",HtmlEscapeUtil.unescapeHtml(remindermessage));
 			  String fmessage=row[19].toString();
-			  assoc.put("followup_of_message",fmessage);
+			  assoc.put("followup_of_message",HtmlEscapeUtil.unescapeHtml(fmessage));
 			  String status=row[20].toString();
 			  assoc.put("status",status);
 			  String created_date=row[21].toString();
@@ -584,13 +584,13 @@ public String checkforpatientpathway(Integer patienid, Integer pathwayId) {
 			  Integer repeat_for_number_of_days=Integer.parseInt(row[15].toString());
 			  assoc.put("repeat_for_number_of_days",repeat_for_number_of_days);
 			  String subject_of_message=row[16].toString();
-			  assoc.put("subject_of_message",subject_of_message);
+			  assoc.put("subject_of_message",HtmlEscapeUtil.unescapeHtml(subject_of_message));
 			  String body_of_message=row[17].toString();
-			  assoc.put("body_of_message",body_of_message);
+			  assoc.put("body_of_message",HtmlEscapeUtil.unescapeHtml(body_of_message));
 			  String remindermessage=row[18].toString();
-			  assoc.put("remainder_of_message",remindermessage);
+			  assoc.put("remainder_of_message",HtmlEscapeUtil.unescapeHtml(remindermessage));
 			  String fmessage=row[19].toString();
-			  assoc.put("followup_of_message",fmessage);
+			  assoc.put("followup_of_message",HtmlEscapeUtil.unescapeHtml(fmessage));
 			  String status=row[20].toString();
 			  assoc.put("status",status);
 			  String created_date=row[21].toString();
@@ -656,13 +656,13 @@ public String checkforpatientpathway(Integer patienid, Integer pathwayId) {
 			  Integer repeat_for_number_of_days=Integer.parseInt(row[15].toString());
 			  assoc.put("repeatOfdays",repeat_for_number_of_days);
 			  String subject_of_message=row[16].toString();
-			  assoc.put("subjectOfMessage",subject_of_message);
+			  assoc.put("subjectOfMessage",HtmlEscapeUtil.unescapeHtml(subject_of_message));
 		  String body_of_message=row[17].toString();
-			  assoc.put("bodyOfMessage",body_of_message);
+			  assoc.put("bodyOfMessage",HtmlEscapeUtil.unescapeHtml(body_of_message));
 		  String remindermessage=row[18].toString();
-			  assoc.put("remainderOfMessage",remindermessage);
+			  assoc.put("remainderOfMessage",HtmlEscapeUtil.unescapeHtml(remindermessage));
 		  String fmessage=row[19].toString();
-			  assoc.put("followupOfMessage",fmessage);
+			  assoc.put("followupOfMessage",HtmlEscapeUtil.unescapeHtml(fmessage));
 	  String status=row[20].toString();
 			  assoc.put("status",status);
 			  String created_date=row[21].toString();
@@ -845,13 +845,13 @@ public String checkforpatientpathway(Integer patienid, Integer pathwayId) {
 		  Integer repeat_for_number_of_days=Integer.parseInt(row[15].toString());
 			  assoc.put("repeat_for_number_of_days",repeat_for_number_of_days);
 			  String subject_of_message=row[16].toString();
-			  assoc.put("subject_of_message",subject_of_message);
+			  assoc.put("subject_of_message",HtmlEscapeUtil.unescapeHtml(subject_of_message));
 			  String body_of_message=row[17].toString();
-			  assoc.put("body_of_message",body_of_message);
+			  assoc.put("body_of_message",HtmlEscapeUtil.unescapeHtml(body_of_message));
 			  String remindermessage=row[18].toString();
-			  assoc.put("remainder_of_message",remindermessage);
+			  assoc.put("remainder_of_message",HtmlEscapeUtil.unescapeHtml(remindermessage));
 			  String fmessage=row[19].toString();
-			  assoc.put("followup_of_message",fmessage);
+			  assoc.put("followup_of_message",HtmlEscapeUtil.unescapeHtml(fmessage));
 			  String status=row[20].toString();
 			  assoc.put("status",status);
 			  String created_date=row[21].toString();

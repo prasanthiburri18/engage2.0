@@ -4,6 +4,7 @@ package com.engage;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
@@ -83,7 +84,9 @@ public class Application extends SpringBootServletInitializer{
 class GreetingController {
 
     @RequestMapping("/hello/{name}")
-    String hello(@PathVariable String name) {
+    String hello(@PathVariable String name, HttpServletRequest request) {
+    	String principal = request.getUserPrincipal().toString();
+    	name =principal;
         return "Hello, " + name + "!";
     }
 

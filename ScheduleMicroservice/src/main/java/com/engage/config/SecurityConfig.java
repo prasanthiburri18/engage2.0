@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	@Autowired
+	/*@Autowired
 	private UserDetailsService userDetailsService;
 
 	@Bean
@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(getAuthenticationProvider());
-	}
+	}*/
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -75,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	// @formatter:on
 
-	@Bean
+/*	@Bean
 	public OAuth2RestTemplate restTemplate() {
 		OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(clientCredentialsResourceDetails());
 		return restTemplate;
@@ -102,6 +102,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public AccessTokenRequest getAccessTokenRequest() {
 		return new DefaultAccessTokenRequest();
 
-	}
+	}*/
 
 }

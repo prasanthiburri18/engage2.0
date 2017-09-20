@@ -266,8 +266,13 @@ public class PathwayController {
 			response.setData(patient);
 			response.setStatuscode(200);
 			return response;
-		} catch (Exception ex) {
-			response.setMessage(ex.getMessage());
+		} catch (InvalidAccessException iaex) {
+			response.setMessage(iaex.getMessage());
+			response.setStatuscode(203);
+			return response;
+		}
+		catch (Exception ex) {
+			response.setMessage("You don't have privileges to view this pathway");
 			response.setStatuscode(203);
 			return response;
 		}

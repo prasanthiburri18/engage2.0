@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -48,6 +50,9 @@ public class UserController {
 	static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 	@Autowired
+	private OAuth2RestTemplate restTemplate;
+
+	@Autowired
 	private UserDao _userDao;
 	@Autowired
 	private UserRolesDao _userRolesDao;
@@ -55,16 +60,19 @@ public class UserController {
 	private OrganizationDao _organizationDao;
 	@Value("${portal.URL}")
 	public String portalURL;
-
+	
+	@Value("${microService.URL}")
+	public String microservicURL;
+	
 	@Autowired
 	private Validator validator;
 
-	 /**
-	   * For encrypting password. Removed previous encoder. 
-	   */
-	  @Autowired
-	  private PasswordEncoder passwordEncoder;
-	
+	/**
+	 * For encrypting password. Removed previous encoder.
+	 */
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	/**
 	 * Load user Profile Method
 	 * 
@@ -114,9 +122,9 @@ public class UserController {
 				BigInteger uid = new BigInteger(json.get("userid"));
 				User user = _userDao.getByUserByUid(uid);
 				final String password = json.get("password");
-				//Engage2.0 change
+				// Engage2.0 change
 				user.setPassword(passwordEncoder.encode(password));
-				//user.setPassword(AdvancedEncryptionStandard.encrypt(password));
+				// user.setPassword(AdvancedEncryptionStandard.encrypt(password));
 				_userDao.update(user);
 				response.setMessage("Password updated successfully.");
 				response.setStatuscode(200);
@@ -146,7 +154,6 @@ public class UserController {
 	public @ResponseBody JsonMessage addteammember(@RequestBody final User user) {
 		JsonMessage response = new JsonMessage();
 		try {
-
 			// Engage2.0 start
 
 			Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -167,10 +174,10 @@ public class UserController {
 			} else {
 
 				String pp = Long.toHexString(Double.doubleToLongBits(Math.random()));
-				//user.setPassword(AdvancedEncryptionStandard.encrypt(pp));
-				
-				//Engage 2.0
-				final String password = pp;//user.getPassword();			
+				// user.setPassword(AdvancedEncryptionStandard.encrypt(pp));
+
+				// Engage 2.0
+				final String password = pp;// user.getPassword();
 				user.setPassword(passwordEncoder.encode(password));
 
 				user.setStatus("Y");
@@ -235,7 +242,7 @@ public class UserController {
 			String userpp = json.get("userpp");
 			String username = json.get("username");
 
-			RestTemplate restTemplate = new RestTemplate();
+			// RestTemplate restTemplate = new RestTemplate();
 			Map<String, Object> data1 = new HashMap<String, Object>();
 			data1.put("from", "EngageApp<support@quantifiedcare.com>");
 			data1.put("to", useremail);
@@ -248,7 +255,7 @@ public class UserController {
 			data1.put("status", true);
 			// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
 			// data1,String.class );
-			restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send", data1, String.class);
+			restTemplate.postForObject(microservicURL+"/email/send", data1, String.class);
 
 			response.setMessage("Email sent successfully");
 			response.setStatuscode(200);
@@ -306,8 +313,8 @@ public class UserController {
 				// Set<String> errormessages =
 				// ConstraintValidationUtils.getArrayOfValidations(violations);
 				Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
-				if(user.getId()==null || user.getId().toString().matches("[0-9]")){
-					errormessages.put("id", "Invalid user id format");					
+				if (user.getId() == null || user.getId().toString().matches("[0-9]")) {
+					errormessages.put("id", "Invalid user id format");
 				}
 				throw new ConstraintViolationException(errormessages);
 			}

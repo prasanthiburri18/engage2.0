@@ -4,6 +4,7 @@ package com.engage;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
@@ -87,7 +88,9 @@ public class Application extends SpringBootServletInitializer{
 class GreetingController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GreetingController.class);
     @RequestMapping("/hello/{name}")
-    String hello(@PathVariable String name) {
+    String hello(@PathVariable String name, HttpServletRequest request) {
+    	String str = request.getUserPrincipal().toString();
+    	LOGGER.info(str);
     	LOGGER.info("Testing error log in UserMicroservice");
       //LOGGER.error("Testing error log in UserMicroservice");
         return "Hello, " + name + "!";

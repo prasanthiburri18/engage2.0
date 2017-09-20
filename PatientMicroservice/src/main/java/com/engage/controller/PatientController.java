@@ -302,7 +302,7 @@ public class PatientController {
 				response.setStatuscode(200);
 				return response;
 			} else {
-				response.setMessage("Patient doen't exists.");
+				response.setMessage("Patient doesn't exists.");
 				response.setStatuscode(204);
 				return response;
 			}
@@ -312,7 +312,7 @@ public class PatientController {
 			response.setStatuscode(203);
 			return response;
 		} catch (Exception ex) {
-			response.setMessage("Patient doen't exists.");
+			response.setMessage("Patient doesn't exists.");
 			response.setStatuscode(203);
 			return response;
 		}

@@ -73,6 +73,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 			Set<GrantedAuthority> grant = new HashSet<>();
 			SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getUserType());
+			grant.add(authority);
 			userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
 					grant);
 			// userRoles.getRoleId()

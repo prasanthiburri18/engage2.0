@@ -1,6 +1,7 @@
 package com.engage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,7 @@ import org.springframework.web.filter.GenericFilterBean;
  */
 @Component
 @PropertySource("classpath:referer.properties")
+//@ConfigurationProperties(prefix="valid")
 @Order(value = 4)
 public class RefererFilter extends GenericFilterBean {
 	/**
@@ -41,6 +44,8 @@ public class RefererFilter extends GenericFilterBean {
 	 */
 	@Value(value = "${valid.referers}")
 	private String[] allowedReferers;
+	//@Value(value = "${valid.referers}")
+	//private List<String> allowedReferers=new ArrayList<>();
 
 	/*
 	 * (non-Javadoc)
@@ -57,6 +62,7 @@ public class RefererFilter extends GenericFilterBean {
 		// allowedReferers =environment.getProperty("valid.referers",
 		// String[].class);
 		final List<String> listReferer = Arrays.asList(allowedReferers);
+	//	final List<String> listReferer = allowedReferers;
 
 		if (referer == null || listReferer.stream().noneMatch(s -> referer.contains(s))) {
 			// logout logic

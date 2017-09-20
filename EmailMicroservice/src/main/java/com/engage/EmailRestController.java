@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.velocity.app.VelocityEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -27,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/email")
 @PropertySource("classpath:mail.properties")
 public class EmailRestController{
+	
+	private static Logger LOGGER = LoggerFactory.getLogger(EmailRestController.class);
 	@Value("${mail.from}")	
 public String fromEmail;
 	@Autowired
@@ -43,7 +48,9 @@ public String fromEmail;
 	}
 
 	@RequestMapping(value = "send", method = RequestMethod.POST, produces = { "application/xml", "application/json" })
-	public ResponseEntity<Email> sendSimpleMail(@RequestBody Email email)throws Exception {
+	public ResponseEntity<Email> sendSimpleMail(@RequestBody Email email, HttpServletRequest request)throws Exception {
+		
+		LOGGER.info(request.getUserPrincipal().toString());
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
 		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -58,7 +65,7 @@ public String fromEmail;
 
 	@RequestMapping(value = "attachments", method = RequestMethod.POST, produces = { "application/xml", "application/json" })
 	public ResponseEntity<Email> attachments(@RequestBody Email email) throws Exception {
-
+		
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
 		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);

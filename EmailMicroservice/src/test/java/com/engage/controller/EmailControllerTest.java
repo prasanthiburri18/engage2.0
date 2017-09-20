@@ -1,5 +1,6 @@
 package com.engage.controller;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 public class EmailControllerTest {
 	
-	/*@Autowired
+	@Autowired
 	private MockMvc mockClient;
-	*/
+	
 	@Autowired
 	private EmailRestController emailRestController;
-	/*@Test
+	@Test
 	public void emailTest() throws JsonProcessingException, Exception{
 		ObjectMapper objectMapper = new ObjectMapper();
 		Email email = new Email();
@@ -40,8 +41,8 @@ public class EmailControllerTest {
 				.andReturn();
 	}
 	
-	*/
 	@Test
+	@Ignore
 	public void sendEmailTest() throws JsonProcessingException, Exception{
 		//EmailRestController erc = new EmailRestController();
 		Email email = new Email();
@@ -49,7 +50,7 @@ public class EmailControllerTest {
 		email.to="s.krishna@mindtechlabs.com";
 		email.text="Hello";
 		email.subject="test";
-		emailRestController.sendSimpleMail(email);
+		//emailRestController.sendSimpleMail(email);
 		/*
 		MvcResult result =mockClient.perform(
 				MockMvcRequestBuilders.post("/email/send")
