@@ -2428,7 +2428,7 @@ function patientChildblockdelete(id)
     var inpid = {"id": id};
     $.ajax({
         url: pathwayapibase + '/api/v1/deletepatientchildblockbyid',
-        type: 'POST',
+        type: 'DELETE',
         async: false,
         dataType: 'json',
         headers: {

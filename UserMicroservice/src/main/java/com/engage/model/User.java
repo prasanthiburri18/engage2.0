@@ -58,7 +58,7 @@ public class User {
 	// @NotNull(message = "Phone number cannot be empty.")
 	// @NotBlank(message = "Phone number cannot be empty.")
 	//@ValidPhoneNumber(message = "Invalid phone number format.")
-	@Pattern(regexp="[1-9][0-9]{9}", message="Invalid phone number format")
+	@Pattern(regexp="^(?:[1-9][0-9]{9}|null|)$", message="Invalid phone number format")
 	@Column(name = "phone")
 	private String phone;
 	@NotNull(message = "Practice name cannot be empty.")

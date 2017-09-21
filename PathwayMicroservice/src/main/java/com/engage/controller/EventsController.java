@@ -105,7 +105,7 @@ public class EventsController {
 	 * @return JsonObject
 	 */
 
-	@RequestMapping(value = "/deleteEvents", method = RequestMethod.POST)
+	@RequestMapping(value = "/deleteEvents", method = RequestMethod.DELETE)
 	public @ResponseBody JsonMessage deleteEvents(
 			@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();

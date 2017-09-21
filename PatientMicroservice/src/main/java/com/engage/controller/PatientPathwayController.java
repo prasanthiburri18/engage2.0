@@ -164,7 +164,7 @@ public class PatientPathwayController {
    * @Inputparam  JsonObject
    * @return JsonObject
    */
-  @RequestMapping(value="/delete_PatientPathway",method = RequestMethod.POST)
+  @RequestMapping(value="/delete_PatientPathway",method = RequestMethod.DELETE)
 
   public @ResponseBody JsonMessage deletePatient(@RequestBody Map<String, Long> json) 
   {

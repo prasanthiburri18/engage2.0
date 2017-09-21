@@ -3,12 +3,18 @@
  */
 package com.engage.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 /**
  * This is a special case. Since we had already configured token store and
@@ -32,10 +38,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	 * {@link AuthorizationServerConfig}
 	 * 
 	 */
-	@Autowired
-	//private DefaultTokenServices tokenServices;
-	//This wires to DefaultTokenServices defined in AuthorizationServerConfig
-	private ResourceServerTokenServices tokenServices;
+/*	@Autowired
+	private TokenStore tokenStore;
+*/
 	/**
 	 * TokenServices configured with JwtTokenStore and JwtAccessTokenConverter
 	 * is leveraged here.
@@ -43,22 +48,50 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
 
-		resources.tokenServices(tokenServices);
+		resources.tokenServices(tokenServices());
+	}
+	
+/*	@Bean
+	@Primary
+	public ResourceServerTokenServices tokenServices() {
+		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+		defaultTokenServices.setTokenStore(tokenStore);
+		return defaultTokenServices;
+	}
+	
+*/	
+
+	@Override
+	public void configure(HttpSecurity http) throws Exception {
+	
+		http// .authenticationProvider(getAuthenticationProvider())
+		.authorizeRequests()
+		.anyRequest().permitAll()
+		.antMatchers("/api/v1/**").authenticated()
+		.and().csrf().disable().formLogin().disable().httpBasic()
+				.disable();
+		;
 	}
 
-	/*
-	 * @Bean public TokenStore tokenStore() { return new
-	 * JwtTokenStore(accessTokenConverter()); }
-	 * 
-	 * @Bean public JwtAccessTokenConverter accessTokenConverter() {
-	 * JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-	 * converter.setSigningKey("123"); return converter; }
-	 * 
-	 * @Bean
-	 * 
-	 * @Primary public DefaultTokenServices tokenServices() {
-	 * DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-	 * defaultTokenServices.setTokenStore(tokenStore()); return
-	 * defaultTokenServices; }
-	 */
+	@Bean
+	public TokenStore tokenStore() {
+		return new JwtTokenStore(accessTokenConverter());
+	}
+
+	@Bean
+	public JwtAccessTokenConverter accessTokenConverter() {
+		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		converter.setSigningKey("secretkey");
+		return converter;
+	}
+
+	@Bean
+
+	@Primary
+	public ResourceServerTokenServices tokenServices() {
+		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+		defaultTokenServices.setTokenStore(tokenStore());
+		return defaultTokenServices;
+	}
+	
 }

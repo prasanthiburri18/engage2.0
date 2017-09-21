@@ -31,7 +31,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Qualifier("authenticationManagerBean")
 	private AuthenticationManager authenticationManager;
 
-
+	
 	/**
 	 * JwtTokenStore returns JwtToken
 	 * 
@@ -79,7 +79,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 		// TODO Auto-generated method stub
-		super.configure(security);
+		/*security.tokenKeyAccess("permitAll()").checkTokenAccess(
+				"isAuthenticated()");
+		*/
+		
+		security.tokenKeyAccess("permitAll()").checkTokenAccess(
+				"isAuthenticated()");
 	}
 
 	@Override
@@ -90,13 +95,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		.authorizedGrantTypes("client_credentials", "password", "refresh_token")
 		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")
 		.authorities("admin","user")
-		.accessTokenValiditySeconds(200).and()
+		.accessTokenValiditySeconds(86400).and()
 		.withClient("mailmicroservice")
 		.secret("Password")
 		.authorizedGrantTypes("client_credentials", "password", "refresh_token")
 		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")
 		.authorities("admin","user")
-		.accessTokenValiditySeconds(200);
+		.accessTokenValiditySeconds(86400);
 	}
 
 }

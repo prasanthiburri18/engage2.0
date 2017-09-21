@@ -3,14 +3,17 @@ package com.engage.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,7 +27,8 @@ import org.springframework.security.oauth2.client.token.DefaultAccessTokenReques
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 
 @Configuration
-// @EnableWebSecurity
+@EnableWebSecurity
+@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
@@ -69,7 +73,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		logger.info("Overriding spring security.");
 
 		http// .authenticationProvider(getAuthenticationProvider())
-				.authorizeRequests().anyRequest().permitAll().and().csrf().disable().formLogin().disable().httpBasic()
+		.authorizeRequests()
+		//.anyRequest().permitAll()
+		.antMatchers("/**").permitAll()
+		//.antMatchers("/api/v1/**").authenticated()
+		.and().csrf().disable().formLogin().disable().httpBasic()
 				.disable();
 		;
 	}

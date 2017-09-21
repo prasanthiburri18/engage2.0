@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.naming.AuthenticationException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
@@ -21,6 +23,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -61,9 +64,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class LoginController {
 
 	/**
-	 * Class' logger
+	 * Class' LOGGER
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 	@Value("${microService.URL}")
 	public String baseURL;
 	@Value("${portal.URL}")
@@ -132,7 +135,7 @@ public class LoginController {
 			// _userDao.getByUserName(user.getEmail(),AdvancedEncryptionStandard.encrypt(user.getPassword()));
 			// to comply with previous code
 			User validateUser = null;
-			logger.info("Is valid user?" + isValidAuthentication);
+			LOGGER.info("Is valid user?" + isValidAuthentication);
 
 			if (isValidAuthentication) {
 				validateUser = _userDao.getById(authentication.getName());
@@ -242,10 +245,9 @@ public class LoginController {
 				// restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send",
 				// data1,String.class );
 				// Engage2.0
-				 final String simpleMailUrl = baseURL+"/email/send";
-				restTemplate.postForObject(simpleMailUrl, data1,String.class
-				 );
-				//Engage2.0
+				final String simpleMailUrl = baseURL + "/email/send";
+				restTemplate.postForObject(simpleMailUrl, data1, String.class);
+				// Engage2.0
 				response.setMessage("User registered successfully");
 				response.setStatuscode(200);
 				return response;
@@ -492,10 +494,10 @@ public class LoginController {
 		try {
 			if ((_userDao.getByEmail(AdvancedEncryptionStandard.decrypt(json.get("emailid"))).size() > 0)) {
 				User user = _userDao.getById(AdvancedEncryptionStandard.decrypt(json.get("emailid")));
-				//user.setPassword(AdvancedEncryptionStandard.encrypt(json.get("password")));
-				//Engage2.0 change
+				// user.setPassword(AdvancedEncryptionStandard.encrypt(json.get("password")));
+				// Engage2.0 change
 				user.setPassword(passwordEncoder.encode(json.get("password")));
-				
+
 				_userDao.update(user);
 				response.setMessage("Password updated successfully.");
 				response.setStatuscode(200);
@@ -580,6 +582,39 @@ public class LoginController {
 			}
 		} catch (Exception e) {
 			response.setMessage(e.getMessage());
+			response.setStatuscode(204);
+			return response;
+		}
+	}
+
+	@RequestMapping(value = "/api/v1/userbasicinfo", method = RequestMethod.GET)
+
+	public @ResponseBody JsonMessage getUserInfo(HttpServletRequest request) {
+		JsonMessage response = new JsonMessage();
+		try {
+			if (request.getUserPrincipal() != null) {
+				String userEmail = request.getUserPrincipal().getName();
+
+				User validateUser = _userDao.getById(userEmail);
+
+				Map<String, Object> data1 = new HashMap<String, Object>();
+				data1.put("UserBacsicInfo", validateUser);
+				response.setMessage("User info");
+				response.setData(data1);
+				response.setStatuscode(200);
+				return response;
+			} else {
+				throw new AuthenticationCredentialsNotFoundException("You are not authorized to access this resource");
+			}
+		} catch(AuthenticationCredentialsNotFoundException aex){
+			response.setData(aex.getMessage());
+			response.setStatuscode(403);
+			return response;
+			
+		}catch (Exception ex) {
+		
+			response.setMessage(ex.getMessage());
+
 			response.setStatuscode(204);
 			return response;
 		}

@@ -118,7 +118,7 @@ public class PathwayController {
 	 * @return Jsonobject
 	 */
 
-	@RequestMapping(value = "/deletePathway", method = RequestMethod.POST)
+	@RequestMapping(value = "/deletePathway", method = RequestMethod.DELETE)
 	public @ResponseBody JsonMessage deletePathway(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {
@@ -147,7 +147,7 @@ public class PathwayController {
 	 * @Inputparam Json object
 	 * @return Jsonobject
 	 */
-	@RequestMapping(value = "/deletepatientchildblockbyid", method = RequestMethod.POST)
+	@RequestMapping(value = "/deletepatientchildblockbyid", method = RequestMethod.DELETE)
 	public @ResponseBody JsonMessage deletepatientchildblockbyid(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
@@ -64,8 +65,13 @@ public class PatientController {
 	@Autowired
 	private PathwayEventsDao _pathwayEventsDao;
 
-	@Value("scheduleMicroserviceBaseUrl")
+	@Value("${scheduleMicroserviceBaseUrl}")
 	private String scheduleMicroserviceBaseUrl;
+	
+	@Value("${pathwayMicroserviceBaseUrl}")
+	private String pathwayMicroserviceBaseUrl;
+	
+	
 	@Autowired
 	private Validator validator;
 
@@ -116,8 +122,9 @@ public class PatientController {
 				// String results =
 				// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
 				// String.class);
+				String patientPathwayCronUrl = pathwayMicroserviceBaseUrl+"/api/v1/patientpathwaycron";
 				String results = restTemplate.getForObject(
-						"http://localhost:8080/PathwayMicroservice/api/v1/patientpathwaycron", String.class);
+						patientPathwayCronUrl, String.class);
 				// data1.put("toNumber", "+91"+user.getPhone());
 				data1.put("toNumber", "+1" + user.getPhone());// for us
 				if (orgmessage.equals("")) {
@@ -132,7 +139,7 @@ public class PatientController {
 				// Str=restTemplate.postForObject("http://35.166.195.23:8080/ScheduleMicroservice/api/v1/sendSms",
 				// data1,String.class );
 				final String sendSmsUrl = scheduleMicroserviceBaseUrl+"/api/v1/sendSms";
-				String Str = restTemplate.postForObject("http://localhost:8080/ScheduleMicroservice/api/v1/sendSms",
+				String Str = restTemplate.postForObject(sendSmsUrl,
 						data1, String.class);
 			} else {
 				// ignore
@@ -215,8 +222,9 @@ public class PatientController {
 						// String results =
 						// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
 						// String.class);
+						String patientPathwayCronUrl = pathwayMicroserviceBaseUrl+"/api/v1/patientpathwaycron";
 						String results = restTemplate.getForObject(
-								"http://localhost:8080/PathwayMicroservice/api/v1/patientpathwaycron", String.class);
+								patientPathwayCronUrl, String.class);
 						// data1.put("toNumber", "+91"+user.getPhone());
 						data1.put("toNumber", "+1" + user.getPhone());// for us
 						if (orgmessage.equals("")) {
@@ -233,8 +241,9 @@ public class PatientController {
 						// String
 						// Str=restTemplate.postForObject("http://35.166.195.23:8080/ScheduleMicroservice/api/v1/sendSms",
 						// data1,String.class );
+						String sendSmsUrl = scheduleMicroserviceBaseUrl+"/api/v1/sendSms";
 						String Str = restTemplate.postForObject(
-								"http://localhost:8080/ScheduleMicroservice/api/v1/sendSms", data1, String.class);
+								sendSmsUrl, data1, String.class);
 
 					}
 
@@ -269,9 +278,13 @@ public class PatientController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/view_Patient", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage viewPatient(@RequestBody Map<String, Long> json) {
+	public @ResponseBody JsonMessage viewPatient(@RequestBody Map<String, Long> json, HttpServletRequest request) {
 		JsonMessage response = new JsonMessage();
 		try {
+			if(request.getUserPrincipal()!=null){
+				String str = request.getUserPrincipal().getName();
+			}
+			String str = request.getUserPrincipal().getName();
 			Patient patient = _patientDao.getById(json.get("id"));
 			// Engage2.0
 			final Long orgId = json.get("orgId");
@@ -292,8 +305,9 @@ public class PatientController {
 				// Map<String,Object> pathway=(Map<String, Object>)
 				// restTemplate.postForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/listPathwayEventForPatients",
 				// data1,Object.class );
+				String listPathwayEventsUrl=pathwayMicroserviceBaseUrl+"/api/v1/listPathwayEventForPatients";
 				Map<String, Object> pathway = (Map<String, Object>) restTemplate.postForObject(
-						"http://localhost:8080/PathwayMicroservice/api/v1/listPathwayEventForPatients", data1,
+						listPathwayEventsUrl, data1,
 						Object.class);
 
 				data.put("pathwayInfo", pathway);
@@ -344,8 +358,9 @@ public class PatientController {
 				// Map<String,Object> pathway=(Map<String, Object>)
 				// restTemplate.postForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/listPathwayEventForPatients",
 				// data1,Object.class );
+				String listPathwayEventsUrl=pathwayMicroserviceBaseUrl+"/api/v1/listPathwayEventForPatients";
 				Map<String, Object> pathway = (Map<String, Object>) restTemplate.postForObject(
-						"http://localhost:8080/PathwayMicroservice/api/v1/listPathwayEventForPatients", data1,
+						listPathwayEventsUrl, data1,
 						Object.class);
 
 				data.put("pathwayInfo", pathway);
@@ -369,7 +384,7 @@ public class PatientController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
-	@RequestMapping(value = "/delete_Patient", method = RequestMethod.POST)
+	@RequestMapping(value = "/delete_Patient", method = RequestMethod.DELETE)
 	public @ResponseBody JsonMessage deletePatient(@RequestBody Map<String, Long> json) {
 		JsonMessage response = new JsonMessage();
 		try {
@@ -557,8 +572,9 @@ public class PatientController {
 				// String results =
 				// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
 				// String.class);
+				String patienPathwayCronUrl=pathwayMicroserviceBaseUrl+"/api/v1/patientpathwaycron";
 				String results = restTemplate.getForObject(
-						"http://localhost:8080/PathwayMicroservice/api/v1/patientpathwaycron", String.class);
+						patienPathwayCronUrl, String.class);
 				response.setMessage("Thank you for joining. You will start receiving messages");
 				response.setStatuscode(200);
 				return new ResponseEntity<String>("Thank you for joining. You will start receiving messages.",
@@ -606,8 +622,9 @@ public class PatientController {
 				// String results =
 				// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
 				// String.class);
+				String patientPathwayCronUrl=pathwayMicroserviceBaseUrl+"/api/v1/patientpathwaycron";
 				String results = restTemplate.getForObject(
-						"http://localhost:8080/PathwayMicroservice/api/v1/patientpathwaycron", String.class);
+						patientPathwayCronUrl, String.class);
 				response.setMessage("Thank you for joining. You will start receiving messages.");
 				response.setStatuscode(200);
 				return response;

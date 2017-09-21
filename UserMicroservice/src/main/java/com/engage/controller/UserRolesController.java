@@ -32,7 +32,7 @@ public class UserRolesController {
   @Autowired
   private Validator validator;
   
-  @RequestMapping(value="/delete")
+  @RequestMapping(value="/delete", method=RequestMethod.DELETE)
   @ResponseBody
   public String delete(Integer id) {
     try {

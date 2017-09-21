@@ -21,7 +21,7 @@ public class JwtFilter extends GenericFilterBean {
     public void doFilter(final ServletRequest req,
                          final ServletResponse res,
                          final FilterChain chain) throws IOException, ServletException {
-        final HttpServletRequest request = (HttpServletRequest) req;
+    	  final HttpServletRequest request = (HttpServletRequest) req;
 
         final String authHeader = request.getHeader("Authorization");
         System.out.println(authHeader);
@@ -31,7 +31,10 @@ public class JwtFilter extends GenericFilterBean {
 
         final String token = authHeader.substring(7); // The part after "Bearer "
 
-        try {
+        //Removed as this filter is not needed
+        
+        
+      /*  try {
             final Claims claims = Jwts.parser().setSigningKey("secretkey")
                 .parseClaimsJws(token).getBody();
             request.setAttribute("claims", claims);
@@ -39,7 +42,7 @@ public class JwtFilter extends GenericFilterBean {
         catch (final SignatureException e) {
             throw new ServletException("Invalid token.");
         }
-
+*/
         chain.doFilter(req, res);
     }
 

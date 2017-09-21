@@ -101,7 +101,7 @@ public class BlocksController {
 	 * @return JsonObject
 	 */
 
-	@RequestMapping(value = "/deleteBlock", method = RequestMethod.POST)
+	@RequestMapping(value = "/deleteBlock", method = RequestMethod.DELETE)
 	public @ResponseBody JsonMessage deleteBlock(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {

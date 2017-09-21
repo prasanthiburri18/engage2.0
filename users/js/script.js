@@ -37,18 +37,26 @@ $('document').ready(function ()
 
         var useremail = $("#user_email").val();
         var pass = $("#password").val();
-        var datat = {"email": useremail, "password": pass};
-
-        var ajaxurl = userapibase + '/login';
+       // var datat = {"email": useremail, "password": pass};
+        var datat = {"username": useremail, "password": pass, "grant_type":"password"};
+        function client_basic_auth(clientUser, clientPassword){
+        	var tok=clientUser+":"+clientPassword;
+        	var hash = window.btoa(tok);
+        	return "Basic "+hash;
+        }
+        var paramData = jQuery.param(datat,true);
+        var ajaxurl = userapibase + '/oauth/token';
         $.ajax({
             url: ajaxurl,
             type: 'POST',
             dataType: 'json',
             "async": true,
             "crossDomain": true,
-            contentType: 'application/json; charset=UTF-8',
+           // contentType: 'application/json; charset=UTF-8',
+            contentType:'application/x-www-form-urlencoded; charset=UTF-8',
             Accept: "application/json",
-            data: JSON.stringify(datat),
+            headers:{"Authorization":client_basic_auth("users","Password")},
+            data:paramData,// JSON.stringify(datat),
             beforeSend: function ()
             {
 
@@ -60,21 +68,59 @@ $('document').ready(function ()
 
 
 
-                if (response.data != null) {
+                if (response != null) {
 
-                    localStorage.setItem('userinfo', JSON.stringify(response.data.UserBacsicInfo));
+                   // localStorage.setItem('userinfo', JSON.stringify(response.data.UserBacsicInfo));
 
-                    setUser(response.data.UserBacsicInfo);
-                    setToken(response.data.token);
+                    //setUser(response.data.UserBacsicInfo);
+                //    setToken(response.data.token);
+                    //New security change
+                    setToken(response.access_token);
+                    setRefreshToken(response.refresh_token);
+                    if(localStorage.getItem("authtoken")!=null)
+                    {
+                     var usertoken=localStorage.getItem("authtoken");
+                     var br='Bearer ';
+                      var securitytoken = br.concat(usertoken);
+                    }
+                    var ajaxurl = userapibase+"/api/v1/userbasicinfo"
+                    $.ajax({
+                        url: ajaxurl,
+                        type: 'GET',
+                        dataType: 'json',
+                        "async": true,
+                        "crossDomain": true,
+                        contentType: 'application/json; charset=UTF-8',
+                        Accept: "application/json",
+                        headers:{ 'Authorization':securitytoken},
+                      //  data: JSON.stringify(datat),
+                        beforeSend: function ()
+                        {
 
-                    setTimeout(' window.location.href = "patientslist.html"; ', 1000);
-                    $.LoadingOverlay("hide");
+                            $("#error").fadeOut();
+                            $.LoadingOverlay("show");
+                        },
+                        success:function(response){
+                        	if(response.data!=null){
+                        	setUser(response.data.UserBacsicInfo);
+                        	  $.LoadingOverlay("hide");
+                        	  
+                        	  
+                        	  setTimeout(' window.location.href = "patientslist.html"; ', 1000);
+                        	}
+                        }
+                        	
+                    });
+                    
+                    //End New security change
+
+                 //   $.LoadingOverlay("hide");
 
                 } else {
 
                     $.LoadingOverlay("hide");
                     $("#error").fadeIn(500, function () {
-                        $("#error").html('<div class="alert alert-danger">Incorrect Email/Pasword combination. Please try again</div>');
+                        $("#error").html('<div class="alert alert-danger">Incorrect Email/Password combination. Please try again</div>');
 
                     });
 
@@ -253,10 +299,20 @@ function getToken() {
     return authtoken;
 }
 function setUser(userdata) {
-    localStorage.setItem("userdata", JSON.stringify(userdata));
+    localStorage.setItem("userinfo", JSON.stringify(userdata));
 }
 function getUser() {
 
-    var userdata = localStorage.getItem("userdata");
+    var userdata = localStorage.getItem("userinfo");
     return userdata;
 }
+
+
+//Engage2.0 change
+function setRefreshToken(token){
+	localStorage.setItem("refresh_token", token);
+}
+
+
+
+//Engage2.0 changes ends

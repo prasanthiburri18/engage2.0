@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
@@ -48,9 +47,9 @@ public String fromEmail;
 	}
 
 	@RequestMapping(value = "send", method = RequestMethod.POST, produces = { "application/xml", "application/json" })
-	public ResponseEntity<Email> sendSimpleMail(@RequestBody Email email, HttpServletRequest request)throws Exception {
+	public ResponseEntity<Email> sendSimpleMail(@RequestBody Email email)throws Exception {
 		
-		LOGGER.info(request.getUserPrincipal().toString());
+	//	LOGGER.info(request.getUserPrincipal().toString());
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
 		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);

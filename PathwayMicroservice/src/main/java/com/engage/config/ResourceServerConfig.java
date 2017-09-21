@@ -31,7 +31,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 	
-	/*
+	
 	 @Override
 	    public void configure(HttpSecurity http) throws Exception {
 	        http
@@ -39,10 +39,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	                .formLogin().disable()
 	                .httpBasic().disable()
 	                .authorizeRequests()
-	                .antMatchers("/**").permitAll()
+	                .anyRequest().permitAll();
 	                ;
 	    }
-*/
+
 	
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {

@@ -360,7 +360,7 @@ function patientdelete()
     var data = {"id": pdid};
     $.ajax({
         url: patientapibase + '/api/v1/delete_Patient',
-        type: 'POST',
+        type: 'DELETE',
         dataType: 'json',
         headers: {
             'Authorization': securitytoken,

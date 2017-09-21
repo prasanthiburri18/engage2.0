@@ -30,8 +30,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-//For now excluding SecurityAutoConfigurtion.class. As security is not implement. Just BCryptEncoder is used
-@SpringBootApplication//(exclude={SecurityAutoConfiguration.class})
+@SpringBootApplication
 @EnableWebMvc
 public class Application extends SpringBootServletInitializer{
 //	@Bean
@@ -88,9 +87,9 @@ public class Application extends SpringBootServletInitializer{
 class GreetingController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GreetingController.class);
     @RequestMapping("/hello/{name}")
-    String hello(@PathVariable String name, HttpServletRequest request) {
-    	String str = request.getUserPrincipal().toString();
-    	LOGGER.info(str);
+    String hello(@PathVariable String name) {
+   
+    	
     	LOGGER.info("Testing error log in UserMicroservice");
       //LOGGER.error("Testing error log in UserMicroservice");
         return "Hello, " + name + "!";

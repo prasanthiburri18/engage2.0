@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +31,6 @@ import com.engage.dao.UserRolesDao;
 import com.engage.model.Organization;
 import com.engage.model.User;
 import com.engage.model.UserRoles;
-import com.engage.util.AdvancedEncryptionStandard;
 import com.engage.util.JsonMessage;
 
 /**
@@ -58,6 +55,7 @@ public class UserController {
 	private UserRolesDao _userRolesDao;
 	@Autowired
 	private OrganizationDao _organizationDao;
+	
 	@Value("${portal.URL}")
 	public String portalURL;
 	
