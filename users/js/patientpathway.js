@@ -516,7 +516,7 @@ $('document').ready(function ()
 
         $.ajax({
             url: pathwayapibase + '/api/v1/updateEvents',
-            type: 'POST',
+            type: 'PUT',
             dataType: 'json',
             headers: {
                 'Authorization': securitytoken,
@@ -1644,7 +1644,7 @@ $('document').ready(function ()
 
             $.ajax({
                 url: pathwayapibase + '/api/v1/updatePatientPathwayblock',
-                type: 'POST',
+                type: 'PUT',
                 async: false,
                 dataType: 'json',
                 headers: {

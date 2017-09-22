@@ -130,7 +130,7 @@ public class BlocksController {
 	 * @Inputparam Block JsonObject
 	 * @return JsonObject
 	 */
-	@RequestMapping(value = "/updateBlock", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateBlock", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage updateBlock(@RequestBody Blocks pathway) {
 		JsonMessage response = new JsonMessage();
 		try { // Engage2.0 start

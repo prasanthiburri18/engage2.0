@@ -173,7 +173,7 @@ public class PathwayController {
 	 * @Inputparam pathway object
 	 * @return JsonObject
 	 */
-	@RequestMapping(value = "/updatePathway", method = RequestMethod.POST)
+	@RequestMapping(value = "/updatePathway", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage updatePathway(@RequestBody final Pathway pathway) {
 		JsonMessage response = new JsonMessage();
 		try {

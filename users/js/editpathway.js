@@ -737,7 +737,7 @@ $('document').ready(function ()
 
         $.ajax({
             url: pathwayapibase + '/api/v1/updateBlock',
-            type: 'POST',
+            type: 'PUT',
             async: false,
             dataType: 'json',
             headers: {

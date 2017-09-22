@@ -523,8 +523,8 @@ public class LoginController {
 	 * @return JsonObject
 	 */
 
-	@RequestMapping(value = "/getAllPraticeNames", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage getAllPraticeNames(@RequestBody Map<String, String> json) {
+	@RequestMapping(value = "/getAllPraticeNames", method = RequestMethod.GET)
+	public @ResponseBody JsonMessage getAllPraticeNames(){//(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
 		try {
 			Map<String, Object> data = new HashMap<String, Object>();
