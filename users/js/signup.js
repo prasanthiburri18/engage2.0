@@ -36,11 +36,11 @@ $('document').ready(function ()
 
     $.ajax({
         url: userapibase + '/getAllPraticeNames',
-        type: 'POST',
-        dataType: 'json',
-        contentType: "application/json",
+        type: 'GET',
+        //dataType: 'json',
+        //contentType: "application/json",
         Accept: "application/json",
-        data: JSON.stringify(datat),
+     //   data: JSON.stringify(datat),
         beforeSend: function ()
         {
             $("#error").fadeOut();
