@@ -28,16 +28,12 @@ import org.springframework.security.oauth2.client.token.grant.client.ClientCrede
 
 @Configuration
 @EnableWebSecurity
+//Order is specified as lowest. So that ResourceServerConfig has higher priority
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
-	/**
-	 * Encoder for password hashing. Changing logRounds is not advisable
-	 * 
-	 * @param args
-	 */
 
 	@Bean
 	@Override
@@ -48,6 +44,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
+	/**
+	 * Encoder for password hashing. Changing logRounds is not advisable
+	 * 
+	 * @param args
+	 */
+
 	@Bean
 	public PasswordEncoder getPasswordEncoder() {
 		// Don't change 10 log rounds hashing hardcoded.
@@ -55,6 +57,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder(logRounds);
 	}
 
+	/**
+	 * Wire CustomUserDetailService here
+	 * @return
+	 */
 	@Bean
 	public AuthenticationProvider getAuthenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -63,11 +69,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return authProvider;
 	}
 
+	/**
+	 * AuthBuilder
+	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(getAuthenticationProvider());
 	}
-
+	/**
+	 * This is lower order than resource server config
+	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		logger.info("Overriding spring security.");
@@ -83,18 +94,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	// @formatter:on
 
+	/**
+	 * Microservice to Microservice communication with {@link OAuth2RestTemplate}.
+	 * This should replace existing RestTemplate
+	 * @return
+	 */
 	@Bean
 	public OAuth2RestTemplate restTemplate() {
 		OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(clientCredentialsResourceDetails());
 		return restTemplate;
 	}
 
+	/**
+	 * Client details. Here, MailMicroservice
+	 * @return
+	 */
 	@Bean
 	@ConfigurationProperties(prefix = "security.oauth2.client")
 	public OAuth2ProtectedResourceDetails clientCredentialsResourceDetails() {
 		return new ClientCredentialsResourceDetails();
 	}
-
+	/**
+	 * Oauth2RestTemplate with Client Context and Details 
+	 * @param ccrd
+	 * @return
+	 */
 	@Bean(name = "ouath2RestTemplate")
 	public OAuth2RestTemplate getOAuth2RestTemplate(OAuth2ProtectedResourceDetails ccrd) {
 		AccessTokenRequest accessTokenRequest = new DefaultAccessTokenRequest();
@@ -105,7 +129,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		return new OAuth2RestTemplate(ccrd, context);
 	}
-
+	/**
+	 * Not necessary. But incase of multiple clients, this might be useful
+	 * @return
+	 */
 	@Bean
 	public AccessTokenRequest getAccessTokenRequest() {
 		return new DefaultAccessTokenRequest();

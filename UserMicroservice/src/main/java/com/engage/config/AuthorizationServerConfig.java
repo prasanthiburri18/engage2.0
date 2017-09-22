@@ -70,12 +70,17 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		return defaultTokenServices;
 	}
 
+	/**
+	 * Token endpoint configuration. Wire authManagner, JwtTokenStore and AccessTokenConverter
+	 */
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore())
 				.accessTokenConverter(accessTokenConverter());
 	}
-
+/**
+ * Security on token endpoints
+ */
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 		// TODO Auto-generated method stub
@@ -87,6 +92,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				"isAuthenticated()");
 	}
 
+	/**
+	 * Client details of users, and all other microservices
+	 */
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()

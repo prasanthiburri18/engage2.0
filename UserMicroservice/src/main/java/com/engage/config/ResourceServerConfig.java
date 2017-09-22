@@ -50,17 +50,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 		resources.tokenServices(tokenServices());
 	}
-	
-/*	@Bean
-	@Primary
-	public ResourceServerTokenServices tokenServices() {
-		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-		defaultTokenServices.setTokenStore(tokenStore);
-		return defaultTokenServices;
-	}
-	
-*/	
 
+	/**
+	 * This overrides HttpSecurity configured in {@link SecurityConfig}
+	 */
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 	
@@ -77,16 +70,22 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
 	}
-
+	/**
+	 * Symmetric key is used here
+	 * @return
+	 */
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 		converter.setSigningKey("secretkey");
 		return converter;
 	}
-
+	/**
+	 * {@link ResourceServerTokenServices} for resource server
+	 * 
+	 * @return
+	 */
 	@Bean
-
 	@Primary
 	public ResourceServerTokenServices tokenServices() {
 		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();

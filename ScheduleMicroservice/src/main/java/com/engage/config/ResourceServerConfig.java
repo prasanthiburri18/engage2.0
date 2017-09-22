@@ -17,11 +17,6 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 /**
- * This is a special case. Since we had already configured token store and
- * access token converter in {@link AuthorizationServerConfig}. We are
- * autowiring those beans here in ResourceServerConfig. All other microservices
- * except this(UserMicroservice) must have tokenstore and AccesstokenConverter
- * beans.
  * 
  * @author mindtech-labs
  *
@@ -30,7 +25,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-	
+	/**
+	 * Has more preference than {@link SecurityConfig}
+	 */
 	
 	 @Override
 	    public void configure(HttpSecurity http) throws Exception {
@@ -43,6 +40,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	                ;
 	    }
 
+	/**
+	 * TokenServices configured with JwtTokenStore and JwtAccessTokenConverter
+	 * is leveraged here.
+	 */
 	
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
@@ -54,7 +55,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
 	}
-
+	/**
+	 * Symmetric key is used here
+	 * @return
+	 */
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();

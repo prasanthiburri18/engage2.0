@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -57,7 +59,8 @@ public class HostFilter extends GenericFilterBean {
 
 		if (host == null || listReferer.stream().noneMatch(s -> s.contains(host))) {
 			// write logout logic here
-
+			//ResponseEntity<String> responseEntity = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		//	response = responseEntity;
 			LOGGER.error("Invalid host: " + host);
 		} else {
 			LOGGER.info("Host " + host + " is valid");

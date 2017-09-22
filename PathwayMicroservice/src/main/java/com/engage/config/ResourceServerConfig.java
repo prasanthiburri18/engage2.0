@@ -44,6 +44,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	    }
 
 	
+	 /**
+		 * TokenServices configured with JwtTokenStore and JwtAccessTokenConverter
+		 * is leveraged here.
+		 */
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
 
@@ -54,7 +58,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
 	}
-
+	/**
+	 * Symmetric key is used here
+	 * @return
+	 */
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
