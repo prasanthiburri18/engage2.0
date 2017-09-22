@@ -125,6 +125,14 @@ $('document').ready(function ()
                     });
 
                 }
+            },
+            error: function(err){
+            	$.LoadingOverlay("hide");
+                $("#error").fadeIn(500, function () {
+                    $("#error").html('<div class="alert alert-danger">Incorrect Email/Password combination. Please try again</div>');
+
+                });
+
             }
         });
         return false;
