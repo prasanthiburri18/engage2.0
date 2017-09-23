@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,7 @@ public class HostFilter extends GenericFilterBean {
 			// write logout logic here
 			//ResponseEntity<String> responseEntity = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		//	response = responseEntity;
+			((HttpServletResponse)response).sendRedirect("https://engage.quantifiedcare.com/users");
 			LOGGER.error("Invalid host: " + host);
 		} else {
 			LOGGER.info("Host " + host + " is valid");

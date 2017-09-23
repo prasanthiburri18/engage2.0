@@ -1,7 +1,6 @@
 package com.engage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,11 +9,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -66,7 +65,9 @@ public class RefererFilter extends GenericFilterBean {
 
 		if (referer == null || listReferer.stream().noneMatch(s -> referer.contains(s))) {
 			// logout logic
-
+			//((HttpServletResponse)response).sendRedirect("http://192.168.0.24:8087/users");
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED);;
+			
 			LOGGER.error("Invalid referer: " + referer);
 		} else {
 			LOGGER.info("Referer "+referer+" is valid");
