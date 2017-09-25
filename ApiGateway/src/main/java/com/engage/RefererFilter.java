@@ -66,7 +66,7 @@ public class RefererFilter extends GenericFilterBean {
 		if (referer == null || listReferer.stream().noneMatch(s -> referer.contains(s))) {
 			// logout logic
 			//((HttpServletResponse)response).sendRedirect("http://192.168.0.24:8087/users");
-			((HttpServletResponse)response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED);;
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
 			
 			LOGGER.error("Invalid referer: " + referer);
 		} else {

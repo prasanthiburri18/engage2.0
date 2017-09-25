@@ -62,7 +62,8 @@ public class HostFilter extends GenericFilterBean {
 			// write logout logic here
 			//ResponseEntity<String> responseEntity = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		//	response = responseEntity;
-			((HttpServletResponse)response).sendRedirect("https://engage.quantifiedcare.com/users");
+			//((HttpServletResponse)response).sendRedirect("https://engage.quantifiedcare.com/users");
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
 			LOGGER.error("Invalid host: " + host);
 		} else {
 			LOGGER.info("Host " + host + " is valid");

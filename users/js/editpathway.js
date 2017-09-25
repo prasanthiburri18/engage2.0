@@ -576,6 +576,14 @@ $('document').ready(function ()
             splitforpagination();
 
 
+        },
+        error: function(response, status){
+        	
+        	if(response.status==412) {
+        	$.LoadingOverlay("hide");
+        		logout();
+        	}
+        	
         }
     });
     /**
@@ -672,6 +680,14 @@ $('document').ready(function ()
                 $("#pathwaytble tr th:nth-child(" + colenindex + ") div").text(meventname);
                 $("#editeventname").val('');
 
+            },
+            error: function(response, status){
+            	
+            	if(response.status==412) {
+            	$.LoadingOverlay("hide");
+            		logout();
+            	}
+            	
             }
         });
 
@@ -771,7 +787,7 @@ $('document').ready(function ()
                     $("#editeventblockModal").modal('hide');
                 }
             },
-            error: function () {
+            error: function (response) {
                 $.LoadingOverlay("hide");
                 $.toast({
                     heading: 'Edit Block',
@@ -782,6 +798,15 @@ $('document').ready(function ()
                     loader: false,
                     stack: true
                 });
+                
+              
+                	
+                	if(response.status==412) {
+                	$.LoadingOverlay("hide");
+                		logout();
+                	}
+                	
+           
 
             }
         });
@@ -978,8 +1003,13 @@ $('document').ready(function ()
 //                }
                 updatePathwayInfo(pid, currentpathwayname);
             },
-            error: function () {
-                console.log('IN error @ Mode');
+            error: function(response, status){
+            	
+            	if(response.status==412) {
+            	$.LoadingOverlay("hide");
+            		logout();
+            	}
+            	
             }
         });
 
@@ -1392,6 +1422,14 @@ $('document').ready(function ()
 
                     $("#" + currentid).append(blockhtml);
                     updatePathwayInfo(pid, currentpathwayname);
+                },
+                error: function(response, status){
+                	
+                	if(response.status==412) {
+                	$.LoadingOverlay("hide");
+                		logout();
+                	}
+                	
                 }
             });
 
@@ -1508,6 +1546,14 @@ $('document').ready(function ()
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
                                     updatePathwayInfo(pid, currentpathwayname);
+                                },
+                                error: function(response, status){
+                                	
+                                	if(response.status==412) {
+                                	$.LoadingOverlay("hide");
+                                		logout();
+                                	}
+                                	
                                 }
                             });
                         }
@@ -1599,6 +1645,14 @@ $('document').ready(function ()
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
                                     updatePathwayInfo(pid, currentpathwayname);
+                                },
+                                error: function(response, status){
+                                	
+                                	if(response.status==412) {
+                                	$.LoadingOverlay("hide");
+                                		logout();
+                                	}
+                                	
                                 }
                             });
                         }
@@ -1691,6 +1745,14 @@ $('document').ready(function ()
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
                                     updatePathwayInfo(pid, currentpathwayname);
+                                },
+                                error: function(response, status){
+                                	
+                                	if(response.status==412) {
+                                	$.LoadingOverlay("hide");
+                                		logout();
+                                	}
+                                	
                                 }
                             });
 
@@ -1793,6 +1855,14 @@ $('document').ready(function ()
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
                                     updatePathwayInfo(pid, currentpathwayname);
+                                },
+                                error: function(response, status){
+                                	
+                                	if(response.status==412) {
+                                	$.LoadingOverlay("hide");
+                                		logout();
+                                	}
+                                	
                                 }
                             });
 
@@ -1883,6 +1953,14 @@ $('document').ready(function ()
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
                                     updatePathwayInfo(pid, currentpathwayname);
+                                },
+                                error: function(response, status){
+                                	
+                                	if(response.status==412) {
+                                	$.LoadingOverlay("hide");
+                                		logout();
+                                	}
+                                	
                                 }
                             });
                         }
@@ -1974,6 +2052,14 @@ $('document').ready(function ()
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
                                     updatePathwayInfo(pid, currentpathwayname);
+                                },
+                                error: function(response, status){
+                                	
+                                	if(response.status==412) {
+                                	$.LoadingOverlay("hide");
+                                		logout();
+                                	}
+                                	
                                 }
                             });
                         }
@@ -2078,6 +2164,14 @@ $('document').ready(function ()
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
                                     updatePathwayInfo(pid, currentpathwayname);
+                                },
+                                error: function(response, status){
+                                	
+                                	if(response.status==412) {
+                                	$.LoadingOverlay("hide");
+                                		logout();
+                                	}
+                                	
                                 }
                             });
                         }
@@ -2170,6 +2264,14 @@ $('document').ready(function ()
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
                                     updatePathwayInfo(pid, currentpathwayname);
+                                },
+                                error: function(response, status){
+                                	
+                                	if(response.status==412) {
+                                	$.LoadingOverlay("hide");
+                                		logout();
+                                	}
+                                	
                                 }
                             });
                         }
@@ -2277,6 +2379,14 @@ $('document').ready(function ()
                             $("#" + currentid).append(blockhtml);
                             $saveblocks[bid] = inputBloc;
                             updatePathwayInfo(pid, currentpathwayname);
+                        },
+                        error: function(response, status){
+                        	
+                        	if(response.status==412) {
+                        	$.LoadingOverlay("hide");
+                        		logout();
+                        	}
+                        	
                         }
                     });
                     $.LoadingOverlay("hide");
@@ -2503,9 +2613,13 @@ $('document').ready(function ()
 
                         $.LoadingOverlay("hide");
                     },
-                    error: function (err, status)
-                    {
-                        $.LoadingOverlay("hide");
+                    error: function(response, status){
+                    	$.LoadingOverlay("hide");
+                    	if(response.status==412) {
+                    	
+                    		logout();
+                    	}
+                    	
                     }
                 });
 
@@ -2875,7 +2989,6 @@ function renderblock(blocks) {
 }
 function logout() {
 
-
     localStorage.clear();
 
     window.location.href = "index.html";
@@ -2929,6 +3042,14 @@ function updatePathwayInfo(pid, pname)
                 });
             }
 
+        },
+        error: function(response, status){
+        	$.LoadingOverlay("hide");
+        	if(response.status==412) {
+        	
+        		logout();
+        	}
+        	
         }
     });
 }

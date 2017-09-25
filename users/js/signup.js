@@ -10,7 +10,7 @@
  * for user active. Otherwise the user would be in inactive mode only.
  * 
  */
-
+/*
 var correctCaptchares = '';
 var correctCaptcha = function (response) {
     if (response.length == 0)
@@ -23,7 +23,7 @@ var correctCaptcha = function (response) {
         return true;
     }
 };
-
+*/
 var currentdate = new Date();
 var currenttime = currentdate.getTime();
 $('document').ready(function ()
@@ -37,10 +37,10 @@ $('document').ready(function ()
     $.ajax({
         url: userapibase + '/getAllPraticeNames',
         type: 'GET',
-        //dataType: 'json',
-        //contentType: "application/json",
+        dataType: 'json',
+     //   contentType: "application/json",
         Accept: "application/json",
-     //   data: JSON.stringify(datat),
+       // data: JSON.stringify(datat),
         beforeSend: function ()
         {
             $("#error").fadeOut();
@@ -79,6 +79,14 @@ $('document').ready(function ()
 
 
             }
+        },
+        error: function(response, status){
+        	
+        	if(response.status==412) {
+        	$.LoadingOverlay("hide");
+        		logout();
+        	}
+        	
         }
     });
 
@@ -236,3 +244,12 @@ $('document').ready(function ()
 
 });
 
+
+function logout() {
+
+
+    localStorage.clear();
+
+    window.location.href = "index.html";
+
+}
