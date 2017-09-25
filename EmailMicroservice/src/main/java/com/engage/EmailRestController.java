@@ -49,7 +49,8 @@ public String fromEmail;
 	@RequestMapping(value = "send", method = RequestMethod.POST, produces = { "application/xml", "application/json" })
 	public ResponseEntity<Email> sendSimpleMail(@RequestBody Email email)throws Exception {
 		
-	//	LOGGER.info(request.getUserPrincipal().toString());
+		LOGGER.error("Testing error using system properties");
+		LOGGER.info("Testing error using system properties");
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
 		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);

@@ -74,8 +74,16 @@ public class CustomUserDetailsService implements UserDetailsService {
 			Set<GrantedAuthority> grant = new HashSet<>();
 			SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getUserType());
 			grant.add(authority);
-			userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+			boolean enabled =false;
+			boolean isNotLocked = false;
+			boolean isNotExpired = false;
+			boolean isNotExpiredCredentials=false;
+			if(user.getStatus()!=null&&user.getStatus().equals("Y")){
+			enabled=isNotExpired=isNotLocked=isNotExpiredCredentials=true;
+			}
+			userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),enabled,isNotExpired,isNotExpiredCredentials,isNotLocked,
 					grant);
+			
 			// userRoles.getRoleId()
 		}
 

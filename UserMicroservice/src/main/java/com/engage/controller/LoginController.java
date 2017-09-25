@@ -186,7 +186,7 @@ public class LoginController {
 		try { // Engage2.0
 			if (user != null) {
 				user.setUserType("A");
-				user.setStatus("Y");
+				user.setStatus("N");
 			}
 			Set<ConstraintViolation<User>> violations = validator.validate(user);
 			if (!violations.isEmpty()) {
