@@ -87,18 +87,18 @@ $('document').ready(function ()
         window.location.href = "index.html";
     });
 //Patien DOB Date Picker
-    $("#patientdob").datepicker({
-        showOn: "button",
-        buttonImage: "images/calendar-icon.png",
-        buttonImageOnly: true,
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-100:+0",
-        maxDate: '0',
-        buttonText: "Select date",
-        dateFormat: "yy-mm-dd",
-        constrainInput: false
-    });
+    // $("#patientdob").datepicker({
+    //     showOn: "button",
+    //     buttonImage: "images/calendar-icon.png",
+    //     buttonImageOnly: true,
+    //     changeMonth: true,
+    //     changeYear: true,
+    //     yearRange: "-100:+0",
+    //     maxDate: '0',
+    //     buttonText: "Select date",
+    //     dateFormat: "mm/dd/yy",
+    //     constrainInput: false
+    // });
 
 
 
@@ -141,7 +141,18 @@ $('document').ready(function ()
     });
 
 
-
+    $("#emailpretext").click(function(){
+         $.toast({
+            heading: 'Device Token',
+            text: 'Available only for  Premium users.',
+            textAlign: 'center',
+            position: 'top-center',
+            icon: 'information',
+            loader: false,
+            allowToastClose: false,
+            hideAfter: 5000,
+        });
+    })
 
     var pdata = {"orgId": orgid};
 
@@ -253,19 +264,25 @@ $('document').ready(function ()
 
         var month = d.getMonth() + 1;
         var day = d.getDate();
-
-        var output = d.getFullYear();
-
+         //alert(day)
+        var outputyear = d.getFullYear();
+        //alert(outputyear);
         var cdate = $(this).val();
+        //alert(cdate);
+        var datearr = cdate.split('/');
+        //alert(parseInt(datearr[0]));
+        //alert(parseInt(datearr[1]));
+        //alert(parseInt(datearr[2]));
 
-        var datearr = cdate.split('-');
-
-        if (parseInt(datearr[0]) > parseInt(output)) {
+        if (parseInt(datearr[2]) > parseInt(outputyear)) {
             //CurrentDate is more than SelectedDate
             $(".error").html("Invalid date of birth");
-        } else {
-            //SelectedDate is more than CurrentDate
-            //alert('success');
+        } else if((parseInt(datearr[2]) == parseInt(outputyear)) && (parseInt(datearr[0]) > parseInt(month))) {
+             $(".error").html("Invalid date of birth");
+        }else if((parseInt(datearr[2]) == parseInt(outputyear)) && (parseInt(datearr[0]) == parseInt(month)) && (parseInt(datearr[1]) > parseInt(day))){
+            $(".error").html("Invalid date of birth");   
+        }else{
+            $(".error").text('');
         }
     });
     $("#editpatientdob").datepicker({
@@ -277,7 +294,39 @@ $('document').ready(function ()
         yearRange: "-100:+0",
         maxDate: '0',
         buttonText: "Select date",
-        dateFormat: "yy-mm-dd"
+        dateFormat: "mm/dd/yy",
+        constrainInput: false
+    });
+
+    $("#devicepa").on("click", function () {
+//      $( "#dialog" ).dialog( "open" );
+
+        $.toast({
+            heading: 'Device Token',
+            text: 'Available only for  Premium users.',
+            textAlign: 'center',
+            position: 'top-center',
+            icon: 'information',
+            loader: false,
+            allowToastClose: false,
+            hideAfter: 5000,
+        });
+    });
+
+    $("#emailpa").on("click", function () {
+       
+//      $( "#dialog" ).dialog( "open" );
+
+        $.toast({
+            heading: 'Email',
+            text: 'Available only for  Premium users.',
+            textAlign: 'center',
+            position: 'top-center',
+            icon: 'information',
+            loader: false,
+            allowToastClose: false,
+            hideAfter: 5000,
+        });
     });
 
     /**
@@ -304,12 +353,12 @@ $('document').ready(function ()
                     },
                     phone2: {
                         required: true,
-                        min: 001,
+                        min: 000,
                         minlength: 3
                     },
                     phone3: {
                         required: true,
-                        min: 0001,
+                        min: 0000,
                         minlength: 4
                     },
                     groups: {
@@ -367,17 +416,42 @@ $('document').ready(function ()
     {
         var pfname = $("#editpatienfrmfirstname").val();
         var plname = $("#editpatienfrmlastname").val();
+        
+        valid=1;
         var pdob = $("#editpatientdob").val();
+               //needed format yy-mm-dd
+          var outDate = convertDate(pdob); // 2013-12-06
+        //alert(outDate);
+
         var peid = $("#editpatienid").val();
 
         var phone_aval = $('#editphone1').val();
         var phone_bval = $('#editphone2').val();
         var phone_cval = $('#editphone3').val();
+        var ph_length=parseInt(phone_aval.length)+parseInt(phone_bval.length)+parseInt(phone_cval.length);
+        
+
+       if(!$.isNumeric(phone_aval) || !$.isNumeric(phone_bval) || !$.isNumeric(phone_cval)){
+            
+            valid=0;
+            $("#pherr").text("Please enter a valid phone number");
+             $('html,body').animate({
+                scrollTop: $("#editphone1").offset().top},
+                'slow');
+       }
+        if(ph_length<10) {
+            
+            valid=0;
+            $("#pherr").text("Please enter a valid phone number");
+              $('html,body').animate({
+                scrollTop: $("#editphone1").offset().top},
+                'slow');
+        }
         if (patientcreateddate == '')
             patientcreateddate = currenttime;
         var pnum = phone_aval.toString() + phone_bval.toString() + phone_cval.toString();
         var pedidata = {id: peid, "orgId": orgid, email: "", "firstName": pfname,"clinicianId":clinicianId,
-            "lastName": plname, "phone": pnum, "deviceToken": "6384632", "dob": pdob, "status": "Y",
+            "lastName": plname, "phone": pnum, "deviceToken": "6384632", "dob": outDate, "status": "Y",
             "pathwayId": currentlyselectedpathwayid, events: checkedevents, pathwayName: currentlyselectedpathwayname, createDate: patientcreateddate, updateDate: currenttime}
 
 
@@ -451,7 +525,10 @@ $('document').ready(function ()
         });
 
     });
-
+$("#cancel").click(function () {
+    setTimeout('window.location.href = "patientslist.html";', 10);
+    return false;
+});
 });
 function logout() {
 
@@ -539,8 +616,37 @@ function ViewpatientDetails()
                 $("#editpatienid").val(results.patient.id);
                 $("#editpatienfrmfirstname").val(results.patient.firstName);
                 $("#editpatienfrmlastname").val(results.patient.lastName);
-                $('#editpatientdob').datepicker('setDate', new Date(results.patient.dob));
-                patientcreateddate = results.patient.createDate;
+               //alert(results.patient.dob);
+               var bdate=results.patient.dob.split('-');
+               var n = currentdate.getTimezoneOffset();
+
+               var new_date = moment(results.patient.dob).add(1, 'days');
+              // alert(new_date);
+               //alert(new_date);
+                var day = new_date.format('DD');
+               // alert(day);
+                var month = new_date.format('MM');
+                var year = new_date.format('YYYY');
+
+                var u_date=year+'-'+month+'-'+day;
+               // alert(u_date);
+                u_date=new Date(u_date);
+
+                u_date.setDate(u_date.getDate()+1);
+                //alert(results.patient.dob);
+
+                var d = new Date()
+                
+                $('#editpatientdob').datepicker('setDate', u_date);
+
+                if(n==240)
+                    $('#editpatientdob').datepicker('setDate', new Date(u_date));
+                else{
+                    d=new Date(results.patient.dob);
+                    d.setDate(d.getDate()+1);
+                    $('#editpatientdob').datepicker('setDate', d);
+                }
+
 
 
 
@@ -591,15 +697,15 @@ function showevents(pathwayid) {
                 if (eventval.eventName == "Welcome")
                     chechtml += '<input type="checkbox" disabled name="eventpaths" value="' + eventval.id + '" id="optionscheck' + eventval.id + '">';
                 else
-                    chechtml += '<input type="checkbox"  name="eventpaths" value="' + eventval.id + '" id="optionscheck' + eventval.id + '">';
+                    chechtml += '<input type="checkbox" disabled  name="eventpaths" value="' + eventval.id + '" id="optionscheck' + eventval.id + '">';
 
             } else
             {
                 checkedevents.push(eventval.id);
                 if (eventval.eventName == "Welcome")
-                    chechtml += '<input type="checkbox" disabled checked ="true" name="eventpaths" value="' + eventval.id + '" id="optionscheck' + eventval.id + '">';
+                    chechtml += '<input type="checkbox"  disabled checked ="true" name="eventpaths" value="' + eventval.id + '" id="optionscheck' + eventval.id + '">';
                 else
-                    chechtml += '<input type="checkbox"  checked ="true" name="eventpaths" value="' + eventval.id + '" id="optionscheck' + eventval.id + '">'
+                    chechtml += '<input type="checkbox" disabled   checked ="true" name="eventpaths" value="' + eventval.id + '" id="optionscheck' + eventval.id + '">'
 
             }
         } else
@@ -608,7 +714,7 @@ function showevents(pathwayid) {
             if (eventval.eventName == "Welcome")
                 chechtml += '<input type="checkbox" disabled  checked ="true" name="eventpaths" value="' + eventval.id + '" id="optionscheck' + eventval.id + '">';
             else
-                chechtml += '<input type="checkbox"  checked ="true" name="eventpaths" value="' + eventval.id + '" id="optionscheck' + eventval.id + '">';
+                chechtml += '<input type="checkbox"   checked ="true" name="eventpaths" value="' + eventval.id + '" id="optionscheck' + eventval.id + '">';
         }
 
 
@@ -623,7 +729,7 @@ function showevents(pathwayid) {
 
     });
 }
-$("#cancel").click(function () {
-    setTimeout('window.location.href = "patientslist.html";', 10);
-    return false;
-});
+var convertDate = function(usDate) {
+  var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  return dateParts[3] + "-" + dateParts[1] + "-" + (parseInt(dateParts[2]));
+}

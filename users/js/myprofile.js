@@ -40,6 +40,8 @@ $('document').ready(function ()
     $("#changepasswordmodalevt").click(function () {
 
         $("#changepasswordmodal").modal('show');
+        $("#newpassword").val('');
+        $("#password_again").val('');
     });
 // $(".cancel").click(function() {
 //   
@@ -64,8 +66,10 @@ $('document').ready(function ()
                 },
         messages:
                 {
-                    cfmpassword: "please enter correct text",
-                    newpassword: "please enter correct text",
+                    cfmpassword: "please confirm password",
+                    newpassword: "Password Criteria:<br/>8 to 15 characters<br/>At least one lowercase letter<br/>At least one uppercase letter<br/>At least one numeric digit<br/>At least one special character",
+                    password_again:"Your passwords do not match. Try again.",
+                    passcheck:"Password",
                 },
         submitHandler: changepasswordsubmitForm
     });

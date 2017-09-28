@@ -72,26 +72,27 @@ $('document').ready(function ()
 
         window.location.href = "index.html";
     });
-    $("#patientdob").focusout(function () {
-        var d = new Date();
-
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-
-        var output = d.getFullYear();
-
-        var cdate = $(this).val();
-
-        var datearr = cdate.split('-');
-
-        if (parseInt(datearr[0]) > parseInt(output)) {
-            //CurrentDate is more than SelectedDate
-            $(".error").html("Invalid date of birth");
-        } else {
-            //SelectedDate is more than CurrentDate
-            //alert('success');
-        }
-    });
+//    $("#patientdob").focusout(function () {
+//        var d = new Date();
+//
+//        var month = d.getMonth() + 1;
+//        var day = d.getDate();
+//
+//        var output = d.getFullYear();
+//
+//        var cdate = $(this).val();
+//
+//        var datearr = cdate.split('-');
+//
+//        if (parseInt(datearr[0]) > parseInt(output)) {
+//            //CurrentDate is more than SelectedDate
+//            $(".error").html("Invalid date of birth");
+//        } else {
+//            //SelectedDate is more than CurrentDate
+//            //alert('success');
+//        }
+//    });
+//    
     $("#patientdob").datepicker({
         showOn: "button",
         buttonImage: "images/calendar-icon.png",
@@ -101,7 +102,7 @@ $('document').ready(function ()
         yearRange: '1700:' + new Date().getFullYear(),
         maxDate: '0',
         buttonText: "Select date",
-        dateFormat: "yy-mm-dd",
+        dateFormat: "mm/dd/yy",
         constrainInput: false
     });
 
@@ -251,12 +252,12 @@ $('document').ready(function ()
                     phone2: {
                         required: true,
                         minlength: 3,
-                        min: 001
+                        min: 000
                     },
                     phone3: {
                         required: true,
                         minlength: 4,
-                        min: 0001
+                        min: 0000
 
                     },
                     groups: {
@@ -310,6 +311,37 @@ $('document').ready(function ()
         });
 
     });
+
+    $("#devicepa").on("click", function () {
+//      $( "#dialog" ).dialog( "open" );
+
+        $.toast({
+            heading: 'Device Token',
+            text: 'Available only for  Premium users.',
+            textAlign: 'center',
+            position: 'top-center',
+            icon: 'information',
+            loader: false,
+            allowToastClose: false,
+            hideAfter: 5000,
+        });
+    });
+
+    $("#emailpa").on("click", function () {
+       
+//      $( "#dialog" ).dialog( "open" );
+
+        $.toast({
+            heading: 'Email',
+            text: 'Available only for  Premium users.',
+            textAlign: 'center',
+            position: 'top-center',
+            icon: 'information',
+            loader: false,
+            allowToastClose: false,
+            hideAfter: 5000,
+        });
+    });
     /**
      * @Input JsonObject
      * @returns {JsonObject}
@@ -324,8 +356,22 @@ $('document').ready(function ()
     {
         var pfname = $("#patienfrmfirstname").val();
         var plname = $("#patienfrmlastname").val();
-        var pdob = $("#patientdob").val();
+        
+        var outDate = $("#patientdob").val();
+      //   var date = new Date($('#patientdob').val());
+      // day = date.getDate();
+      // month = date.getMonth() + 1;
+      // year = date.getFullYear();
+      // var outDate=[month, day, year].join('/');
+       //alert(outDate);
+        //alert(outDate);
+        //var ts = moment(outDate).valueOf();
+        //alert(ts);
+        //var alertdd =new Date(moment.unix(outDate));
+       // alert(alertdd);
 
+        var  pdob= convertDate(outDate); // 2013-12-06
+        //alert(pdob)
         var phone_aval = $('#phone1').val();
         var phone_bval = $('#phone2').val();
         var phone_cval = $('#phone3').val();
@@ -510,4 +556,7 @@ $('#cancel').on('click', function (e) {
     $('form').get(0).reset();
     window.location = "patientslist.html";
 });
-          
+          var convertDate = function(usDate) {
+  var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  return dateParts[3] + "-" + dateParts[1] + "-" + dateParts[2];
+}

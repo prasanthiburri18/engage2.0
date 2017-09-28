@@ -54,20 +54,7 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 
-	/**
-	 * Registering {@link RefererFilter} component with
-	 * {@link FilterRegistrationBean}
-	 * 
-	 * @return
-	 */
-	/*@Bean(name = "refererFilter")
-	public FilterRegistrationBean refererFilter() {
-		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-		LOGGER.info("Creating Referer Filter Bean");
-		registrationBean.setFilter(new RefererFilter());
-		return registrationBean;
-	}*/
-
+	
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurerAdapter() {

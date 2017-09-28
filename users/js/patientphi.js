@@ -20,6 +20,35 @@ $(document).ready(function() {
 
 var patientapibase = baseurl + patientmicroservice;
 var bid = getUrlParameter('bid');
+var pathwayid = getUrlParameter('pathwayid');
+var pathwayinpt={"pathwayid":pathwayid};
+// alert(apibase+'/getorgname');
+// alert( JSON.stringify(pathwayinpt));
+$.ajax({
+            url: apibase+'/getorgname',
+            type: 'POST',
+            dataType: 'json',
+            contentType: "application/json",
+            Accept: "application/json",
+            data: JSON.stringify(pathwayinpt),
+            beforeSend: function ()
+            {
+                $("#error").fadeOut();
+                $.LoadingOverlay("show");
+            },
+            success: function (response)
+            {
+                if(response.data!="No Name")
+                {
+                    $("#orgname").html(response.data);
+                    $.LoadingOverlay("hide");
+                }
+            },error:function(err,status){
+                //err
+            }
+            });
+
+
 $("#messwidget").css('display','none');
 $( "#patientdob" ).datepicker({
 			showOn: "button",
@@ -40,7 +69,23 @@ $( "#patientdob" ).datepicker({
                  * 
                  */
                 $("#checkpatientdob").click(function(){
-                      var dobinput={"dob":$("#patientdob").val()};
+                      
+                      var inputdate=$("#patientdob").val();
+                      var da=new Date(inputdate);
+                      //alert(da);
+                      // var inputarr=inputdate.split('-');
+                      // var day= parseInt(inputarr[2])-1;
+                      // var newdate=inputarr[0]+'-'+inputarr[1]+'-'+day; 
+                      // da.setDate(da.getDate()+1);
+                      // alert(da);
+                      // var day = da.getDate();
+                      //   var month = da.getMonth() + 1;
+                      //   var year = da.getFullYear();
+                       
+
+                        var new_date=formatDate(da);
+                        //alert(new_date);
+                      var dobinput={"dob":new_date};
                     
                     $.ajax({
             url: userapibase+'/getPatientBydob',
@@ -110,10 +155,10 @@ var binput={"id":bid};
                      
             $.toast({
     heading: 'Error',
-    text: 'Entered date of birth is not found in our database..',
+    text: 'Your phone number and date of birth combination does not match. Please try again',
     textAlign: 'center',
     position: 'top-center',
-    icon: 'warning',
+    icon: 'error',
     loader:false,
     allowToastClose: false,
     hideAfter: 5000,
@@ -129,4 +174,16 @@ var binput={"id":bid};
                 });
                 
     });
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
 

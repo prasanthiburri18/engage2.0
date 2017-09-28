@@ -89,8 +89,11 @@
                                         <label>Date of Birth </label><sup>*</sup>
                                     </div>
                                     <div class="col-md-9 col-sm-9">
-                                        <p class="datepicker-block"><input type="date" name="patientdob" placeholder="mm/dd/yyyy" id="patientdob" required=""  readonly="true" />
+                                        <p class="datepicker-block"><!-- <input type="date" name="patientdob" placeholder="mm/dd/yyyy" required pattern="(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d
+" id="patientdob"   /> -->
+                                    <input type="text" name="patientdob" id="patientdob" placeholder="mm/dd/yyyy" required readonly="true" >
                                         <span class="error"></span>
+										</p>
                                         <p id="error-dob" class="error fieldError"></p>
                                         
                                   </div>
@@ -118,7 +121,7 @@
 
                                 </div>
 
-                                <div class="col-md-12">
+                                <div class="col-md-12" id="emailpa">
                                     <div class="col-md-3 col-sm-3">
                                         <label>Email</label>
                                     </div>
@@ -128,14 +131,14 @@
                                   <p id="emailpremier" style="display:none;">Available only for  Premium users.</p>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-12" id="devicepa">
                                     <div class="col-md-3 col-sm-3">
                                         <label>Device Token</label>
                                     </div>
                                     <div class="col-md-9 col-sm-9">
                                         <input type="text" required="" disabled class="disabled"/>
                                         <div id="bb" style="position:absolute; left:0; right:0; top:0; bottom:0;"></div>
-                                       <p id="devicepremier" style="cdisplay:none;">Available only for  Premium users.</p>
+                                      <!--  <p id="devicepremier" style="cdisplay:none;">Available only for  Premium users.</p> -->
                                     </div>
                                 </div>
 

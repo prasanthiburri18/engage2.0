@@ -122,7 +122,7 @@ $(document).ready(function () {
                     var date1 = new Date();
                     if (row.pathwayInfo.data == null)
                     {
-                        return 'Not Started'
+                        return '0';
                     }
                     var pthid = row.pathwayInfo.data.pathwayInfo.id;
                     var patientid = row.patient.id;
@@ -169,7 +169,7 @@ $(document).ready(function () {
                             } else
                             {
 
-                                $(currentCell).html('Not Started');
+                                $(currentCell).html('0');
                             }
 
 
@@ -178,7 +178,7 @@ $(document).ready(function () {
 
 
 
-                    return 'Not Started';
+                    return '0';
                 },
                 "targets": 1
             },
@@ -194,7 +194,8 @@ $(document).ready(function () {
                         var pathlink = '<a href="patientpathway.html?pathwayid=' + pthid + '&patientid=' + row.patient.id + '" target="_blank" style="color:#ec843e;">' + pathname + '</a>';
                     } else
                     {
-                        var pathname = 'No Pathway';
+                        // var pathname = 'No Pathway';
+                        var pathname = '-';
                         var pathlink = '<a href="#" style="color:#ec843e;">' + pathname + '</a>';
                     }
 

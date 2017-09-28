@@ -12,8 +12,8 @@
 		</Console>
 		<SMTP name="Mail" subject="Error Report" to="s.krishna@mindtechlabs.com"
 			from="s.krishna@mindtechlabs.com" smtpHost="email-smtp.us-east-1.amazonaws.com"
-			smtpPort="587" bufferSize="50" smtpUsername="${sys:aws.ses.username}"
-			smtpPassword="${sys:aws.ses.password}">
+			smtpPort="587" bufferSize="50" smtpUsername="${env:aws.ses.username}"
+			smtpPassword="${env:aws.ses.password}">
 		</SMTP>
 		<RollingFile name="RollingFile-Appender" fileName="${logger-path}/rollingfile.log"
 			filePattern="${archive}/rollingfile.log.%d{yyyy-MM-dd-hh-mm}.gz">

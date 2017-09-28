@@ -10,7 +10,7 @@
  * for user active. Otherwise the user would be in inactive mode only.
  * 
  */
-/*
+
 var correctCaptchares = '';
 var correctCaptcha = function (response) {
     if (response.length == 0)
@@ -23,7 +23,7 @@ var correctCaptcha = function (response) {
         return true;
     }
 };
-*/
+
 var currentdate = new Date();
 var currenttime = currentdate.getTime();
 $('document').ready(function ()

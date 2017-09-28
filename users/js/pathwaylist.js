@@ -195,16 +195,17 @@ $(document).ready(function () {
                     if (usertype == "U")
                     {
                         var pedit = '<button class="btn btn-primary btn-xs" data-title="Edit" disabled  onClick="pathwaytEdit(\'' + row.id + '\')" ><span class="glyphicon glyphicon-pencil"></span></button>';
-                        var pdelete = '<button class="btn btn-danger btn-xs" data-title="Delete" disabled onclick="pathwayDelete(\'' + row.id + '\')";  ><span class="glyphicon glyphicon-trash"></span></button>';
+                        //var pdelete = '<button class="btn btn-danger btn-xs" data-title="Delete" disabled onclick="pathwayDelete(\'' + row.id + '\')";  ><span class="glyphicon glyphicon-trash"></span></button>';
                     }
                     if (usertype == "A")
                     {
 
                         var pedit = '<button class="btn btn-primary btn-xs" data-title="Edit"   onClick="pathwaytEdit(\'' + row.id + '\')" ><span class="glyphicon glyphicon-pencil"></span></button>';
-                        var pdelete = '<button class="btn btn-danger btn-xs" data-title="Delete"  onclick="pathwayDelete(\'' + row.id + '\')";  ><span class="glyphicon glyphicon-trash"></span></button>';
+                        //var pdelete = '<button class="btn btn-danger btn-xs" data-title="Delete"  onclick="pathwayDelete(\'' + row.id + '\')";  ><span class="glyphicon glyphicon-trash"></span></button>';
                     }
 
-                    var actiondata = pedit + ' ' + pdelete;
+                    //var actiondata = pedit + ' ' + pdelete;
+                    var actiondata = pedit;
                     return actiondata;
                 },
                 "targets": 4

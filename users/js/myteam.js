@@ -207,17 +207,20 @@ $(document).ready(function () {
                     phone1: {
                         required: true,
                         minlength: 3,
-                        min: 001
+                        number: true,
+                        min: 100
                     },
                     phone2: {
                         required: true,
                         minlength: 3,
-                        min: 001
+                        number: true,
+                        min: 000
                     },
                     phone3: {
                         required: true,
                         minlength: 4,
-                        min: 0001
+                        number: true,
+                        min: 0000
                     },
                     groups: {
                         patientphone: "phone1 phone2 phone3"
@@ -320,7 +323,7 @@ $(document).ready(function () {
                     $.LoadingOverlay("hide");
 
                     //Send an email to team If user added successfully
-                    var sendemailobj = {"useremail": temail, "mailcontent": temamemcomments}
+                    var sendemailobj = {"useremail": temail, "mailcontent": temamemcomments,"username":pfname,"userpp":response.data}
                     $.ajax({
                         url: userapibase + '/api/v1/sendemailforteammember',
                         type: 'POST',
@@ -362,7 +365,7 @@ $(document).ready(function () {
                         text: 'Email already taken.',
                         textAlign: 'center',
                         position: 'top-center',
-                        icon: 'warning',
+                        icon: 'error',
                         loader: false,
                         allowToastClose: false,
                         hideAfter: 5000,
@@ -375,7 +378,7 @@ $(document).ready(function () {
                         text: 'Internal Server Error.',
                         textAlign: 'center',
                         position: 'top-center',
-                        icon: 'warning',
+                        icon: 'error',
                         loader: false,
                         allowToastClose: false,
                         hideAfter: 5000,

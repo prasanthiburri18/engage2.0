@@ -84,8 +84,9 @@
                                         <label>Date of Birth</label><sup>*</sup>
                                     </div>
                                     <div class="col-md-9 col-sm-9">
-                                        <p class="datepicker-block"><input type="date" name="editpatientdob" id="editpatientdob" required="" readonly="true"/><span class="error"></span></p>
-                                        <p id="error-dob" class="error fieldError"></p>
+                                        <p class="datepicker-block"><input type="text" name="editpatientdob" id="editpatientdob" placeholder="mm/dd/yyyy" readonly="readonly"/> <span class="error"></span></p></p>
+                                         <!--  -->
+                                   <p id="error-dob" class="error fieldError"></p>
 
                                     </div>
                                 </div>
@@ -99,9 +100,9 @@
                                     </div>
                                     <div class="col-md-9 col-sm-9 mobile-format">
                                         <input id="editphone1" class="phone" name="phone1" type="text" size="3" value="" maxlength = "3"/>
-                                        <span></span>
+                                       
                                         <input id="editphone2" class="phone" name="phone2" type="text" size="3" value="" maxlength = "3"/>
-                                        <span></span>
+                                        
                                         <input id="editphone3" class="phone" name="phone3" type="text" size="4" value="" maxlength = "4"/>
                                         <br/>
                                         <p id="pherr"></p>
@@ -110,7 +111,7 @@
 
                                 </div>
 
-                                <div class="col-md-12">
+                                <div class="col-md-12" id="emailpa">
                                     <div class="col-md-3 col-sm-3">
                                         <label>Email</label>
                                     </div>
@@ -118,7 +119,7 @@
                                         <input type="text" required="" disabled class="disabled"/>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-12" id="devicepa">
                                     <div class="col-md-3 col-sm-3">
                                         <label>Device Token</label>
                                     </div>
@@ -161,6 +162,8 @@
         <script type="text/javascript" src="js/loadingoverlay.min.js"></script>
         <script src="js/jquery.toast.js"></script>
         <script src="js/editpatients.js"></script>
+         <script src="js/moment.js"></script>
+        <script src="js/momenttimezone.js"></script>
         <script src="js/timesession.js"></script>
     </body>
 </html>

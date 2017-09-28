@@ -121,7 +121,12 @@ patientfname=results.patient.firstName;
                     var displayphinput=phinput.substring(0,3)+'-'+phinput.substring(3,6)+'-'+phinput.substring(6,10);
                      
                      $("#pphone").html(displayphinput);
-                       var formatted = moment(results.patient.dob).format('L');
+                       //var bdate=results.patient.dob.split('-');
+                       var bdate=results.patient.dob;
+
+                       var bdate1 = moment(bdate).add(1, 'days');
+             
+                       var formatted = moment(bdate1).format('L');
                      $('#pdob').html(formatted);
                      $("#pathwayname").html(results.pathwayInfo.data.pathwayInfo.name);
                      pathwayid=results.pathwayInfo.data.pathwayInfo.id;
@@ -149,11 +154,15 @@ patientfname=results.patient.firstName;
             {
                   $.LoadingOverlay("hide");
                 
-                pathwayevents=presponse.data;
+                  pathwayevents=presponse.data;
+                  //console.log(results.pathwayInfo.data.eventInfo);
+
 
             }
            });     
 
+                    
+                      var cnt_event=0;
                      $.each(results.pathwayInfo.data.eventInfo,function(evetindex,evenval){
                         
                       
@@ -189,9 +198,8 @@ patientfname=results.patient.firstName;
            
            if(eventblocks.length > 0)
            {
+                cnt_event++;
 
-
-                  
                   $.each(eventblocks,function(bi,be){
                  
                       if(be.block_type=='A' && be.block_parent_id==0)
@@ -208,6 +216,7 @@ patientfname=results.patient.firstName;
                           }
                          
                           totalcount=totalcount+1;
+                          cnt_event=cnt_event+1;
                       }
                       
                   });
@@ -260,6 +269,107 @@ var phinput =results.patient.phone;
             {
                  $.LoadingOverlay("hide");
                  var jsonlist=[];
+
+                 if(response.data.length==0){
+                    var totaleventlist=[];
+                    var totaleventlistid=[];
+                    var assignedeventlist=[];
+                    var eventnameshtml='';
+                     
+
+                     var ptin={"patient_id":pid};
+                     $.ajax({
+            url:patientapibase+'/api/v1/getPatientEventsId',
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+        'Authorization':securitytoken,
+        'Content-Type':'application/json'
+    },
+
+            Accept: "application/json",
+            data: JSON.stringify(ptin),
+            success:function(response){
+               
+               // eventnameshtml+='<div class="col-lg-4 col-md-4 col-sm-4 HF-list">';
+               //    eventnameshtml+='<h4>'+evenval.eventName+'</h4>';
+               //    eventnameshtml+='<p>Delivered : '+deliveredcount+' of '+totalcount+'</p>';
+               //    eventnameshtml+='</div>';
+               //    $("#eventslist").append(eventnameshtml); 
+              // console.log(response.data);
+               assignedeventlist=response.data;
+                // $.each(response.data,function(k,v){
+                //     console.log(v);
+                //     if($.inArray(v, totaleventlistid) !== -1){
+                //         console.log(v);
+                //         var ind=$.inArray(v, totaleventlistid);
+                //         alert(ind);
+                //         console.log(totaleventlist[ind]);
+                //         eventnameshtml='<div class="col-lg-4 col-md-4 col-sm-4 HF-list">';
+                //         eventnameshtml+='<h4>'+totaleventlist[ind]+'</h4>';
+                //         //eventnameshtml+='<p>Delivered : '+deliveredcount+' of '+totalcount+'</p>';
+                //          eventnameshtml+='</div>';
+                //         $("#eventslist").append(eventnameshtml); 
+
+                //     }
+
+                // });
+               
+
+            }
+
+        });
+                     var ppin={"pathwayId":pathwayid};
+                     $.ajax({
+            url:pathwayapibase+'/api/v1/listEvents',
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+        'Authorization':securitytoken,
+        'Content-Type':'application/json'
+    },
+
+            Accept: "application/json",
+            data: JSON.stringify(ppin),
+            success:function(response){
+               // eventnameshtml+='<div class="col-lg-4 col-md-4 col-sm-4 HF-list">';
+               //    eventnameshtml+='<h4>'+evenval.eventName+'</h4>';
+               //    eventnameshtml+='<p>Delivered : '+deliveredcount+' of '+totalcount+'</p>';
+               //    eventnameshtml+='</div>';
+               //    $("#eventslist").append(eventnameshtml); 
+
+               $.each(response.data,function(key,value){
+                   //var i=0;
+                   var flag=0
+                   $.each(value,function(k,v){
+
+                    if(k=='id'){
+                       if($.inArray(v,assignedeventlist)!=-1){
+                        flag=1;
+                       }
+                     }
+                     if(k=='eventName' && flag==1){
+                        console.log(v);
+                         eventnameshtml='<div class="col-lg-4 col-md-4 col-sm-4 HF-list">';
+                  eventnameshtml+='<h4>'+v+'</h4>';
+               //eventnameshtml+='<p>Delivered : '+deliveredcount+' of '+totalcount+'</p>';
+                eventnameshtml+='</div>';
+               $("#eventslist").append(eventnameshtml); 
+                     }
+                   });
+               });
+               
+
+            }
+
+        });
+                    // console.log(totaleventlist);
+                     //console.log(totaleventlistid);
+                     //console.log(assignedeventlist);
+                   
+                    //$("#eventslist").text("Patient has not started on pathway yet");
+                 }
+
                  $.each(response.data,function(i,row){
                   
                      if(row.message_status=='sent')
@@ -344,7 +454,11 @@ $('#example').DataTable({
                     "render": function (data, type, row) {
                         var date1 = new Date();
 var date2 = new Date(row.patient_accepted_date);
-var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+var alertdd =new Date(moment.unix(row.msenttime/1000));
+
+var timeDiff = Math.abs(date2.getTime() - alertdd.getTime());
+
+
 var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
 
                         return diffDays;
@@ -365,8 +479,10 @@ var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 },
                  {
                     "render": function (data, type, row) {
-//                        var date = new Date(row.msenttime);
-                        var formatted = moment.unix(row.msenttime/1000).format('LLL');
+//                        var date = new Date(row.msenttime/1000);
+                
+             var formattedd = moment.unix(row.msenttime/1000).format('LLL');
+             var formatted = moment(formattedd).tz('America/New_York').format('LLL');
                         return formatted;
                         
                     },

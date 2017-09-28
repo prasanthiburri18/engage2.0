@@ -146,20 +146,32 @@ $(document).ready(function () {
 
     $("#savepathway").click(function () {
 
-        var inputdata = {"id": $currentpthwayId, "pathwayName": currentpathwayname, "orgId": output.orgid, "teamId": 1, "status": "Y"};
-        //Save Pathway Here
-        $.toast({
-            heading: 'Save Pathway',
-            text: 'Pathway has been saved successfully.',
+        if(currentpathwayname==''){
+             $.toast({
+            heading: 'Add Pathway',
+            text: 'Please enter pathway name',
             textAlign: 'center',
             position: 'top-center',
             loader: false,
-            icon: 'success',
+            icon: 'error',
             stack: true
-        });
-        var lastmodifiedtime = formatAMPM(new Date());
-        lastmodifiedtime = 'Last saved at ' + lastmodifiedtime;
-        $("#lastsavedtime").html(lastmodifiedtime);
+            });
+        }else{
+            var inputdata = {"id": $currentpthwayId, "pathwayName": currentpathwayname, "orgId": output.orgid, "teamId": 1, "status": "Y"};
+            //Save Pathway Here
+            $.toast({
+                heading: 'Save Pathway',
+                text: 'Pathway saved successfully.',
+                textAlign: 'center',
+                position: 'top-center',
+                loader: false,
+                icon: 'success',
+                stack: true
+            });
+            var lastmodifiedtime = formatAMPM(new Date());
+            lastmodifiedtime = 'Last saved at ' + lastmodifiedtime;
+            $("#lastsavedtime").html(lastmodifiedtime);
+        }    
 
 
 
@@ -358,7 +370,7 @@ $(document).ready(function () {
                 text: 'You need to create pathway before event creation..',
                 textAlign: 'center',
                 position: 'top-center',
-                icon: 'warning',
+                icon: 'error',
                 loader: false,
                 allowToastClose: false,
                 hideAfter: 5000,
@@ -1179,7 +1191,7 @@ $(document).ready(function () {
         currenteditblock.id = currentblockforupdateid
         $.ajax({
             url: pathwayapibase + '/api/v1/updateBlock',
-            type: 'POST',
+            type: 'PUT',
             async: false,
             dataType: 'json',
             headers: {
@@ -1340,7 +1352,7 @@ $(document).ready(function () {
                 text: 'Please enter a Block Name',
                 textAlign: 'center',
                 position: 'top-center',
-                icon: 'warning',
+                icon: 'error',
                 loader: false,
                 allowToastClose: false,
                 hideAfter: 5000,
@@ -1485,7 +1497,7 @@ $(document).ready(function () {
                     appointmentparentid = bid;
 //                    var blkclass = 'newcreateblock appointmentblock';
                     var blkclass = 'newcreateblock';
-                    var blockhtml = '<div  id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '">' + blockname + '</div>'
+                    var blockhtml = '<div  id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '"><h3>' + blockname + '</h3></div>'
 
                     $("#" + currentid).append(blockhtml);
                     updatePathwayInfo($currentpthwayId, currentpathwayname);
@@ -1718,7 +1730,7 @@ $(document).ready(function () {
                                     }
                                     var bid = response.data;
                                     var blkclass = 'newcreateblock';
-                                    var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '">' + blockname + '</div>'
+                                    var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '"><h3>' + blockname + '</h3></div>'
 
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
@@ -1944,7 +1956,7 @@ $(document).ready(function () {
                                     }
                                     var bid = response.data;
                                     var blkclass = 'newcreateblock';
-                                    var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '">' + blockname + '</div>'
+                                    var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '"><h3>' + blockname + '</h3></div>'
 
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
@@ -2146,7 +2158,7 @@ $(document).ready(function () {
                                         return false;
                                     }                                    var bid = response.data;
                                     var blkclass = 'newcreateblock';
-                                    var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '">' + blockname + '</div>'
+                                    var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '"><h3>' + blockname + '</h3></div>'
 
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
@@ -2269,7 +2281,7 @@ $(document).ready(function () {
 
                                     var bid = response.data;
                                     var blkclass = 'newcreateblock';
-                                    var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '">' + blockname + '</div>'
+                                    var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '"><h3>' + blockname + '</h3></div>'
 
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
@@ -2373,7 +2385,7 @@ $(document).ready(function () {
                                     }
                                     var bid = response.data;
                                     var blkclass = 'newcreateblock';
-                                    var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '">' + blockname + '</div>'
+                                    var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '"><h3>' + blockname + '</h3></div>'
 
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
@@ -2405,7 +2417,7 @@ $(document).ready(function () {
                         text: 'No reminder message can be sent.',
                         textAlign: 'center',
                         position: 'top-center',
-                        icon: 'warning',
+                        icon: 'error',
                         loader: false,
                         allowToastClose: false,
                         hideAfter: 5000,
@@ -2496,7 +2508,7 @@ $(document).ready(function () {
                                     }
                             var bid = response.data;
                             var blkclass = 'newcreateblock';
-                            var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '">' + blockname + '</div>'
+                            var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '"><h3>' + blockname + '</h3></div>'
 
                             $("#" + currentid).append(blockhtml);
                             $saveblocks[bid] = inputBloc;
@@ -2530,6 +2542,7 @@ $(document).ready(function () {
 
             for (var bcell = 0; bcell < occurrences; bcell++)
             {
+                var occ=parseInt(occurrences) - (bcell + 1);
 
                 var inputBloc = {
                     "blockName": blockname,
@@ -2541,7 +2554,7 @@ $(document).ready(function () {
                     "triggerId": blocktirggerafter,
                     "triggername": triggertext,
                     "DeliveryDaysAfterTigger": triggerdays,
-                    "repeatForNoOfDays": repeatdays,
+                    "repeatForNoOfDays": repeatdays+occ,
                     "subjectOfMessage": "hi",
                     "bodyOfMessage": blockmessage,
                     "phiSecured": phisecuredinput,
@@ -2693,7 +2706,7 @@ $(document).ready(function () {
 
                                 $("#" + currentid + " div:nth-child(" + bw + ")").css({'width': blockstylewidth});
                             }
-                            var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '">' + blocknameht + '</div>';
+                            var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '"><h3>' + blocknameht + '</h3></div>';
                             $("#" + currentid).append(blockhtml);
                             blockexecuteday = bcuurentday;
                             changedowid = blockexecuteday;
@@ -2989,7 +3002,7 @@ $(document).ready(function () {
                 text: 'Sorry, the minimum value was reached',
                 textAlign: 'center',
                 position: 'top-center',
-                icon: 'warning',
+                icon: 'error',
                 loader: false,
                 allowToastClose: false,
                 hideAfter: 5000,
@@ -3023,7 +3036,7 @@ $(document).ready(function () {
                 text: 'Sorry, the maximum value was reached',
                 textAlign: 'center',
                 position: 'top-center',
-                icon: 'warning',
+                icon: 'error',
                 loader: false,
                 allowToastClose: false,
                 hideAfter: 5000,
