@@ -12,6 +12,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import com.engage.dto.PatientDto;
  *
  */
 @RunWith(SpringRunner.class)
+@Ignore
 public class ValidatePatientDtoTest {
 	
 	/**
