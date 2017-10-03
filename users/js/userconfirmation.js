@@ -19,14 +19,14 @@
 };
         $('document').ready(function ()
 {
-   
+
     var tech = getUrlParameter('keyconfirm');
- 
+
     var k=new Object();
     k.emailid=tech;
     var inputstring=k;
-  
-    
+
+
      $.ajax({
             url: userapibase+'/verify_email',
             type: 'POST',
@@ -42,20 +42,25 @@
             success: function (response)
             {
                 $.LoadingOverlay("hide");
-               
+
                 if(response.statuscode==200)
                 {
                      $('#signupconfirmation').css('display','block');
-                    
+
                 }
                 else
                 {
                     $('#signupconfirmationerr').css('display','block');
-                 
+
                 }
-              
+
+            },error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
+
             }
         });
 });
-   
-    

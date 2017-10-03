@@ -83,9 +83,9 @@ $(document).ready(function () {
      *using Datatable.
      *@Input JsonObject
      *@return {JsonObject}
-     * 
-     * 
-     * 
+     *
+     *
+     *
      */
     $('#example').DataTable({
         "bProcessing": true,
@@ -176,6 +176,14 @@ $(document).ready(function () {
                                 num = response.data;
                                 $(currentCell).html(num);
                             }
+                        },
+                        error: function(response, status){
+
+                        	if(response.status==412) {
+                        	$.LoadingOverlay("hide");
+                        		logout();
+                        	}
+
                         }
                     });
                     return 'Not Started';
@@ -301,6 +309,14 @@ $(document).ready(function () {
                 });
 
             }
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
+
         }
     });
 

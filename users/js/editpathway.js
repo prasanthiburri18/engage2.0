@@ -264,9 +264,9 @@ $('document').ready(function ()
      * get fillvent event 1,event 2....etc with repect to page no's.
      * The color schema is applied based on the columns 1 to 5
      * and this will get repeated page wise up to the lats  Pathway Event column Number.
-     * 
-     * 
-     * 
+     *
+     *
+     *
      */
 
     $("#previouscols").click(function () {
@@ -435,25 +435,25 @@ $('document').ready(function ()
      * for Pathway Edit Operations
      *  After Loading the Pathway we are getting the information like
      *  Pathway Information, Events Information and Block Information
-     *  Based on the Pathway Event Row and Col postions  the system will create 
+     *  Based on the Pathway Event Row and Col postions  the system will create
      *  the Pathway Table by taking the Max row number from the Pathway Information
      *  Agaian checking the condition if the max pathway event block max row information
-     *  is lessthat 16 then the max row informaiton is treated as 16 i.e by default the 
+     *  is lessthat 16 then the max row informaiton is treated as 16 i.e by default the
      *  system will render 16 rows in case less max row number.
      *   For Events and Block placement the system will use
-     *   renderevent and render block functions which will the 
+     *   renderevent and render block functions which will the
      *   event and blocks on respective places.
      *   While placing the events and blocks the system will check for the postions based on blocrow
-     *   and block columns which are taken from API response. The Pathway system shows 
+     *   and block columns which are taken from API response. The Pathway system shows
      *   5 cols for page i.e 5 factorial process in case of there is number which not fits
      *   into 5 factorial then the system will shows like event (number) (header name)....etc
      *   For Ex: I have 3 Events for Pathway then table event header looks like
      *   Welcome, Hyper, Heart, Event4, Event5....etc.
-     *   
-     *   In case of block rendering the system will check for the no of occurences 
+     *
+     *   In case of block rendering the system will check for the no of occurences
      *   along the postion and display the block along with content.
-     * 
-     * 
+     *
+     *
      */
     $.ajax({
         url: pathwayapibase + '/api/v1/viewPathway',
@@ -475,9 +475,9 @@ $('document').ready(function ()
             $.LoadingOverlay("hide");
 
             if(response.statuscode==203){
-                                var msg_new=response.message;    
+                                var msg_new=response.message;
                                 var res = msg_new.replace("patient", "pathway");
-                                        
+
                                         $.toast({
                                             heading: 'Pathway',
                                             text: res,
@@ -579,21 +579,21 @@ $('document').ready(function ()
 
         },
         error: function(response, status){
-        	
+
         	if(response.status==412) {
         	$.LoadingOverlay("hide");
         		logout();
         	}
-        	
+
         }
     });
     /**
-     * Event Modal Popup 
-     * By Clicking on the table header 
+     * Event Modal Popup
+     * By Clicking on the table header
      * the event modal popup is getting showed.
-     * Checking the If there is an already event existence of 
+     * Checking the If there is an already event existence of
      * header clicked event
-     * 
+     *
      */
     $("#headerrow").on('click', 'th', function () {
         if ($(this).children().length > 0) {
@@ -641,9 +641,9 @@ $('document').ready(function ()
     });
     /**
      * Edit Event Modal which check for event availability
-     * If the event is available then dispalying the 
+     * If the event is available then dispalying the
      * event popup with event name and allows user to change the event name.
-     * 
+     *
      */
     $("#editevent").on('click', function () {
 
@@ -683,12 +683,12 @@ $('document').ready(function ()
 
             },
             error: function(response, status){
-            	
+
             	if(response.status==412) {
             	$.LoadingOverlay("hide");
             		logout();
             	}
-            	
+
             }
         });
 
@@ -702,7 +702,7 @@ $('document').ready(function ()
      * then it will return a toast warn message
      * If the Pathway is there then It will show up
      * the modal add event modal window.s
-     * 
+     *
      */
     $("#addeventmodal").click(function () {
 
@@ -720,14 +720,14 @@ $('document').ready(function ()
      * Edit Block functionality
      * While saving the block we are checking with the block type
      * to get the respective messages should be updated.
-     * Note that we are only allowing user to update the 
+     * Note that we are only allowing user to update the
      * message part.
-     * 
+     *
      */
     $("#editblocsumbtn").click(function () {
 
 
-
+$('.fieldError').text('');
         var currenteditblock = $saveblocks[currentblockforupdateid];
 
         var editmessage = $("#editblockmessage").val();
@@ -735,7 +735,75 @@ $('document').ready(function ()
         {
 
             var editrmessage = $("#editremainderblockmessage").val();
+            if (editrmessage.trim() !=''&& editrmessage.length>500)
+            {
+
+                $.toast({
+                    heading: 'Edit Block',
+                    text: 'Reminder message exceeds 500 characters',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
+
+            var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+            if (!punctPattern.test(editrmessage))
+            {
+
+                $.toast({
+                    heading: 'Edit Block',
+                    text: 'Message should contain punctuation and alphanumeric characters only',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
+
             var editfmessage = $("#editappointmentfollowup").val();
+            if (editfmessage.trim() !=''&& editfmessage.length>500)
+            {
+
+                $.toast({
+                    heading: 'Edit Block',
+                    text: 'Followup message exceeds 500 characters',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
+              var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+            if (!punctPattern.test(editfmessage))
+            {
+
+                $.toast({
+                    heading: 'Edit Block',
+                    text: 'Message should contain punctuation and alphanumeric characters only',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
 
 
 
@@ -746,6 +814,39 @@ $('document').ready(function ()
         }
         if (currenteditblock.blockType == 'M')
         {
+          if (editmessage.trim() !=''&& editmessage.length>500)
+          {
+
+              $.toast({
+                  heading: 'Edit Block',
+                  text: 'Block message exceeds 500 characters',
+                  textAlign: 'center',
+                  position: 'top-center',
+                  icon: 'error',
+                  loader: false,
+                  allowToastClose: false,
+                  hideAfter: 5000,
+              });
+              $.LoadingOverlay("hide");
+              return false;
+          }
+           var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+            if (!punctPattern.test(editmessage))
+            {
+
+                $.toast({
+                    heading: 'Edit Block',
+                    text: 'Message should contain punctuation and alphanumeric characters only',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
 
             if (editmessage != '')
                 currenteditblock.bodyOfMessage = editmessage;
@@ -765,6 +866,7 @@ $('document').ready(function ()
             data: JSON.stringify(currenteditblock),
             beforeSend: function ()
             {
+              $('.fieldError').text('');
                 $("#error").fadeOut();
                 $.LoadingOverlay("show");
             },
@@ -787,6 +889,22 @@ $('document').ready(function ()
                     $saveblocks[currentblockforupdateid] = currenteditblock;
                     $("#editeventblockModal").modal('hide');
                 }
+                if(response.statuscode==204){
+                  var resData = $.parseJSON(response.message);
+                  if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                      $('#error-blockmessage').text(resData.bodyOfMessage);
+                    }
+                    if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                        $('#error-followupmessage').text(resData.followupOfMessage);
+                      }
+
+                      if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                          $('#error-remindermessage').text(resData.remainderOfMessage);
+                        }
+                    return false;
+
+                }
+                return false;
             },
             error: function (response) {
                 $.LoadingOverlay("hide");
@@ -799,15 +917,15 @@ $('document').ready(function ()
                     loader: false,
                     stack: true
                 });
-                
-              
-                	
+
+
+
                 	if(response.status==412) {
                 	$.LoadingOverlay("hide");
                 		logout();
                 	}
-                	
-           
+
+
 
             }
         });
@@ -816,7 +934,7 @@ $('document').ready(function ()
     });
     /**
      * Upload plus button toggle functionality.
-     * 
+     *
      */
     $("#cbblockuploadplus").click(function () {
 
@@ -841,7 +959,7 @@ $('document').ready(function ()
     /**
      * Event Creation functionality
      * Check point: Checking for the pathway creation or not
-     * If there is not pathway while creating the event then 
+     * If there is not pathway while creating the event then
      * the system will repond with some error taost message.
      * In case of the pathway existence then the system will create
      * an event using QC API call.
@@ -1003,19 +1121,19 @@ $('document').ready(function ()
                 //current page redirection
 //                if(nexteventcol <=5)
 //                {
-//                    
+//
 //                    //move to previous page
 //                    $("#previouscols").trigger("click");
 //                }
                 updatePathwayInfo(pid, currentpathwayname);
             },
             error: function(response, status){
-            	
+
             	if(response.status==412) {
             	$.LoadingOverlay("hide");
             		logout();
             	}
-            	
+
             }
         });
 
@@ -1080,12 +1198,14 @@ $('document').ready(function ()
     $(document).on('click', 'td .newcreateblock', function (e) {
 
         e.stopPropagation();
+        $('.fieldError').text('');
         $('#addeventblockModal').modal('hide');
         if ($(this).data('blockid'))
         {
 //            $('#addeventblockModal').modal('hide');
         } else
         {
+          $('.fieldError').text('');
             $('#addeventblockModal').modal('show');
         }
 
@@ -1185,10 +1305,11 @@ $('document').ready(function ()
         if(currenteditblock.phiSecured=="yes"){
             $("#editphisecured").prop("checked",true);
         }else{
-          $("#editphisecured").prop("checked",false);  
+          $("#editphisecured").prop("checked",false);
         }
 
         $("#editeventblockModal").modal('show');
+
         $("body").addClass('modal-open');
         return;
 
@@ -1207,28 +1328,29 @@ $('document').ready(function ()
      *  If the block type is Message then  the calculations are made with
      *  trigger ,repeat and occurence input vals
      *  In case the block type is an appointment then we are applying the below logic
-     *  
+     *
      *  Case Block Execution day > 7
      *  Then the system will create the appointmnt blocks on executed day -7 =Remiander one
      *  executed day -1 =Remiander to message
      *  Executed day +1 =follow up message
-     * 
+     *
      *  Case Block Execution day < 7
      *  Then the system will create the appointmnt blocks on executed day -3 =Remiander one
      *  executed day -1 =Remiander to message
      *  Executed day +1 =follow up message
-     * 
+     *
      *  Case Block Execution day < 3
-     * 
+     *
      *  executed day -1 =Remiander to message
      *  Executed day +1 =follow up message
      Case Block Execution day =1
      * Shows only followup message with toase warn message like no remainders ..etc
-     *  
-     *  
+     *
+     *
      */
     $("#pathwaytble").on('click', '.addblock', function (e) {
 
+      $('.fieldError').text('');
         if (e.target !== e.currentTarget)
             return;
 
@@ -1266,6 +1388,7 @@ $('document').ready(function ()
         $("#pathwaydayoccurances").css('display', 'block');
         $("#phisecuredgrp").css('display', 'block');
 
+        $('.fieldError').text('');
         $('#addeventblockModal').modal('show');
 
 
@@ -1276,8 +1399,10 @@ $('document').ready(function ()
 
         $.LoadingOverlay("hide");
         ev.stopPropagation();
-
+        $('.fieldError').text('');
         var blockname = $("#blockname").val();
+        var blocknameregexp = new RegExp('^[a-zA-Z0-9\\s]+$');
+
         if (blockname == '')
         {
 
@@ -1294,8 +1419,74 @@ $('document').ready(function ()
             $.LoadingOverlay("hide");
             return false;
         }
+        else if (blockname.length>30)
+        {
+
+            $.toast({
+                heading: 'Add Block',
+                text: 'Block name exceeds 30 characters',
+                textAlign: 'center',
+                position: 'top-center',
+                icon: 'error',
+                loader: false,
+                allowToastClose: false,
+                hideAfter: 5000,
+            });
+            $.LoadingOverlay("hide");
+            return false;
+        }
+        else if (!blocknameregexp.test(blockname))
+        {
+
+            $.toast({
+                heading: 'Add Block',
+                text: 'Only alphanumeric characters are allowed in Block name',
+                textAlign: 'center',
+                position: 'top-center',
+                icon: 'error',
+                loader: false,
+                allowToastClose: false,
+                hideAfter: 5000,
+            });
+            $.LoadingOverlay("hide");
+            return false;
+        }
+
         var blocktirggerafter = $("#blocktrigger").val();
         var blockmessage = $("#blockmessage").val();
+        if ($blocktype == 'M'&&blockmessage.trim() !=''&& blockmessage.length>500)
+        {
+
+            $.toast({
+                heading: 'Add Block',
+                text: 'Block message exceeds 500 characters',
+                textAlign: 'center',
+                position: 'top-center',
+                icon: 'error',
+                loader: false,
+                allowToastClose: false,
+                hideAfter: 5000,
+            });
+            $.LoadingOverlay("hide");
+            return false;
+        }
+          var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+            if (!punctPattern.test(blockmessage))
+            {
+
+                $.toast({
+                    heading: 'Add Block',
+                    text: 'Message should contain punctuation and alphanumeric characters only',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
         var triggerdays = $("#triggerdays").val();
         var repeatdays = $("#repeatdays").val();
         var occurrences = $("#occurrences").val();
@@ -1357,8 +1548,75 @@ $('document').ready(function ()
 
 
             var remindermessage = $("#remainderblockmessage").val();
-            var appointmentfollowup = $("#appointmentfollowup").val();
+            if (remindermessage.trim() !=''&& remindermessage.length>500)
+            {
 
+                $.toast({
+                    heading: 'Add Block',
+                    text: 'Reminder message exceeds 500 characters',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
+            var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+            if (!punctPattern.test(remindermessage))
+            {
+
+                $.toast({
+                    heading: 'Add Block',
+                    text: 'Message should contain punctuation and alphanumeric characters only',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
+
+
+            var appointmentfollowup = $("#appointmentfollowup").val();
+            if (appointmentfollowup.trim() !=''&& appointmentfollowup.length>500)
+            {
+
+                $.toast({
+                    heading: 'Add Block',
+                    text: 'Followup message exceeds 500 characters',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
+              var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+            if (!punctPattern.test(appointmentfollowup))
+            {
+
+                $.toast({
+                    heading: 'Add Block',
+                    text: 'Message should contain punctuation and alphanumeric characters only',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
             var inputBloc = {
                 "blockName": blockname,
                 "blockType": $blocktype,
@@ -1395,15 +1653,16 @@ $('document').ready(function ()
                 data: JSON.stringify(inputBloc),
                 beforeSend: function ()
                 {
+                          $('.fieldError').text('');
                     $("#error").fadeOut();
                     $.LoadingOverlay("show");
                 },
                 success: function (response)
                 {
                                     $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
-                                        var newmsg='';
+                                    /*    var newmsg='';
                                         var msg=JSON.parse(response.message);
                                         if (typeof msg.blockName  != "undefined" || msg.blockName != null){
                                             newmsg=msg.blockName;
@@ -1411,7 +1670,7 @@ $('document').ready(function ()
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -1421,10 +1680,31 @@ $('document').ready(function ()
                                             loader: false,
                                             allowToastClose: false,
                                             hideAfter: 5000,
-                                        });
-                                        return false;
-                                    }
+                                        });*/
 
+
+                                          var resData = $.parseJSON(response.message);
+                                          if(typeof(resData)!="undefined"&&resData!==null){
+                                          if(typeof(resData.blockName) != "undefined" && resData.blockName !== null){
+                                              $('#error-addblockname').text(resData.blockName);
+                                            }
+
+                                          if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                                              $('#error-addblockmessage').text(resData.bodyOfMessage);
+                                            }
+                                            if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                                                $('#error-addfollowupmessage').text(resData.followupOfMessage);
+                                              }
+
+                                              if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                                                  $('#error-addremindermessage').text(resData.remainderOfMessage);
+                                                }
+
+                                            }
+
+                                    return false;
+                                    }
+                                    if(response.statuscode==200){
                     var bid = response.data;
                     appointmentparentid = bid;
 //                    var blkclass = 'newcreateblock appointmentblock';
@@ -1433,14 +1713,16 @@ $('document').ready(function ()
 
                     $("#" + currentid).append(blockhtml);
                     updatePathwayInfo(pid, currentpathwayname);
+                  }
+                  return false;
                 },
                 error: function(response, status){
-                	
+
                 	if(response.status==412) {
                 	$.LoadingOverlay("hide");
                 		logout();
                 	}
-                	
+
                 }
             });
 
@@ -1526,28 +1808,49 @@ $('document').ready(function ()
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
-                                        var newmsg='';
-                                        var msg=JSON.parse(response.message);
-                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
-                                            newmsg=msg.blockName;
-                                        }
-                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
-                                            newmsg=msg.bodyOfMessage;
-                                        }
-                                        
-                                        $.toast({
-                                            heading: 'Add Block',
-                                            text: newmsg,
-                                            textAlign: 'center',
-                                            position: 'top-center',
-                                            icon: 'error',
-                                            loader: false,
-                                            allowToastClose: false,
-                                            hideAfter: 5000,
-                                        });
-                                        return false;
+                                      /*    var newmsg='';
+                                          var msg=JSON.parse(response.message);
+                                          if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                              newmsg=msg.blockName;
+                                          }
+                                          if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                              newmsg=msg.bodyOfMessage;
+                                          }
+
+                                          $.toast({
+                                              heading: 'Add Block',
+                                              text: newmsg,
+                                              textAlign: 'center',
+                                              position: 'top-center',
+                                              icon: 'error',
+                                              loader: false,
+                                              allowToastClose: false,
+                                              hideAfter: 5000,
+                                          });*/
+
+
+                                            var resData = $.parseJSON(response.message);
+                                            if(typeof(resData)!="undefined"&&resData!==null){
+                                            if(typeof(resData.blockName) != "undefined" && resData.blockName !== null){
+                                                $('#error-addblockname').text(resData.blockName);
+                                              }
+
+                                            if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                                                $('#error-addblockmessage').text(resData.bodyOfMessage);
+                                              }
+                                              if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                                                  $('#error-addfollowupmessage').text(resData.followupOfMessage);
+                                                }
+
+                                                if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                                                    $('#error-addremindermessage').text(resData.remainderOfMessage);
+                                                  }
+
+                                              }
+
+                                      return false;
                                     }
 
                                     var bid = response.data;
@@ -1559,12 +1862,12 @@ $('document').ready(function ()
                                     updatePathwayInfo(pid, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
                         }
@@ -1624,9 +1927,8 @@ $('document').ready(function ()
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
-                                    
-                                    if(response.statuscode==204){
-                                        var newmsg='';
+
+                                    if(response.statuscode==204){/*    var newmsg='';
                                         var msg=JSON.parse(response.message);
                                         if (typeof msg.blockName  != "undefined" || msg.blockName != null){
                                             newmsg=msg.blockName;
@@ -1634,7 +1936,7 @@ $('document').ready(function ()
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -1644,8 +1946,29 @@ $('document').ready(function ()
                                             loader: false,
                                             allowToastClose: false,
                                             hideAfter: 5000,
-                                        });
-                                        return false;
+                                        });*/
+
+
+                                          var resData = $.parseJSON(response.message);
+                                          if(typeof(resData)!="undefined"&&resData!==null){
+                                          if(typeof(resData.blockName) != "undefined" && resData.blockName !== null){
+                                              $('#error-addblockname').text(resData.blockName);
+                                            }
+
+                                          if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                                              $('#error-addblockmessage').text(resData.bodyOfMessage);
+                                            }
+                                            if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                                                $('#error-addfollowupmessage').text(resData.followupOfMessage);
+                                              }
+
+                                              if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                                                  $('#error-addremindermessage').text(resData.remainderOfMessage);
+                                                }
+
+                                            }
+
+                                    return false;
                                     }
 
 
@@ -1658,12 +1981,12 @@ $('document').ready(function ()
                                     updatePathwayInfo(pid, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
                         }
@@ -1724,28 +2047,49 @@ $('document').ready(function ()
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
-                                        var newmsg='';
-                                        var msg=JSON.parse(response.message);
-                                        if (typeof msg.blockName  != "undefined" || msg.blockName != null){
-                                            newmsg=msg.blockName;
-                                        }
-                                        if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
-                                            newmsg=msg.bodyOfMessage;
-                                        }
-                                        
-                                        $.toast({
-                                            heading: 'Add Block',
-                                            text: newmsg,
-                                            textAlign: 'center',
-                                            position: 'top-center',
-                                            icon: 'error',
-                                            loader: false,
-                                            allowToastClose: false,
-                                            hideAfter: 5000,
-                                        });
-                                        return false;
+                                      /*    var newmsg='';
+                                          var msg=JSON.parse(response.message);
+                                          if (typeof msg.blockName  != "undefined" || msg.blockName != null){
+                                              newmsg=msg.blockName;
+                                          }
+                                          if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
+                                              newmsg=msg.bodyOfMessage;
+                                          }
+
+                                          $.toast({
+                                              heading: 'Add Block',
+                                              text: newmsg,
+                                              textAlign: 'center',
+                                              position: 'top-center',
+                                              icon: 'error',
+                                              loader: false,
+                                              allowToastClose: false,
+                                              hideAfter: 5000,
+                                          });*/
+
+
+                                            var resData = $.parseJSON(response.message);
+                                            if(typeof(resData)!="undefined"&&resData!==null){
+                                            if(typeof(resData.blockName) != "undefined" && resData.blockName !== null){
+                                                $('#error-addblockname').text(resData.blockName);
+                                              }
+
+                                            if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                                                $('#error-addblockmessage').text(resData.bodyOfMessage);
+                                              }
+                                              if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                                                  $('#error-addfollowupmessage').text(resData.followupOfMessage);
+                                                }
+
+                                                if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                                                    $('#error-addremindermessage').text(resData.remainderOfMessage);
+                                                  }
+
+                                              }
+
+                                      return false;
                                     }
 
 
@@ -1758,12 +2102,12 @@ $('document').ready(function ()
                                     updatePathwayInfo(pid, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
 
@@ -1834,9 +2178,8 @@ $('document').ready(function ()
                                 success: function (response)
                                 {
                                      $.LoadingOverlay("hide");
-                                    
-                                    if(response.statuscode==204){
-                                        var newmsg='';
+
+                                    if(response.statuscode==204){/*    var newmsg='';
                                         var msg=JSON.parse(response.message);
                                         if (typeof msg.blockName  != "undefined" || msg.blockName != null){
                                             newmsg=msg.blockName;
@@ -1844,7 +2187,7 @@ $('document').ready(function ()
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -1854,8 +2197,29 @@ $('document').ready(function ()
                                             loader: false,
                                             allowToastClose: false,
                                             hideAfter: 5000,
-                                        });
-                                        return false;
+                                        });*/
+
+
+                                          var resData = $.parseJSON(response.message);
+                                          if(typeof(resData)!="undefined"&&resData!==null){
+                                          if(typeof(resData.blockName) != "undefined" && resData.blockName !== null){
+                                              $('#error-addblockname').text(resData.blockName);
+                                            }
+
+                                          if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                                              $('#error-addblockmessage').text(resData.bodyOfMessage);
+                                            }
+                                            if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                                                $('#error-addfollowupmessage').text(resData.followupOfMessage);
+                                              }
+
+                                              if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                                                  $('#error-addremindermessage').text(resData.remainderOfMessage);
+                                                }
+
+                                            }
+
+                                    return false;
                                     }
 
 
@@ -1868,12 +2232,12 @@ $('document').ready(function ()
                                     updatePathwayInfo(pid, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
 
@@ -1933,9 +2297,8 @@ $('document').ready(function ()
                                 success: function (response)
                                 {
                                      $.LoadingOverlay("hide");
-                                    
-                                    if(response.statuscode==204){
-                                        var newmsg='';
+
+                                    if(response.statuscode==204){/*    var newmsg='';
                                         var msg=JSON.parse(response.message);
                                         if (typeof msg.blockName  != "undefined" || msg.blockName != null){
                                             newmsg=msg.blockName;
@@ -1943,7 +2306,7 @@ $('document').ready(function ()
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -1953,8 +2316,29 @@ $('document').ready(function ()
                                             loader: false,
                                             allowToastClose: false,
                                             hideAfter: 5000,
-                                        });
-                                        return false;
+                                        });*/
+
+
+                                          var resData = $.parseJSON(response.message);
+                                          if(typeof(resData)!="undefined"&&resData!==null){
+                                          if(typeof(resData.blockName) != "undefined" && resData.blockName !== null){
+                                              $('#error-addblockname').text(resData.blockName);
+                                            }
+
+                                          if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                                              $('#error-addblockmessage').text(resData.bodyOfMessage);
+                                            }
+                                            if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                                                $('#error-addfollowupmessage').text(resData.followupOfMessage);
+                                              }
+
+                                              if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                                                  $('#error-addremindermessage').text(resData.remainderOfMessage);
+                                                }
+
+                                            }
+
+                                    return false;
                                     }
 
                                     var bid = response.data;
@@ -1966,12 +2350,12 @@ $('document').ready(function ()
                                     updatePathwayInfo(pid, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
                         }
@@ -2031,9 +2415,8 @@ $('document').ready(function ()
                                 success: function (response)
                                 {
                                      $.LoadingOverlay("hide");
-                                    
-                                    if(response.statuscode==204){
-                                        var newmsg='';
+
+                                    if(response.statuscode==204){/*    var newmsg='';
                                         var msg=JSON.parse(response.message);
                                         if (typeof msg.blockName  != "undefined" || msg.blockName != null){
                                             newmsg=msg.blockName;
@@ -2041,7 +2424,7 @@ $('document').ready(function ()
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -2051,8 +2434,29 @@ $('document').ready(function ()
                                             loader: false,
                                             allowToastClose: false,
                                             hideAfter: 5000,
-                                        });
-                                        return false;
+                                        });*/
+
+
+                                          var resData = $.parseJSON(response.message);
+                                          if(typeof(resData)!="undefined"&&resData!==null){
+                                          if(typeof(resData.blockName) != "undefined" && resData.blockName !== null){
+                                              $('#error-addblockname').text(resData.blockName);
+                                            }
+
+                                          if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                                              $('#error-addblockmessage').text(resData.bodyOfMessage);
+                                            }
+                                            if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                                                $('#error-addfollowupmessage').text(resData.followupOfMessage);
+                                              }
+
+                                              if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                                                  $('#error-addremindermessage').text(resData.remainderOfMessage);
+                                                }
+
+                                            }
+
+                                    return false;
                                     }
 
 
@@ -2065,12 +2469,12 @@ $('document').ready(function ()
                                     updatePathwayInfo(pid, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
                         }
@@ -2144,9 +2548,8 @@ $('document').ready(function ()
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
-                                    
-                                    if(response.statuscode==204){
-                                        var newmsg='';
+
+                                    if(response.statuscode==204){/*    var newmsg='';
                                         var msg=JSON.parse(response.message);
                                         if (typeof msg.blockName  != "undefined" || msg.blockName != null){
                                             newmsg=msg.blockName;
@@ -2154,7 +2557,7 @@ $('document').ready(function ()
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -2164,8 +2567,29 @@ $('document').ready(function ()
                                             loader: false,
                                             allowToastClose: false,
                                             hideAfter: 5000,
-                                        });
-                                        return false;
+                                        });*/
+
+
+                                          var resData = $.parseJSON(response.message);
+                                          if(typeof(resData)!="undefined"&&resData!==null){
+                                          if(typeof(resData.blockName) != "undefined" && resData.blockName !== null){
+                                              $('#error-addblockname').text(resData.blockName);
+                                            }
+
+                                          if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                                              $('#error-addblockmessage').text(resData.bodyOfMessage);
+                                            }
+                                            if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                                                $('#error-addfollowupmessage').text(resData.followupOfMessage);
+                                              }
+
+                                              if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                                                  $('#error-addremindermessage').text(resData.remainderOfMessage);
+                                                }
+
+                                            }
+
+                                    return false;
                                     }
 
                                     var bid = response.data;
@@ -2177,12 +2601,12 @@ $('document').ready(function ()
                                     updatePathwayInfo(pid, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
                         }
@@ -2244,9 +2668,8 @@ $('document').ready(function ()
                                 success: function (response)
                                 {
                                      $.LoadingOverlay("hide");
-                                    
-                                    if(response.statuscode==204){
-                                        var newmsg='';
+
+                                    if(response.statuscode==204){/*    var newmsg='';
                                         var msg=JSON.parse(response.message);
                                         if (typeof msg.blockName  != "undefined" || msg.blockName != null){
                                             newmsg=msg.blockName;
@@ -2254,7 +2677,7 @@ $('document').ready(function ()
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -2264,8 +2687,29 @@ $('document').ready(function ()
                                             loader: false,
                                             allowToastClose: false,
                                             hideAfter: 5000,
-                                        });
-                                        return false;
+                                        });*/
+
+
+                                          var resData = $.parseJSON(response.message);
+                                          if(typeof(resData)!="undefined"&&resData!==null){
+                                          if(typeof(resData.blockName) != "undefined" && resData.blockName !== null){
+                                              $('#error-addblockname').text(resData.blockName);
+                                            }
+
+                                          if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                                              $('#error-addblockmessage').text(resData.bodyOfMessage);
+                                            }
+                                            if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                                                $('#error-addfollowupmessage').text(resData.followupOfMessage);
+                                              }
+
+                                              if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                                                  $('#error-addremindermessage').text(resData.remainderOfMessage);
+                                                }
+
+                                            }
+
+                                    return false;
                                     }
 
 
@@ -2277,12 +2721,12 @@ $('document').ready(function ()
                                     updatePathwayInfo(pid, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
                         }
@@ -2360,9 +2804,8 @@ $('document').ready(function ()
                         success: function (response)
                         {
                                    $.LoadingOverlay("hide");
-                                    
-                                    if(response.statuscode==204){
-                                        var newmsg='';
+
+                                    if(response.statuscode==204){/*    var newmsg='';
                                         var msg=JSON.parse(response.message);
                                         if (typeof msg.blockName  != "undefined" || msg.blockName != null){
                                             newmsg=msg.blockName;
@@ -2370,7 +2813,7 @@ $('document').ready(function ()
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -2380,8 +2823,29 @@ $('document').ready(function ()
                                             loader: false,
                                             allowToastClose: false,
                                             hideAfter: 5000,
-                                        });
-                                        return false;
+                                        });*/
+
+
+                                          var resData = $.parseJSON(response.message);
+                                          if(typeof(resData)!="undefined"&&resData!==null){
+                                          if(typeof(resData.blockName) != "undefined" && resData.blockName !== null){
+                                              $('#error-addblockname').text(resData.blockName);
+                                            }
+
+                                          if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                                              $('#error-addblockmessage').text(resData.bodyOfMessage);
+                                            }
+                                            if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                                                $('#error-addfollowupmessage').text(resData.followupOfMessage);
+                                              }
+
+                                              if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                                                  $('#error-addremindermessage').text(resData.remainderOfMessage);
+                                                }
+
+                                            }
+
+                                    return false;
                                     }
 
                             var bid = response.data;
@@ -2392,12 +2856,12 @@ $('document').ready(function ()
                             updatePathwayInfo(pid, currentpathwayname);
                         },
                         error: function(response, status){
-                        	
+
                         	if(response.status==412) {
                         	$.LoadingOverlay("hide");
                         		logout();
                         	}
-                        	
+
                         }
                     });
                     $.LoadingOverlay("hide");
@@ -2458,9 +2922,8 @@ $('document').ready(function ()
                     success: function (response)
                     {
                                     $.LoadingOverlay("hide");
-                                    
-                                    if(response.statuscode==204){
-                                        var newmsg='';
+
+                                    if(response.statuscode==204){/*    var newmsg='';
                                         var msg=JSON.parse(response.message);
                                         if (typeof msg.blockName  != "undefined" || msg.blockName != null){
                                             newmsg=msg.blockName;
@@ -2468,7 +2931,7 @@ $('document').ready(function ()
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -2478,10 +2941,31 @@ $('document').ready(function ()
                                             loader: false,
                                             allowToastClose: false,
                                             hideAfter: 5000,
-                                        });
-                                        return false;
-                                    }
+                                        });*/
 
+
+                                          var resData = $.parseJSON(response.message);
+                                          if(typeof(resData)!="undefined"&&resData!==null){
+                                          if(typeof(resData.blockName) != "undefined" && resData.blockName !== null){
+                                              $('#error-addblockname').text(resData.blockName);
+                                            }
+
+                                          if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                                              $('#error-addblockmessage').text(resData.bodyOfMessage);
+                                            }
+                                            if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                                                $('#error-addfollowupmessage').text(resData.followupOfMessage);
+                                              }
+
+                                              if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                                                  $('#error-addremindermessage').text(resData.remainderOfMessage);
+                                                }
+
+                                            }
+
+                                    return false;
+                                    }
+                        if(response.statuscode==200){
                         var bid = response.data;
                         inputBloc.id = response.data;
                         $saveblocks[bid] = inputBloc;
@@ -2620,17 +3104,20 @@ $('document').ready(function ()
 
 
 
+
                         updatePathwayInfo(pid, currentpathwayname);
 
                         $.LoadingOverlay("hide");
+                        }
+
                     },
                     error: function(response, status){
                     	$.LoadingOverlay("hide");
                     	if(response.status==412) {
-                    	
+
                     		logout();
                     	}
-                    	
+
                     }
                 });
 
@@ -2990,21 +3477,21 @@ function renderblock(blocks) {
             var ocblocknameht = '<p style="font-size:10px;color:#fff;">Every ' + block.repeatForNoOfDays + ' Days | End After ' + block.noofOccurence + ' Occurrences</p>';
         } else
         {
-           
+
             if(block.repeatForNoOfDays>1){
                 var fullnum=parseInt(block.repeatForNoOfDays);
                 var repeat=Math.floor(fullnum/10);
                 var occ=fullnum%10;
-                
+
                 if(occ!=0){
                     var ocblocknameht = '<p style="font-size:10px;color:#fff;">Every ' + repeat+ ' Days | End After ' + occ + ' Occurrences</p>';
                  }else{
                     var ocblocknameht = '<p style="font-size:10px;color:#fff;">Last Occurance</p>';
-                 }     
+                 }
             }else{
                  var ocblocknameht = '<p style="font-size:10px;color:#fff;"></p>';
-            }           
-           
+            }
+
 
         }
         var bhtm = '<div id="newblock" style="float:left;width:' + blockstylewidth + ';" data-blockid="' + block.id + '" data-eventid="' + block.eventId + '" class="' + bcellclass + '"><h3>' + block.blockName + '</h3>' + ocblocknameht + '</div>';
@@ -3071,10 +3558,10 @@ function updatePathwayInfo(pid, pname)
         error: function(response, status){
         	$.LoadingOverlay("hide");
         	if(response.status==412) {
-        	
+
         		logout();
         	}
-        	
+
         }
     });
 }

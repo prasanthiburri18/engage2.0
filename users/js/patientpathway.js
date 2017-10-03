@@ -1,13 +1,13 @@
 /**
- * 
+ *
  * @type String|response.data|accpeteddate
  * Patients Child Pathway Operations
  * Update Message
  * Set appointment dates
  * View message dates and delivered messages..etc
- * 
- * 
- * 
+ *
+ *
+ *
  */
 var stdate = '';
 function getObjects(obj, key, val) {
@@ -248,9 +248,9 @@ $('document').ready(function ()
      * get fillvent event 1,event 2....etc with repect to page no's.
      * The color schema is applied based on the columns 1 to 5
      * and this will get repeated page wise up to the lats  Pathway Event column Number.
-     * 
-     * 
-     * 
+     *
+     *
+     *
      */
     $("#previouscols").click(function () {
 
@@ -425,9 +425,9 @@ $('document').ready(function ()
 
             $.LoadingOverlay("hide");
             if(response.statuscode==203){
-                                //var msg_new=response.message;    
+                                //var msg_new=response.message;
                                 //var res = msg_new.replace("patient", "pathway");
-                                        
+
                                         $.toast({
                                             heading: 'Pathway',
                                             text: response.message,
@@ -487,6 +487,14 @@ $('document').ready(function ()
                                 viewPathway();
 
 
+                            },
+                            error: function(response, status){
+
+                            	if(response.status==412) {
+                            	$.LoadingOverlay("hide");
+                            		logout();
+                            	}
+
                             }
                         });
 
@@ -497,6 +505,14 @@ $('document').ready(function ()
                 }
             }
 
+
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
 
         }
     });
@@ -538,6 +554,14 @@ $('document').ready(function ()
                 $("#pathwaytble tr th:nth-child(" + colenindex + ") div").text(meventname);
                 $("#editeventname").val('');
 
+            },
+            error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
+
             }
         });
 
@@ -547,37 +571,37 @@ $('document').ready(function ()
      * For Block Type B
      * While saving the block we are checking with the block type
      * to get the respective messages should be updated.
-     * Note that we are only allowing user to update the 
+     * Note that we are only allowing user to update the
      * message part.
-     * 
+     *
      * For Block Type A "Appointment Block". In Patient Pathway we had an option
      * to provide the appointment dates. Based on appointment date reposition
      * the remainder message blocks and the followup message blocks .
-     * 
-     * In case of the appointment date is already specified and some of the remainder messages sent in 
-     * that case  system is again creating the new message blocks based on date selection which follows the logic 
+     *
+     * In case of the appointment date is already specified and some of the remainder messages sent in
+     * that case  system is again creating the new message blocks based on date selection which follows the logic
      * like .....
      * Case Block Execution day > 7
      *  Then the system will create the appointmnt blocks on executed day -7 =Remiander one
      *  executed day -1 =Remiander to message
      *  Executed day +1 =follow up message
-     * 
+     *
      *  Case Block Execution day < 7
      *  Then the system will create the appointmnt blocks on executed day -3 =Remiander one
      *  executed day -1 =Remiander to message
      *  Executed day +1 =follow up message
-     * 
+     *
      *  Case Block Execution day < 3
-     * 
+     *
      *  executed day -1 =Remiander to message
      *  Executed day +1 =follow up message
      Case Block Execution day =1
      * Shows only followup message with toase warn message like no remainders ..etc
-     * 
-     * Please note that if the patient has got earlier remiander message those 
-     * ones will get deleted while creating 
+     *
+     * Please note that if the patient has got earlier remiander message those
+     * ones will get deleted while creating
      * on new ones.
-     * 
+     *
      */
     $("#editblocsumbtn").click(function () {
 
@@ -623,8 +647,39 @@ $('document').ready(function ()
             });
             return;
         }
+          if (updatemessage.trim() !=''&& updatemessage.length>500)
+            {
 
+                $.toast({
+                    heading: 'Edit Block',
+                    text: 'Message exceeds 500 characters',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
+            var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+            if (!punctPattern.test(updatemessage))
+            {
 
+                $.toast({
+                    heading: 'Edit Block',
+                    text: 'Message should contain punctuation and alphanumeric characters only',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
 
         if (currenteditblock.blockType == "A" && currenteditblock.blockAppointmentParent == 0)
         {
@@ -755,6 +810,14 @@ $('document').ready(function ()
                             var blockhtml = '<div style="float:left;width:' + blockstylewidth + ';" id="newblock" data-blockavail="true" data-blockid="' + bid + '" class="' + blkclass + '">' + blockname + '</div>'
 
                             $saveblocks[bid] = inputBloc;
+                        },
+                        error: function(response, status){
+
+                        	if(response.status==412) {
+                        	$.LoadingOverlay("hide");
+                        		logout();
+                        	}
+
                         }
                     });
 
@@ -872,6 +935,14 @@ $('document').ready(function ()
 
                                             $("#" + currentid).append(blockhtml);
                                             $saveblocks[bid] = inputBloc;
+                                        },
+                                        error: function(response, status){
+
+                                        	if(response.status==412) {
+                                        	$.LoadingOverlay("hide");
+                                        		logout();
+                                        	}
+
                                         }
                                     });
 
@@ -958,6 +1029,14 @@ $('document').ready(function ()
 
                                             $("#" + currentid).append(blockhtml);
                                             $saveblocks[bid] = inputBloc;
+                                        },
+                                        error: function(response, status){
+
+                                        	if(response.status==412) {
+                                        	$.LoadingOverlay("hide");
+                                        		logout();
+                                        	}
+
                                         }
                                     });
 
@@ -1045,6 +1124,14 @@ $('document').ready(function ()
 
                                             $("#" + currentid).append(blockhtml);
                                             $saveblocks[bid] = inputBloc;
+                                        },
+                                        error: function(response, status){
+
+                                        	if(response.status==412) {
+                                        	$.LoadingOverlay("hide");
+                                        		logout();
+                                        	}
+
                                         }
                                     });
 
@@ -1151,6 +1238,14 @@ $('document').ready(function ()
 
                                             $("#" + currentid).append(blockhtml);
                                             $saveblocks[bid] = inputBloc;
+                                        },
+                                        error: function(response, status){
+
+                                        	if(response.status==412) {
+                                        	$.LoadingOverlay("hide");
+                                        		logout();
+                                        	}
+
                                         }
                                     });
 
@@ -1235,6 +1330,14 @@ $('document').ready(function ()
 
                                             $("#" + currentid).append(blockhtml);
                                             $saveblocks[bid] = inputBloc;
+                                        },
+                                        error: function(response, status){
+
+                                        	if(response.status==412) {
+                                        	$.LoadingOverlay("hide");
+                                        		logout();
+                                        	}
+
                                         }
                                     });
 
@@ -1321,6 +1424,14 @@ $('document').ready(function ()
 
                                             $("#" + currentid).append(blockhtml);
                                             $saveblocks[bid] = inputBloc;
+                                        },
+                                        error: function(response, status){
+
+                                        	if(response.status==412) {
+                                        	$.LoadingOverlay("hide");
+                                        		logout();
+                                        	}
+
                                         }
                                     });
                                 }
@@ -1422,6 +1533,14 @@ $('document').ready(function ()
 
                                             $("#" + currentid).append(blockhtml);
                                             $saveblocks[bid] = inputBloc;
+                                        },
+                                        error: function(response, status){
+
+                                        	if(response.status==412) {
+                                        	$.LoadingOverlay("hide");
+                                        		logout();
+                                        	}
+
                                         }
                                     });
 
@@ -1510,6 +1629,14 @@ $('document').ready(function ()
 
                                             $("#" + currentid).append(blockhtml);
                                             $saveblocks[bid] = inputBloc;
+                                        },
+                                        error: function(response, status){
+
+                                        	if(response.status==412) {
+                                        	$.LoadingOverlay("hide");
+                                        		logout();
+                                        	}
+
                                         }
                                     });
                                 }
@@ -1614,6 +1741,14 @@ $('document').ready(function ()
 
                                     $("#" + currentid).append(blockhtml);
                                     $saveblocks[bid] = inputBloc;
+                                },
+                                error: function(response, status){
+
+                                	if(response.status==412) {
+                                	$.LoadingOverlay("hide");
+                                		logout();
+                                	}
+
                                 }
                             });
                             $.LoadingOverlay("hide");
@@ -1633,6 +1768,14 @@ $('document').ready(function ()
 
 
 
+
+                },
+                error: function(response, status){
+
+                  if(response.status==412) {
+                  $.LoadingOverlay("hide");
+                    logout();
+                  }
 
                 }
             });
@@ -1747,6 +1890,10 @@ $('document').ready(function ()
     $('input[type=radio][name=editblocktype]').change(function () {
 
     });
+    $("#ebblockuploadplus").click(function () {
+
+        $("#ebblockupload").toggle();
+    });
 
     $(document).on('click', 'td .newcreateblock', function () {
 
@@ -1808,6 +1955,7 @@ $('document').ready(function ()
                 $("#editremindermessage").css('display', 'none');
 
                 $("#aptgrp").css('display', 'block');
+                $("#editfollowupmessage").css('display', 'none');
                 $("#aptgrp").attr('disabled', false);
 
             }
@@ -1838,8 +1986,15 @@ $('document').ready(function ()
         $("#editdeliveryday").attr('disabled', 'disabled');
         $("#editdeliveryday").val(currenteditblock.blockPocRow);
 
-        $("#editphisecured").attr('disabled', 'disabled');
-        $("#editphisecured").css('display', 'none');
+        if(currenteditblock.phiSecured=='yes'){
+            $("#editphisecured").attr('disabled', 'disabled');
+            $("#editphisecured").css('display', 'none');
+            $("#editphisecured").prop('checked', true);
+        }else{
+            $("#editphisecured").prop('checked', false);
+        }
+
+
 
         if (currenteditblock.blockAppointmentDate != '')
         {
@@ -1915,19 +2070,19 @@ function splitforpagination()
 
 }
 /**
- * 
+ *
  * @returns {JsonObject}
  * View PatientPathway
  * Loading the Master Pathway which is associated with patient
  * After that checking for patient acceptance in case of patient
  * not accepted then showing the Maste Pathway Information only
- * If the Patient Get Accepted then loading the child pathway along with 
+ * If the Patient Get Accepted then loading the child pathway along with
  * Patient Master pathway while showing the child pathway the master pathway days
  * are converting into child pathway dates based on patient accepted date.
  * Whenever the user performs edit operations on blocks these changes will get
  * affected only for child pathway not for master pathway.
- * 
- * 
+ *
+ *
  */
 function viewPathway()
 {
@@ -1953,6 +2108,10 @@ function viewPathway()
 
 
             pathswaysdata = response.data[0];
+            //console.log(pathswaysdata);
+            if(pathswaysdata.events.length<5){
+                    $("#nextcols").prop("disabled",true);
+            }
             var blocarrs = [];
             var blocarrscol = [];
             $('.patientpathwayfilename').html(pathswaysdata.pathwayName);
@@ -2010,8 +2169,17 @@ function viewPathway()
                 bthtml += '<tr>';
                 if (patientacceptdate)
                 {
+                     var currentdate=new Date();
+                     var n = currentdate.getTimezoneOffset();
+                      //alert(n);
+                      if(n==240){
+                         var someDate = new Date(accpeteddate);
+                         someDate.setDate(someDate.getDate()+1);
+                      }else{
+                        var someDate = new Date(accpeteddate);
 
-                    var someDate = new Date(accpeteddate);
+                      }
+                    //alert(someDate);
 
                     var numberOfDaysToAdd = tbrw;
                     if (numberOfDaysToAdd == 1)
@@ -2074,20 +2242,97 @@ function viewPathway()
 
             renderevent(pathswaysdata, maxRowNumber);
             splitforpagination();
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
+
         }
     });
 
 }
 function renderevent(pathswaysdata, maxRowNumber) {
+     var ptin={"patient_id":patientid};
+            var assignedeventlist=[];
+            var ase='';
+            var j=0;
+            $.ajax({
+            url:patientapibase+'/api/v1/getPatientEventsId',
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'Authorization':securitytoken,
+                'Content-Type':'application/json'
+            },
 
+            Accept: "application/json",
+            data: JSON.stringify(ptin),
+            async: false,
+            success:function(response){
+
+               // eventnameshtml+='<div class="col-lg-4 col-md-4 col-sm-4 HF-list">';
+               //    eventnameshtml+='<h4>'+evenval.eventName+'</h4>';
+               //    eventnameshtml+='<p>Delivered : '+deliveredcount+' of '+totalcount+'</p>';
+               //    eventnameshtml+='</div>';
+               //    $("#eventslist").append(eventnameshtml);
+              // console.log(response.data);
+              //alert(response.data);
+               //assignedeventlist=response.data;
+               //alert(assignedeventlist);
+               $.each(response.data,function(k,v){
+                // console.log(v);
+                 assignedeventlist[j]=v;
+                 j++;
+                 ase+='~'+v;
+                 //console.log(ase);
+               });
+               //console.log(assignedeventlist);
+                // $.each(response.data,function(k,v){
+                //     console.log(v);
+                //     if($.inArray(v, totaleventlistid) !== -1){
+                //         console.log(v);
+                //         var ind=$.inArray(v, totaleventlistid);
+                //         alert(ind);
+                //         console.log(totaleventlist[ind]);
+                //         eventnameshtml='<div class="col-lg-4 col-md-4 col-sm-4 HF-list">';
+                //         eventnameshtml+='<h4>'+totaleventlist[ind]+'</h4>';
+                //         //eventnameshtml+='<p>Delivered : '+deliveredcount+' of '+totalcount+'</p>';
+                //          eventnameshtml+='</div>';
+                //         $("#eventslist").append(eventnameshtml);
+
+                //     }
+
+                // });
+
+
+            },
+            error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
+
+            }
+
+        });
+            console.log(ase);
     var eventcolorarr = ['color2', 'color3'];
     pathswaysdata.events.sort(function (a, b) {
         return a.id - b.id;
     });
     $.each(pathswaysdata.events, function (index, pathwayeventinfo) {
+        //console.log(assignedeventlist);
+        //console.log(assignedeventlist.length);
+        //console.log(pathwayeventinfo.id);
 
-        var checkeveexist = checkObjectArray(patientevents, pathwayeventinfo.eventName, true);
 
+
+        //var checkeveexist = checkObjectArray(patientevents, pathwayeventinfo.eventName, true);
+        checkeveexist=true;
 
         if (checkeveexist)
         {
@@ -2165,7 +2410,23 @@ function renderevent(pathswaysdata, maxRowNumber) {
                 loadpatientblocks(pathwayeventinfo.id);
             } else
             {
-                renderblock(pathwayeventinfo.blocks);
+                //var flag=0;
+                // console.log(assignedeventlist);
+                // //$.each(response.data,function(k,v){
+
+                    if($.inArray(eventid,assignedeventlist)!=-1){
+                         renderblock(pathwayeventinfo.blocks);
+                    }
+
+
+               //if(flag==1){
+                  //console.log('AA');
+
+                //}
+               //loadpatientblocks(pathwayeventinfo.id);
+
+
+
             }
 
 
@@ -2229,6 +2490,14 @@ function loadpatientblocks(eid)
             var eventblocks = response.data;
 
             renderblock(eventblocks);
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
+
         }
     });
 
@@ -2402,6 +2671,14 @@ function renderblockOrgRemove(blocks) {
 
                     $.LoadingOverlay("hide");
                 }
+            },
+            error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
+
             }
         });
 
@@ -2445,6 +2722,14 @@ function patientChildblockdelete(id)
         success: function (response)
         {
             $.LoadingOverlay("hide");
+
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
 
         }
     });

@@ -1,6 +1,6 @@
 var patientfname='';
 $(document).ready(function() {
-   
+
 
     var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -18,8 +18,8 @@ $(document).ready(function() {
 };
 
  var pid = getUrlParameter('patientid');
-   
-    
+
+
     var pdata={};
        pdata.id=pid;
        var pathwayid=0;
@@ -37,7 +37,7 @@ if(localStorage.getItem("authtoken")!=null)
 }
 else{
     logout();
-   return; 
+   return;
 }
 
 
@@ -52,11 +52,11 @@ var dataSet=[];
  * Load patient using patient Id
  * @Input JsonObject
  * @return JsonObjects
- * 
+ *
  */
 
  /**
-     * 
+     *
      * @returns {JsonObject}
      * View PatientPathway
      * Loading the Master Pathway which is associated with patient
@@ -64,8 +64,8 @@ var dataSet=[];
      * not accepted then showing the Maste Pathway Information only
      * If the Patient Get Accepted then loading the child pathway information
      * And Displaying the message status along with delivery dates table.
-     * 
-     * 
+     *
+     *
      */
 $.ajax({
             url: patientapibase+'/api/v1/view_Patient',
@@ -85,12 +85,12 @@ $.ajax({
             },
             success: function (response)
             {
-                
+
                  $.LoadingOverlay("hide");
 
                  if(response.statuscode==203){
-                                
-                                        
+
+
                                         $.toast({
                                             heading: 'Patients',
                                             text: response.message,
@@ -104,35 +104,35 @@ $.ajax({
                                         return false;
             }
 
-                 
+
                  if(response.data!=null)
                  {
                      var results=response.data;
-                     
+
 
 var name=results.patient.firstName+' '+results.patient.lastName;
 patientfname=results.patient.firstName;
                      $("#pname").html(name);
-                     
+
                      //Making Phone Substring
-                     
+
                      var phinput =results.patient.phone;
 
                     var displayphinput=phinput.substring(0,3)+'-'+phinput.substring(3,6)+'-'+phinput.substring(6,10);
-                     
+
                      $("#pphone").html(displayphinput);
                        //var bdate=results.patient.dob.split('-');
                        var bdate=results.patient.dob;
 
                        var bdate1 = moment(bdate).add(1, 'days');
-             
+
                        var formatted = moment(bdate1).format('L');
                      $('#pdob').html(formatted);
                      $("#pathwayname").html(results.pathwayInfo.data.pathwayInfo.name);
                      pathwayid=results.pathwayInfo.data.pathwayInfo.id;
-                     
+
                      var ppin={"pathwayId":pathwayid};
-               
+
                      $.ajax({
             url:pathwayapibase+'/api/v1/listEvents',
             type: 'POST',
@@ -153,26 +153,33 @@ patientfname=results.patient.firstName;
             success: function (presponse)
             {
                   $.LoadingOverlay("hide");
-                
+
                   pathwayevents=presponse.data;
                   //console.log(results.pathwayInfo.data.eventInfo);
 
 
-            }
-           });     
+            },error: function(response, status){
 
-                    
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
+
+            }
+           });
+
+
                       var cnt_event=0;
                      $.each(results.pathwayInfo.data.eventInfo,function(evetindex,evenval){
-                        
-                      
+
+
                                   var eventnameshtml='';
                                 var totalcount=0;
                                 var deliveredcount=0;
                                 var eventcountinput={"patientid":pid,"pathwayid":pathwayid,"eventid":evenval.id};
-                                
-                         
-                                
+
+
+
                                 $.ajax({
             url: pathwayapibase+'/api/v1/getPatientpathwayblockbyevent',
             type: 'POST',
@@ -192,33 +199,33 @@ patientfname=results.patient.firstName;
             success: function (response)
             {
             $.LoadingOverlay("hide");
-           
+
            var eventblocks=response.data;
-          
-           
+
+
            if(eventblocks.length > 0)
            {
                 cnt_event++;
 
                   $.each(eventblocks,function(bi,be){
-                 
+
                       if(be.block_type=='A' && be.block_parent_id==0)
                       {
                           //Ignore
                       }
                       else
                       {
-                         
+
 
                           if(be.message_status=="sent")
                           {
-                             deliveredcount=deliveredcount+1; 
+                             deliveredcount=deliveredcount+1;
                           }
-                         
+
                           totalcount=totalcount+1;
                           cnt_event=cnt_event+1;
                       }
-                      
+
                   });
                   if(totalcount==deliveredcount)
                   eventnameshtml+='<div class="col-lg-4 col-md-4 col-sm-4 HF-list active">';
@@ -229,17 +236,24 @@ patientfname=results.patient.firstName;
                   eventnameshtml+='</div>';
                   $("#eventslist").append(eventnameshtml);
            }
-           
+
+        },error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
+
         }
         });
 
-                                
-                                
-                           
-                         
+
+
+
+
                      });
-                     
-                     
+
+
 var phinput =results.patient.phone;
  phinput = phinput.replace(/\\D/g, " ").split("-");
 
@@ -247,7 +261,7 @@ var phinput =results.patient.phone;
  $("#editphone2").val(phinput[1]);
  $("#editphone3").val(phinput[2]);
 
-  
+
   var painp={"patientid":pid,"pathwayid":pathwayid}
         $.ajax({
             url: pathwayapibase+'/api/v1/getPatientpathway',
@@ -275,7 +289,7 @@ var phinput =results.patient.phone;
                     var totaleventlistid=[];
                     var assignedeventlist=[];
                     var eventnameshtml='';
-                     
+
 
                      var ptin={"patient_id":pid};
                      $.ajax({
@@ -290,12 +304,12 @@ var phinput =results.patient.phone;
             Accept: "application/json",
             data: JSON.stringify(ptin),
             success:function(response){
-               
+
                // eventnameshtml+='<div class="col-lg-4 col-md-4 col-sm-4 HF-list">';
                //    eventnameshtml+='<h4>'+evenval.eventName+'</h4>';
                //    eventnameshtml+='<p>Delivered : '+deliveredcount+' of '+totalcount+'</p>';
                //    eventnameshtml+='</div>';
-               //    $("#eventslist").append(eventnameshtml); 
+               //    $("#eventslist").append(eventnameshtml);
               // console.log(response.data);
                assignedeventlist=response.data;
                 // $.each(response.data,function(k,v){
@@ -309,12 +323,19 @@ var phinput =results.patient.phone;
                 //         eventnameshtml+='<h4>'+totaleventlist[ind]+'</h4>';
                 //         //eventnameshtml+='<p>Delivered : '+deliveredcount+' of '+totalcount+'</p>';
                 //          eventnameshtml+='</div>';
-                //         $("#eventslist").append(eventnameshtml); 
+                //         $("#eventslist").append(eventnameshtml);
 
                 //     }
 
                 // });
-               
+
+
+            },error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
 
             }
 
@@ -336,7 +357,7 @@ var phinput =results.patient.phone;
                //    eventnameshtml+='<h4>'+evenval.eventName+'</h4>';
                //    eventnameshtml+='<p>Delivered : '+deliveredcount+' of '+totalcount+'</p>';
                //    eventnameshtml+='</div>';
-               //    $("#eventslist").append(eventnameshtml); 
+               //    $("#eventslist").append(eventnameshtml);
 
                $.each(response.data,function(key,value){
                    //var i=0;
@@ -354,11 +375,18 @@ var phinput =results.patient.phone;
                   eventnameshtml+='<h4>'+v+'</h4>';
                //eventnameshtml+='<p>Delivered : '+deliveredcount+' of '+totalcount+'</p>';
                 eventnameshtml+='</div>';
-               $("#eventslist").append(eventnameshtml); 
+               $("#eventslist").append(eventnameshtml);
                      }
                    });
                });
-               
+
+
+            },error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
 
             }
 
@@ -366,39 +394,53 @@ var phinput =results.patient.phone;
                     // console.log(totaleventlist);
                      //console.log(totaleventlistid);
                      //console.log(assignedeventlist);
-                   
+
                     //$("#eventslist").text("Patient has not started on pathway yet");
                  }
 
                  $.each(response.data,function(i,row){
-                  
+
                      if(row.message_status=='sent')
                      {
-                       jsonlist.push(row);  
+                       jsonlist.push(row);
                      }
                  });
-                 
+
                  dataSet=jsonlist;
-               
+
                                  var myTable = $('#example').DataTable();
 myTable.clear().rows.add(dataSet).draw();
+        },error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
+
         }
         });
 
 
                  }
-                
-               
+
+
+            },error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
+
             }
         });
 
 
- 
+
   var SearcheventTag = function (eventid) {
             var i = null;
-          
+
             for (i = 0; pathwayevents.length > i; i += 1) {
-           
+
                 if (pathwayevents[i].id === eventid) {
                     return pathwayevents[i];
                 }
@@ -406,20 +448,20 @@ myTable.clear().rows.add(dataSet).draw();
 
             return null;
         };
-        
+
 $('#example').DataTable({
-    
+
     "bProcessing": true,
     "order": [],
     "data": dataSet,
-    "columns": 
+    "columns":
         [
-        {"data": "body_of_message"}, 
+        {"data": "body_of_message"},
         {"data": null},
         {"data": null},
         {"data": "message_status"},
         {"data": null},
-        
+
         ],
          "columnDefs": [
                 {
@@ -437,10 +479,10 @@ $('#example').DataTable({
                          pname=row.remainder_of_message;
                     }
                         var plink='<a href="#" style="color:#ec843e;">More</a>';
-                       
+
 
                         var dd =pname;
-                        
+
                        if(row.block_name=="Sign Up")
                        {
                     dd = dd.replace("#FN", patientfname);
@@ -459,7 +501,7 @@ var alertdd =new Date(moment.unix(row.msenttime/1000));
 var timeDiff = Math.abs(date2.getTime() - alertdd.getTime());
 
 
-var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
                         return diffDays;
                     },
@@ -468,7 +510,7 @@ var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
                  {
                     "render": function (data, type, row) {
                         var tag = SearcheventTag(row.event_id);
-                      
+
         if (tag)
         {
             return tag.eventName;
@@ -480,11 +522,11 @@ var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
                  {
                     "render": function (data, type, row) {
 //                        var date = new Date(row.msenttime/1000);
-                
+
              var formattedd = moment.unix(row.msenttime/1000).format('LLL');
              var formatted = moment(formattedd).tz('America/New_York').format('LLL');
                         return formatted;
-                        
+
                     },
                     "targets":3
                 },
@@ -495,10 +537,10 @@ var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
                     "targets":4
                 }
          ]
-        
+
   });
-  
-  
-  
-  
+
+
+
+
 } );

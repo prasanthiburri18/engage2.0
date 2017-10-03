@@ -25,12 +25,12 @@ $('document').ready(function ()
      * @Input Json Object
      * @returns {Json Object}
      * User Login System
-     * After user sucessfull login the 
+     * After user sucessfull login the
      * we are storing the user details in local storage for
      * further operations and this local storgae will get
      * cleared for i5 mins in case of app inactivity.
-     * 
-     * 
+     *
+     *
      */
     function submitForm()
     {
@@ -104,14 +104,22 @@ $('document').ready(function ()
                         	if(response.data!=null){
                         	setUser(response.data.UserBacsicInfo);
                         	  $.LoadingOverlay("hide");
-                        	  
-                        	  
+
+
                         	  setTimeout(' window.location.href = "patientslist.html"; ', 1000);
                         	}
+                        },
+                        error: function(response, status){
+
+                        	if(response.status==412) {
+                        	$.LoadingOverlay("hide");
+                        		logout();
+                        	}
+
                         }
-                        	
+
                     });
-                    
+
                     //End New security change
 
                  //   $.LoadingOverlay("hide");
@@ -132,6 +140,15 @@ $('document').ready(function ()
                     $("#error").html('<div class="alert alert-danger">Incorrect Email/Password combination. Please try again</div>');
 
                 });
+
+
+                  if(err.status==412) {
+                  $.LoadingOverlay("hide");
+                    logout();
+                  }
+
+
+
 
             }
         });
@@ -166,9 +183,9 @@ $('document').ready(function ()
         };
 
         /**
-         * 
+         *
          * Forgot Password API call
-         * 
+         *
          */
 
         $.ajax({
@@ -211,8 +228,12 @@ $('document').ready(function ()
                 }
 
             },
-            error: function (jqXHR, textStatus, errorThrown) {
-                $.LoadingOverlay("hide");
+            error: function(response, status){
+                  $.LoadingOverlay("hide");
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
 
             }
         });
@@ -286,6 +307,13 @@ $('document').ready(function ()
                     $("#changepasserr").css('display', 'block');
 
                 }
+
+            },error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
 
             }
         });

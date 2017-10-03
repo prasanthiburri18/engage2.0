@@ -160,9 +160,9 @@ $('document').ready(function ()
      * Listing the Oragnization Pathways
      * which are getting displayed on the edit patient section
      * And comapring the pathway which is already assigned to patient and making
-     * that pathway as default selection (disabling other Pathways). In case of no pathway is assigned then 
+     * that pathway as default selection (disabling other Pathways). In case of no pathway is assigned then
      * listing all pathways of that organization
-     * 
+     *
      */
 
     $.ajax({
@@ -226,6 +226,14 @@ $('document').ready(function ()
             {
                 ViewpatientDetails();
             }
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
+
         }
     });
 
@@ -280,7 +288,7 @@ $('document').ready(function ()
         } else if((parseInt(datearr[2]) == parseInt(outputyear)) && (parseInt(datearr[0]) > parseInt(month))) {
              $(".error").html("Invalid date of birth");
         }else if((parseInt(datearr[2]) == parseInt(outputyear)) && (parseInt(datearr[0]) == parseInt(month)) && (parseInt(datearr[1]) > parseInt(day))){
-            $(".error").html("Invalid date of birth");   
+            $(".error").html("Invalid date of birth");
         }else{
             $(".error").text('');
         }
@@ -314,7 +322,7 @@ $('document').ready(function ()
     });
 
     $("#emailpa").on("click", function () {
-       
+
 //      $( "#dialog" ).dialog( "open" );
 
         $.toast({
@@ -331,7 +339,7 @@ $('document').ready(function ()
 
     /**
      * Patient Form Jquery Validation Process
-     * 
+     *
      */
 
     $("#editpatient-form").validate({
@@ -409,14 +417,18 @@ $('document').ready(function ()
      * @return { Json Object} description
      * Taking the Patient information and updating in the backend
      * using QC API Call.
-     * 
-     * 
+     *
+     *
      */
     function editpatientsubmitForm()
     {
+
+      //Clear server side error messages before submitting
+      $('.fieldError').text('');
+
         var pfname = $("#editpatienfrmfirstname").val();
         var plname = $("#editpatienfrmlastname").val();
-        
+
         valid=1;
         var pdob = $("#editpatientdob").val();
                //needed format yy-mm-dd
@@ -429,10 +441,10 @@ $('document').ready(function ()
         var phone_bval = $('#editphone2').val();
         var phone_cval = $('#editphone3').val();
         var ph_length=parseInt(phone_aval.length)+parseInt(phone_bval.length)+parseInt(phone_cval.length);
-        
+
 
        if(!$.isNumeric(phone_aval) || !$.isNumeric(phone_bval) || !$.isNumeric(phone_cval)){
-            
+
             valid=0;
             $("#pherr").text("Please enter a valid phone number");
              $('html,body').animate({
@@ -440,7 +452,7 @@ $('document').ready(function ()
                 'slow');
        }
         if(ph_length<10) {
-            
+
             valid=0;
             $("#pherr").text("Please enter a valid phone number");
               $('html,body').animate({
@@ -486,23 +498,23 @@ $('document').ready(function ()
                     if(typeof(resData.firstName) != "undefined" && resData.firstName !== null){
                         $('#error-firstName').text(resData.firstName);
                         $.LoadingOverlay("hide");
-                        
+
                     }
-                    
+
                     if(typeof(resData.lastName) != "undefined" && resData.lastName !== null){
                         $('#error-lastName').text(resData.lastName);
                         $.LoadingOverlay("hide");
                     }
-                    
+
                     if(typeof(resData.dob) != "undefined" && resData.dob !== null){
                         $('#error-dob').text(resData.dob);
                     }
-                    
+
                     if(typeof(resData.phone) != "undefined" && resData.password !== null){
                         $('#error-phone').text(resData.phone);
                     }
                     $.LoadingOverlay("hide");
-                } 
+                }
                 else {
 
                     $.LoadingOverlay("hide");
@@ -512,6 +524,14 @@ $('document').ready(function ()
                     });
 
                 }
+            },
+            error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
+
             }
         });
         return false;
@@ -565,8 +585,8 @@ function ViewpatientDetails()
             $.LoadingOverlay("hide");
 
             if(response.statuscode==203){
-                                
-                                        
+
+
                                         $.toast({
                                             heading: 'Patients',
                                             text: response.message,
@@ -604,7 +624,7 @@ function ViewpatientDetails()
                         $(this).removeAttr("disabled");
 
                     });
-//                         $('input[name="eventpaths"]').each(function () { 
+//                         $('input[name="eventpaths"]').each(function () {
 //                             $(this).removeAttr( "disabled" );
 ////                             alert($(this).attr('name'));
 //                         });
@@ -636,7 +656,7 @@ function ViewpatientDetails()
                 //alert(results.patient.dob);
 
                 var d = new Date()
-                
+
                 $('#editpatientdob').datepicker('setDate', u_date);
 
                 if(n==240)
@@ -663,6 +683,14 @@ function ViewpatientDetails()
                 if (currentlyselectedpathwayid != 0)
                     showevents(currentlyselectedpathwayid);
             }
+
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
 
         }
     });

@@ -131,7 +131,7 @@ $(document).ready(function () {
      * @Input JsonObject
      * @return Output JsonObject
      * List view is rendering using Datatable.
-     *  
+     *
      */
     var listinpu = {"orgid": orgid};
     $.ajax({
@@ -177,6 +177,14 @@ $(document).ready(function () {
                 });
 
             }
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
+
         }
     });
 
@@ -271,8 +279,8 @@ $(document).ready(function () {
      * Adding team memeber into the user logged organization
      * @Input JsonObject
      * @returns {JsonObject}
-     * 
-     * 
+     *
+     *
      */
     function addteamsubmitForm()
     {
@@ -355,6 +363,15 @@ $(document).ready(function () {
                             });
                             location.reload();
                         }
+                        ,
+                        error: function(response, status){
+
+                        	if(response.status==412) {
+                        	$.LoadingOverlay("hide");
+                        		logout();
+                        	}
+
+                        }
                     });
                     //End of sending email
 
@@ -396,18 +413,18 @@ $(document).ready(function () {
                     if(typeof(resData.fullName) != "undefined" && resData.fullName !== null){
                         $('#error-fullname').text(resData.fullName);
                     }
-                    
+
                     if(typeof(resData.dob) != "undefined" && resData.dob !== null){
                         $('#error-dob').text(resData.dob);
                     }
-                    
+
                     if(typeof(resData.email) != "undefined" && resData.email !== null){
                         $('#error-email').text(resData.email);
                     }
-                    
-                    if(typeof(resData.password) != "undefined" && resData.password !== null){
-                        $('#error-userpassword').text(resData.password);
-                    
+
+                    if(typeof(resData.phone) != "undefined" && resData.phone !== null){
+                        $('#error-phone').text(resData.password);
+
                 }
 
                 } else {
@@ -419,9 +436,17 @@ $(document).ready(function () {
                     });
 
                 }
+            },
+            error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
+
             }
+
         });
         return false;
     }
-
 });

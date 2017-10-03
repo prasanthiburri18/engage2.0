@@ -27,10 +27,10 @@ $(document).ready(function () {
     var plist = {"orgId": output.orgid};
 
 /**
- * Loading the Pathway names for filter atuo select purpose 
+ * Loading the Pathway names for filter atuo select purpose
  * @input JsonObject
  * @return JsonObject
- *  
+ *
  */
 
     $.ajax({
@@ -86,13 +86,21 @@ $(document).ready(function () {
                 });
 
             }
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
+
         }
     });
 /**
  * Displaying the Patient list using organization
  * In this section we are calculating the patient pathway start days by
  * patient accepted date for particular Pathway
- * 
+ *
  */
     $('#example').DataTable({
         "bProcessing": true,
@@ -172,6 +180,14 @@ $(document).ready(function () {
                                 $(currentCell).html('0');
                             }
 
+
+                        },
+                        error: function(response, status){
+
+                        	if(response.status==412) {
+                        	$.LoadingOverlay("hide");
+                        		logout();
+                        	}
 
                         }
                     });
@@ -285,7 +301,7 @@ $(document).ready(function () {
  * Rendering the list using Datatbales
  * @Input JsonObject
  * @return JsonObject
- * 
+ *
  */
     $.ajax({
         url: patientapibase + '/api/v1/list_Patient',
@@ -335,6 +351,14 @@ $(document).ready(function () {
                 });
 
             }
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
+
         }
     });
 
@@ -392,6 +416,14 @@ function patientdelete()
                 });
 
             }
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
+
         }
     });
 }

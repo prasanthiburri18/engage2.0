@@ -43,8 +43,14 @@ $.ajax({
                     $("#orgname").html(response.data);
                     $.LoadingOverlay("hide");
                 }
-            },error:function(err,status){
-                //err
+            },
+            error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
+
             }
             });
 
@@ -64,29 +70,29 @@ $( "#patientdob" ).datepicker({
                 /**
                  * Loading the Patient Information
                  * by patient dob.
-                 * Once the patient found in db then the 
+                 * Once the patient found in db then the
                  * phi message will get displayed based on Block record id.
-                 * 
+                 *
                  */
                 $("#checkpatientdob").click(function(){
-                      
+
                       var inputdate=$("#patientdob").val();
                       var da=new Date(inputdate);
                       //alert(da);
                       // var inputarr=inputdate.split('-');
                       // var day= parseInt(inputarr[2])-1;
-                      // var newdate=inputarr[0]+'-'+inputarr[1]+'-'+day; 
+                      // var newdate=inputarr[0]+'-'+inputarr[1]+'-'+day;
                       // da.setDate(da.getDate()+1);
                       // alert(da);
                       // var day = da.getDate();
                       //   var month = da.getMonth() + 1;
                       //   var year = da.getFullYear();
-                       
+
 
                         var new_date=formatDate(da);
                         //alert(new_date);
                       var dobinput={"dob":new_date};
-                    
+
                     $.ajax({
             url: userapibase+'/getPatientBydob',
             type: 'POST',
@@ -102,11 +108,11 @@ $( "#patientdob" ).datepicker({
             success: function (response)
             {
                  $.LoadingOverlay("hide");
-                 
+
                  var result=parseInt(response.data);
                  if(result >0)
                  {
-                   
+
 var binput={"id":bid};
          $.ajax({
             url: userapibase+'/getPatientpathwayblockbyId',
@@ -123,36 +129,44 @@ var binput={"id":bid};
             success: function (response)
             {
                  $.LoadingOverlay("hide");
-                 
+
                  if(response.data.length >0)
                  {
                      $("#messwidget").css('display','block');
                      var bdata=response.data;
                      if(bdata[0].body_of_message!='no message')
                      {
-                         
+
                          $("#patientblockmessage").html(bdata[0].body_of_message);
                      }
                       if(bdata[0].remainder_of_message!='no message')
                      {
-                         
+
                          $("#patientblockmessage").html(bdata[0].remainder_of_message);
                      }
                        if(bdata[0].followup_of_message!='no message')
                      {
-                         
+
                          $("#patientblockmessage").html(bdata[0].followup_of_message);
                      }
-                     
+
                      $("#dobwidget").css('display','none');
                  }
-                 
+
+            },
+            error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
+
             }
         });
                  }
                  else
                  {
-                     
+
             $.toast({
     heading: 'Error',
     text: 'Your phone number and date of birth combination does not match. Please try again',
@@ -162,17 +176,25 @@ var binput={"id":bid};
     loader:false,
     allowToastClose: false,
     hideAfter: 5000,
-    
-});          
+
+});
                  }
-                 
+
+            },
+            error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
+
             }
         });
-                    
-                    
-                    
+
+
+
                 });
-                
+
     });
 
 function formatDate(date) {
@@ -186,4 +208,3 @@ function formatDate(date) {
 
     return [year, month, day].join('-');
 }
-

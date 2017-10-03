@@ -44,7 +44,7 @@ $('document').ready(function ()
         $("#password_again").val('');
     });
 // $(".cancel").click(function() {
-//   
+//
 //            return;
 //      });
 //Change Password frm submission process
@@ -74,11 +74,11 @@ $('document').ready(function ()
         submitHandler: changepasswordsubmitForm
     });
     /**
-     * 
+     *
      * Change Password for Logged in User
      * @Input Json Object
-     * @return {Json Object} 
-     * 
+     * @return {Json Object}
+     *
      */
     function changepasswordsubmitForm()
     {
@@ -143,6 +143,14 @@ $('document').ready(function ()
 
                 }
 
+            },
+            error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
+
             }
         });
 
@@ -192,8 +200,8 @@ $('document').ready(function ()
      * @return {JsonObject}
      * After succesfull validation the user profile get updated
      * using backed QC API Call and return the JsonObject as Output.
-     * 
-     * 
+     *
+     *
      */
 
 
@@ -229,6 +237,9 @@ $('document').ready(function ()
 
     function updateuserprofilrsubmitForm()
     {
+      //Clear server side error messages before submitting
+      $('.fieldError').text('');
+
         var fullname = $("#fullname").val();
         var email = $("#email").val();
         var orgname = $("#orgname").val();
@@ -294,11 +305,11 @@ $('document').ready(function ()
                     if(typeof(resData.fullName) != "undefined" && resData.fullName !== null){
                         $('#error-fullname').text(resData.fullName);
                     }
-                    
+
                     if(typeof(resData.practiceName) != "undefined" && resData.practiceName !== null){
                         $('#error-practiceName').text(resData.practiceName);
                     }
-                    
+
                     if(typeof(resData.email) != "undefined" && resData.email !== null){
                         $('#error-useremail').text(resData.email);
                     }
@@ -307,6 +318,14 @@ $('document').ready(function ()
                     }
                      $.LoadingOverlay("hide");
                 }
+
+            },
+            error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
 
             }
         });

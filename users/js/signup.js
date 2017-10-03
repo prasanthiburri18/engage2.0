@@ -1,14 +1,14 @@
 /**
- * 
+ *
  * @type String|response
  * User Registration Js file
  * In this file we are making the user registration
  * Loading the all organization names which are getting displayed
  * in registration form.
- * After making user successful registration the system will send 
+ * After making user successful registration the system will send
  * an email to user then the user  need to click on verify email
  * for user active. Otherwise the user would be in inactive mode only.
- * 
+ *
  */
 
 var correctCaptchares = '';
@@ -81,12 +81,12 @@ $('document').ready(function ()
             }
         },
         error: function(response, status){
-        	
+
         	if(response.status==412) {
         	$.LoadingOverlay("hide");
         		logout();
         	}
-        	
+
         }
     });
 
@@ -222,19 +222,26 @@ $('document').ready(function ()
                     if(typeof(resData.fullName) != "undefined" && resData.fullName !== null){
                         $('#error-fullname').text(resData.fullName);
                     }
-                    
+
                     if(typeof(resData.practiceName) != "undefined" && resData.practiceName !== null){
                         $('#error-praname').text(resData.practiceName);
                     }
-                    
+
                     if(typeof(resData.email) != "undefined" && resData.email !== null){
                         $('#error-useremail').text(resData.email);
                     }
-                    
+
                     if(typeof(resData.password) != "undefined" && resData.password !== null){
                         $('#error-userpassword').text(resData.password);
                     }
                 }
+
+            },error: function(response, status){
+
+              if(response.status==412) {
+              $.LoadingOverlay("hide");
+                logout();
+              }
 
             }
         });
