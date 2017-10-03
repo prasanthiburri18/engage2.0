@@ -3,6 +3,7 @@ package com.engage.commons.util;
 import java.io.IOException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,7 +13,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 @RunWith(SpringRunner.class)
-
+@Ignore
 public class HtmlEscapeUtilTest {
 	/**
 	 * Logger used here

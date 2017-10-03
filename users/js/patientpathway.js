@@ -1747,7 +1747,11 @@ $('document').ready(function ()
     $('input[type=radio][name=editblocktype]').change(function () {
 
     });
+    $("#ebblockuploadplus").click(function () {
 
+        $("#ebblockupload").toggle();
+    });
+    
     $(document).on('click', 'td .newcreateblock', function () {
 
         if ($(this).data('blockid'))
@@ -1808,6 +1812,7 @@ $('document').ready(function ()
                 $("#editremindermessage").css('display', 'none');
 
                 $("#aptgrp").css('display', 'block');
+                $("#editfollowupmessage").css('display', 'none');
                 $("#aptgrp").attr('disabled', false);
 
             }
@@ -1837,9 +1842,16 @@ $('document').ready(function ()
         $("#editblocktrigger").attr('disabled', 'disabled');
         $("#editdeliveryday").attr('disabled', 'disabled');
         $("#editdeliveryday").val(currenteditblock.blockPocRow);
+        
+        if(currenteditblock.phiSecured=='yes'){
+            $("#editphisecured").attr('disabled', 'disabled');
+            $("#editphisecured").css('display', 'none');
+            $("#editphisecured").prop('checked', true);
+        }else{
+            $("#editphisecured").prop('checked', false);
+        }
 
-        $("#editphisecured").attr('disabled', 'disabled');
-        $("#editphisecured").css('display', 'none');
+
 
         if (currenteditblock.blockAppointmentDate != '')
         {
@@ -1953,6 +1965,10 @@ function viewPathway()
 
 
             pathswaysdata = response.data[0];
+            //console.log(pathswaysdata);
+            if(pathswaysdata.events.length<5){
+                    $("#nextcols").prop("disabled",true);
+            }
             var blocarrs = [];
             var blocarrscol = [];
             $('.patientpathwayfilename').html(pathswaysdata.pathwayName);
@@ -2010,8 +2026,17 @@ function viewPathway()
                 bthtml += '<tr>';
                 if (patientacceptdate)
                 {
+                     var currentdate=new Date();
+                     var n = currentdate.getTimezoneOffset();
+                      //alert(n);
+                      if(n==240){
+                         var someDate = new Date(accpeteddate);
+                         someDate.setDate(someDate.getDate()+1);
+                      }else{
+                        var someDate = new Date(accpeteddate);
 
-                    var someDate = new Date(accpeteddate);
+                      }
+                    //alert(someDate);
 
                     var numberOfDaysToAdd = tbrw;
                     if (numberOfDaysToAdd == 1)
@@ -2079,15 +2104,76 @@ function viewPathway()
 
 }
 function renderevent(pathswaysdata, maxRowNumber) {
+     var ptin={"patient_id":patientid};
+            var assignedeventlist=[];
+            var ase='';
+            var j=0;
+            $.ajax({
+            url:patientapibase+'/api/v1/getPatientEventsId',
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'Authorization':securitytoken,
+                'Content-Type':'application/json'
+            },
 
+            Accept: "application/json",
+            data: JSON.stringify(ptin),
+            async: false,
+            success:function(response){
+               
+               // eventnameshtml+='<div class="col-lg-4 col-md-4 col-sm-4 HF-list">';
+               //    eventnameshtml+='<h4>'+evenval.eventName+'</h4>';
+               //    eventnameshtml+='<p>Delivered : '+deliveredcount+' of '+totalcount+'</p>';
+               //    eventnameshtml+='</div>';
+               //    $("#eventslist").append(eventnameshtml); 
+              // console.log(response.data);
+              //alert(response.data);
+               //assignedeventlist=response.data;
+               //alert(assignedeventlist);
+               $.each(response.data,function(k,v){
+                // console.log(v);
+                 assignedeventlist[j]=v;
+                 j++;
+                 ase+='~'+v;
+                 //console.log(ase);
+               });
+               //console.log(assignedeventlist);
+                // $.each(response.data,function(k,v){
+                //     console.log(v);
+                //     if($.inArray(v, totaleventlistid) !== -1){
+                //         console.log(v);
+                //         var ind=$.inArray(v, totaleventlistid);
+                //         alert(ind);
+                //         console.log(totaleventlist[ind]);
+                //         eventnameshtml='<div class="col-lg-4 col-md-4 col-sm-4 HF-list">';
+                //         eventnameshtml+='<h4>'+totaleventlist[ind]+'</h4>';
+                //         //eventnameshtml+='<p>Delivered : '+deliveredcount+' of '+totalcount+'</p>';
+                //          eventnameshtml+='</div>';
+                //         $("#eventslist").append(eventnameshtml); 
+
+                //     }
+
+                // });
+               
+
+            }
+
+        });
+            console.log(ase);
     var eventcolorarr = ['color2', 'color3'];
     pathswaysdata.events.sort(function (a, b) {
         return a.id - b.id;
     });
     $.each(pathswaysdata.events, function (index, pathwayeventinfo) {
-
-        var checkeveexist = checkObjectArray(patientevents, pathwayeventinfo.eventName, true);
-
+        //console.log(assignedeventlist);
+        //console.log(assignedeventlist.length);
+        //console.log(pathwayeventinfo.id);
+       
+       
+       
+        //var checkeveexist = checkObjectArray(patientevents, pathwayeventinfo.eventName, true);
+        checkeveexist=true;
 
         if (checkeveexist)
         {
@@ -2165,7 +2251,23 @@ function renderevent(pathswaysdata, maxRowNumber) {
                 loadpatientblocks(pathwayeventinfo.id);
             } else
             {
-                renderblock(pathwayeventinfo.blocks);
+                //var flag=0;
+                // console.log(assignedeventlist);
+                // //$.each(response.data,function(k,v){
+              
+                    if($.inArray(eventid,assignedeventlist)!=-1){
+                         renderblock(pathwayeventinfo.blocks);
+                    }
+                
+
+               //if(flag==1){
+                  //console.log('AA');
+                   
+                //}    
+               //loadpatientblocks(pathwayeventinfo.id);
+
+
+
             }
 
 

@@ -536,6 +536,26 @@ public class PatientController {
 
 	}
 
+  @RequestMapping(value="/getPatientEventsId",method = RequestMethod.POST)
+  public  @ResponseBody JsonMessage  getPatientEventsId(@RequestBody  Map<String, String> json ) 
+  {
+	  JsonMessage response=new JsonMessage();
+	  try
+	  {
+	Long pi=Long.parseLong(json.get("patient_id"));
+	ArrayList<Long> patientPathway= _patientPathwayDao.getEventsById(pi);
+	
+		  response.setData(patientPathway);
+			response.setStatuscode(200);
+			return response; 
+	  }catch(Exception ex)
+	 {
+		  response.setMessage(ex.getMessage());
+			response.setStatuscode(200);
+			return response; 
+	 }
+	 	
+  }
 	/**
 	 * API Callback for twilio Reply
 	 * 

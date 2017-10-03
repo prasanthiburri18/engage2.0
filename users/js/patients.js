@@ -92,7 +92,7 @@ $('document').ready(function ()
 //            //alert('success');
 //        }
 //    });
-//    
+//
     $("#patientdob").datepicker({
         showOn: "button",
         buttonImage: "images/calendar-icon.png",
@@ -141,12 +141,12 @@ $('document').ready(function ()
     });
 
     /**
-     * 
+     *
      * @returns {JsonObject}
      * View PatientPathway
      * Loading the Master Pathway which is associated with Organization
      * for user selction at the time of adding patient
-     * 
+     *
      */
 
     var pathwaysjson = [];
@@ -328,7 +328,7 @@ $('document').ready(function ()
     });
 
     $("#emailpa").on("click", function () {
-       
+
 //      $( "#dialog" ).dialog( "open" );
 
         $.toast({
@@ -346,7 +346,7 @@ $('document').ready(function ()
      * @Input JsonObject
      * @returns {JsonObject}
      * Adding patient using QC API call.
-     * Patient can be added with pathway assigned or 
+     * Patient can be added with pathway assigned or
      * without pathway assigned.
      * The backed system will checks for patient pathway assinged . If there is
      * a pathway is assigned to patient then the system will send an sms
@@ -354,9 +354,13 @@ $('document').ready(function ()
      */
     function patientsubmitForm()
     {
+      //Clear server side error messages before submitting
+      $('.fieldError').text('');
+
+
         var pfname = $("#patienfrmfirstname").val();
         var plname = $("#patienfrmlastname").val();
-        
+
         var outDate = $("#patientdob").val();
       //   var date = new Date($('#patientdob').val());
       // day = date.getDate();
@@ -430,7 +434,7 @@ $('document').ready(function ()
                     });
 
                 }
-                
+
                 if (response.statuscode == 400) {
 
 
@@ -446,22 +450,22 @@ $('document').ready(function ()
                         $('#error-firstName').text(resData.firstName);
                         $.LoadingOverlay("hide");
                     }
-                    
+
                     if(typeof(resData.lastName) != "undefined" && resData.lastName !== null){
                         $('#error-lastName').text(resData.lastName);
                     }
-                    
+
                     if(typeof(resData.dob) != "undefined" && resData.dob !== null){
                         $('#error-dob').text(resData.dob);
                     }
-                    
+
                     if(typeof(resData.phone) != "undefined" && resData.password !== null){
                         $('#error-phone').text(resData.phone);
                     }
-                    
+
                     $.LoadingOverlay("hide");
                 }
-                 
+
                 else {
 
                     $.LoadingOverlay("hide");

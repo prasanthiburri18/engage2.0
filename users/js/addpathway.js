@@ -171,7 +171,7 @@ $(document).ready(function () {
             var lastmodifiedtime = formatAMPM(new Date());
             lastmodifiedtime = 'Last saved at ' + lastmodifiedtime;
             $("#lastsavedtime").html(lastmodifiedtime);
-        }    
+        }
 
 
 
@@ -260,7 +260,7 @@ $(document).ready(function () {
     var $currenteventid;
     var $blocktype;
 
-    //Defualt settings for Modal Popup Blocks 
+    //Defualt settings for Modal Popup Blocks
     $("#remindermessage").css('display', 'none');
     $("#followupmessage").css('display', 'none');
     $("#followupphisecuredgrp").css('display', 'none');
@@ -322,8 +322,8 @@ $(document).ready(function () {
      * Pathway Update on name change .
      * @Input params Json Object
      * @return {JsonObject} JsonObject
-     * 
-     * 
+     *
+     *
      */
     $(document).on("blur", ".inpchangepathwayname", function () {
         var pname = $(this).val();
@@ -359,7 +359,7 @@ $(document).ready(function () {
      * then it will return a toast warn message
      * If the Pathway is there then It will show up
      * the modal add event modal window.s
-     * 
+     *
      */
     $("#addeventmodal").click(function () {
         if ($currentpthwayId == 0)
@@ -392,9 +392,9 @@ $(document).ready(function () {
      * Checking for the clicked parent has
      * childs or not . If there are no childs
      * then allow add event modal popup
-     * 
-     * 
-     * 
+     *
+     *
+     *
      */
 
     $("#pathwaytble tbody tr td").on('click', function () {
@@ -409,9 +409,9 @@ $(document).ready(function () {
      * Checking for the clicked parent has
      * childs or not . If there are  childs gt 0
      * then allow add block modal popup
-     * 
-     * 
-     * 
+     *
+     *
+     *
      */
     $("#headerrow").on('click', 'th', function () {
         if ($(this).children().length > 0) {
@@ -455,7 +455,7 @@ $(document).ready(function () {
             if ($(this).index() != 0)
                 $("#addeventmodal").trigger("click");
             $('#eventname').focus()
-//       $("#addeventmodal").trigger("click"); 
+//       $("#addeventmodal").trigger("click");
         }
 
     });
@@ -527,9 +527,9 @@ $(document).ready(function () {
      * get fillvent event 1,event 2....etc with repect to page no's.
      * The color schema is applied based on the columns 1 to 5
      * and this will get repeated page wise up to the lats  Pathway Event column Number.
-     * 
-     * 
-     * 
+     *
+     *
+     *
      */
 
     $("#previouscols").prop('disabled', true);
@@ -633,14 +633,14 @@ $(document).ready(function () {
     /**
      * Event Creation functionality
      * Check point: Checking for the pathway creation or not
-     * If there is not pathway while creating the event then 
+     * If there is not pathway while creating the event then
      * the system will repond with some error taost message.
      * In case of the pathway existence then the system will create
      * an event using QC API call.
      * And alos the system will check for the dupliacte name with status code 208 which was getting
      * as API response.
-     * 
-     * 
+     *
+     *
      */
     $("#createevent").on('click', function () {
 
@@ -801,7 +801,7 @@ $(document).ready(function () {
                             inputBloc.id = response.data;
                             $saveblocks[response.data] = inputBloc;
                             $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
                                         var newmsg='';
                                         var msg=JSON.parse(response.message);
@@ -811,7 +811,7 @@ $(document).ready(function () {
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -832,24 +832,24 @@ $(document).ready(function () {
 
                         },
                         error: function(response, status){
-                        	
+
                         	if(response.status==412) {
                         	$.LoadingOverlay("hide");
                         		logout();
                         	}
-                        	
+
                         }
                     });
 
 
                 },
                 error: function(response, status){
-                	
+
                 	if(response.status==412) {
                 	$.LoadingOverlay("hide");
                 		logout();
                 	}
-                	
+
                 }
 
             });
@@ -975,12 +975,12 @@ $(document).ready(function () {
                     updatePathwayInfo($currentpthwayId, currentpathwayname);
                 },
                 error: function(response, status){
-                	
+
                 	if(response.status==412) {
                 	$.LoadingOverlay("hide");
                 		logout();
                 	}
-                	
+
                 }
             });
 
@@ -998,7 +998,7 @@ $(document).ready(function () {
      * base the blocktype selection the fields off/onn
      * Note:: The below funciton which is used for creating block incase
      * of already a block is placed on clicked cell.
-     * 
+     *
      */
     $(document).on('click', 'td .newcreateblock', function () {
 
@@ -1108,8 +1108,8 @@ $(document).ready(function () {
      * While clicking on the Table event filled row
      * the system will get displayed the modal popup
      * base the blocktype selection the fields off/onn
-     * 
-     * 
+     *
+     *
      */
     $("#pathwaytble").on('click', '.addblock', function (e) {
 
@@ -1157,13 +1157,13 @@ $(document).ready(function () {
      * Edit Block functionality
      * While saving the block we are checking with the block type
      * to get the respective messages should be updated.
-     * Note that we are only allowing user to update the 
+     * Note that we are only allowing user to update the
      * message part.
-     * 
+     *
      */
     $("#editblocsumbtn").click(function () {
 
-
+$('.fieldError').text('');
 
         var currenteditblock = $saveblocks[currentblockforupdateid];
 
@@ -1172,7 +1172,40 @@ $(document).ready(function () {
         {
 
             var editrmessage = $("#editremainderblockmessage").val();
+            if (editrmessage.trim() !=''&& editrmessage.length>500)
+            {
+
+                $.toast({
+                    heading: 'Edit Block',
+                    text: 'Reminder message exceeds 500 characters',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
+
             var editfmessage = $("#editappointmentfollowup").val();
+            if (editfmessage.trim() !=''&& editfmessage.length>500)
+            {
+
+                $.toast({
+                    heading: 'Edit Block',
+                    text: 'Followup message exceeds 500 characters',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
 
 
 
@@ -1183,7 +1216,22 @@ $(document).ready(function () {
         }
         if (currenteditblock.blockType == 'M')
         {
+          if (editmessage.trim() !=''&& editmessage.length>500)
+          {
 
+              $.toast({
+                  heading: 'Edit Block',
+                  text: 'Block message exceeds 500 characters',
+                  textAlign: 'center',
+                  position: 'top-center',
+                  icon: 'error',
+                  loader: false,
+                  allowToastClose: false,
+                  hideAfter: 5000,
+              });
+              $.LoadingOverlay("hide");
+              return false;
+          }
             if (editmessage != '')
                 currenteditblock.bodyOfMessage = editmessage;
         }
@@ -1226,6 +1274,23 @@ $(document).ready(function () {
                     $saveblocks[currentblockforupdateid] = currenteditblock;
                     $("#editeventblockModal").modal('hide');
                 }
+                if(response.statuscode==204){
+                  var resData = $.parseJSON(response.message);
+                  if(typeof(resData.bodyOfMessage) != "undefined" && resData.bodyOfMessage !== null){
+                      $('#error-blockmessage').text(resData.bodyOfMessage);
+                    }
+                    if(typeof(resData.followupOfMessage) != "undefined" && resData.followupOfMessage !== null){
+                        $('#error-followupmessage').text(resData.followupOfMessage);
+                      }
+
+                      if(typeof(resData.remainderOfMessage) != "undefined" && resData.remainderOfMessage !== null){
+                          $('#error-remindermessage').text(resData.remainderOfMessage);
+                        }
+                    return false;
+
+                }
+
+
             },
             error: function (err, status) {
                 $.LoadingOverlay("hide");
@@ -1239,13 +1304,13 @@ $(document).ready(function () {
                     allowToastClose: false,
                     hideAfter: 5000,
                 });
-                	
+
                 	if(response.status==412) {
                 	$.LoadingOverlay("hide");
                 		logout();
                 	}
-                	
-                
+
+
                 console.log('IN error @ Mode');
             }
         });
@@ -1256,7 +1321,7 @@ $(document).ready(function () {
      * Block Trigger change functionality
      * In case of no trigger we are disabling
      * triggerdays.
-     * 
+     *
      */
     $("#blocktrigger").on('change', function () {
 
@@ -1288,7 +1353,7 @@ $(document).ready(function () {
 
     /**
      * Upload plus button toggle functionality.
-     * 
+     *
      */
 
     $("#cbblockuploadplus").click(function () {
@@ -1316,40 +1381,74 @@ $(document).ready(function () {
      *  If the block type is Message then  the calculations are made with
      *  trigger ,repeat and occurence input vals
      *  In case the block type is an appointment then we are applying the below logic
-     *  
+     *
      *  Case Block Execution day > 7
      *  Then the system will create the appointmnt blocks on executed day -7 =Remiander one
      *  executed day -1 =Remiander to message
      *  Executed day +1 =follow up message
-     * 
+     *
      *  Case Block Execution day < 7
      *  Then the system will create the appointmnt blocks on executed day -3 =Remiander one
      *  executed day -1 =Remiander to message
      *  Executed day +1 =follow up message
-     * 
+     *
      *  Case Block Execution day < 3
-     * 
+     *
      *  executed day -1 =Remiander to message
      *  Executed day +1 =follow up message
      Case Block Execution day =1
      * Shows only followup message with toase warn message like no remainders ..etc
-     *  
-     *  
+     *
+     *
      */
     $("div").on('click', '#addblocsumbtn', function (ev) {
 
 
         $.LoadingOverlay("hide");
         ev.stopPropagation();
+        $('.fieldError').text('');
 
 
         var blockname = $("#blockname").val();
-        if (blockname == '')
+        var blocknameregexp = new RegExp('^[a-zA-Z0-9\\s]+$');
+  if (blockname == '')
         {
 
             $.toast({
-                heading: 'Updation',
+                heading: 'Add Block',
                 text: 'Please enter a Block Name',
+                textAlign: 'center',
+                position: 'top-center',
+                icon: 'error',
+                loader: false,
+                allowToastClose: false,
+                hideAfter: 5000,
+            });
+            $.LoadingOverlay("hide");
+            return false;
+        }
+        else if (blockname.length>30)
+        {
+
+            $.toast({
+                heading: 'Add Block',
+                text: 'Block name exceeds 30 characters',
+                textAlign: 'center',
+                position: 'top-center',
+                icon: 'error',
+                loader: false,
+                allowToastClose: false,
+                hideAfter: 5000,
+            });
+            $.LoadingOverlay("hide");
+            return false;
+        }
+        else if (!blocknameregexp.test(blockname))
+        {
+
+            $.toast({
+                heading: 'Add Block',
+                text: 'Only alphanumeric characters are allowed in Block name',
                 textAlign: 'center',
                 position: 'top-center',
                 icon: 'error',
@@ -1362,6 +1461,23 @@ $(document).ready(function () {
         }
         var blocktirggerafter = $("#blocktrigger").val();
         var blockmessage = $("#blockmessage").val();
+        if ($blocktype == 'M'&&blockmessage.trim() !=''&& blockmessage.length>500)
+        {
+
+            $.toast({
+                heading: 'Add Block',
+                text: 'Block message exceeds 500 characters',
+                textAlign: 'center',
+                position: 'top-center',
+                icon: 'error',
+                loader: false,
+                allowToastClose: false,
+                hideAfter: 5000,
+            });
+            $.LoadingOverlay("hide");
+            return false;
+        }
+
         var triggerdays = $("#triggerdays").val();
         var repeatdays = $("#repeatdays").val();
         var occurrences = $("#occurrences").val();
@@ -1426,8 +1542,40 @@ $(document).ready(function () {
 
 
             var remindermessage = $("#remainderblockmessage").val();
-            var appointmentfollowup = $("#appointmentfollowup").val();
+            if (remindermessage.trim() !=''&& remindermessage.length>500)
+            {
 
+                $.toast({
+                    heading: 'Add Block',
+                    text: 'Reminder message exceeds 500 characters',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
+
+            var appointmentfollowup = $("#appointmentfollowup").val();
+            if (appointmentfollowup.trim() !=''&& appointmentfollowup.length>500)
+            {
+
+                $.toast({
+                    heading: 'Add Block',
+                    text: 'Followup message exceeds 500 characters',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+                $.LoadingOverlay("hide");
+                return false;
+            }
             var inputBloc = {
                 "blockName": blockname,
                 "blockType": $blocktype,
@@ -1470,7 +1618,7 @@ $(document).ready(function () {
                 success: function (response)
                 {
                     $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
                                         var newmsg='';
                                         var msg=JSON.parse(response.message);
@@ -1480,7 +1628,7 @@ $(document).ready(function () {
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -1503,12 +1651,12 @@ $(document).ready(function () {
                     updatePathwayInfo($currentpthwayId, currentpathwayname);
                 },
                 error: function(response, status){
-                	
+
                 	if(response.status==412) {
                 	$.LoadingOverlay("hide");
                 		logout();
                 	}
-                	
+
                 }
             });
 
@@ -1598,7 +1746,7 @@ $(document).ready(function () {
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
                                         var newmsg='';
                                         var msg=JSON.parse(response.message);
@@ -1608,7 +1756,7 @@ $(document).ready(function () {
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -1631,12 +1779,12 @@ $(document).ready(function () {
                                     updatePathwayInfo($currentpthwayId, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
 
@@ -1705,7 +1853,7 @@ $(document).ready(function () {
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
                                         var newmsg='';
                                         var msg=JSON.parse(response.message);
@@ -1715,7 +1863,7 @@ $(document).ready(function () {
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -1737,12 +1885,12 @@ $(document).ready(function () {
                                     updatePathwayInfo($currentpthwayId, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
 
@@ -1808,7 +1956,7 @@ $(document).ready(function () {
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
                                         var newmsg='';
                                         var msg=JSON.parse(response.message);
@@ -1818,7 +1966,7 @@ $(document).ready(function () {
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -1841,12 +1989,12 @@ $(document).ready(function () {
                                     updatePathwayInfo($currentpthwayId, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
 
@@ -1931,7 +2079,7 @@ $(document).ready(function () {
                                 success: function (response)
                                 {
                                    $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
                                         var newmsg='';
                                         var msg=JSON.parse(response.message);
@@ -1941,7 +2089,7 @@ $(document).ready(function () {
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -1963,12 +2111,12 @@ $(document).ready(function () {
                                     updatePathwayInfo($currentpthwayId, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
 
@@ -2032,7 +2180,7 @@ $(document).ready(function () {
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
                                         var newmsg='';
                                         var msg=JSON.parse(response.message);
@@ -2042,7 +2190,7 @@ $(document).ready(function () {
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -2065,12 +2213,12 @@ $(document).ready(function () {
                                     updatePathwayInfo($currentpthwayId, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
                         }
@@ -2134,7 +2282,7 @@ $(document).ready(function () {
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
                                         var newmsg='';
                                         var msg=JSON.parse(response.message);
@@ -2144,7 +2292,7 @@ $(document).ready(function () {
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -2165,12 +2313,12 @@ $(document).ready(function () {
                                     updatePathwayInfo($currentpthwayId, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
                         }
@@ -2255,7 +2403,7 @@ $(document).ready(function () {
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
                                         var newmsg='';
                                         var msg=JSON.parse(response.message);
@@ -2265,7 +2413,7 @@ $(document).ready(function () {
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -2288,14 +2436,14 @@ $(document).ready(function () {
                                     updatePathwayInfo($currentpthwayId, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
-                           
+
                             });
                         }
                         if (a == 1)
@@ -2360,7 +2508,7 @@ $(document).ready(function () {
                                 success: function (response)
                                 {
                                     $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
                                         var newmsg='';
                                         var msg=JSON.parse(response.message);
@@ -2370,7 +2518,7 @@ $(document).ready(function () {
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -2392,12 +2540,12 @@ $(document).ready(function () {
                                     updatePathwayInfo($currentpthwayId, currentpathwayname);
                                 },
                                 error: function(response, status){
-                                	
+
                                 	if(response.status==412) {
                                 	$.LoadingOverlay("hide");
                                 		logout();
                                 	}
-                                	
+
                                 }
                             });
                         }
@@ -2483,7 +2631,7 @@ $(document).ready(function () {
                         success: function (response)
                         {
                                     $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
                                         var newmsg='';
                                         var msg=JSON.parse(response.message);
@@ -2493,7 +2641,7 @@ $(document).ready(function () {
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -2515,12 +2663,12 @@ $(document).ready(function () {
                             updatePathwayInfo($currentpthwayId, currentpathwayname);
                         },
                         error: function(response, status){
-                        	
+
                         	if(response.status==412) {
                         	$.LoadingOverlay("hide");
                         		logout();
                         	}
-                        	
+
                         }
                     });
                     $.LoadingOverlay("hide");
@@ -2585,7 +2733,7 @@ $(document).ready(function () {
                     success: function (response)
                     {
                          $.LoadingOverlay("hide");
-                                    
+
                                     if(response.statuscode==204){
                                         var newmsg='';
                                         var msg=JSON.parse(response.message);
@@ -2595,7 +2743,7 @@ $(document).ready(function () {
                                         if (typeof msg.bodyOfMessage  != "undefined" || msg.bodyOfMessage != null){
                                             newmsg=msg.bodyOfMessage;
                                         }
-                                        
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: newmsg,
@@ -2769,12 +2917,12 @@ $(document).ready(function () {
                         $.LoadingOverlay("hide");
                     },
                     error: function(response, status){
-                    	
+
                     	if(response.status==412) {
                     	$.LoadingOverlay("hide");
                     		logout();
                     	}
-                    	
+
                     }
                 });
 
@@ -2809,23 +2957,23 @@ $(document).ready(function () {
     /**
      * Add Pathway Functionality Start here
      * Creating the Pathway from modal popup
-     * Checking the pathway name field in case of 
+     * Checking the pathway name field in case of
      * empty then we are showing the toast warn message
      * Once after pathway creation using QC API Call
      * the we are creating the Default event calling as Welcome.
      * followed default block calling as Signup.
      * While creating the block we are appending the welcome message
      * with #FN place holder which waould be helpful for the backend system.
-     * 
+     *
      * So Please maintain #FN Place holder in case of updating the signup block as well.
-     * 
-     * 
+     *
+     *
      */
     $("#createpathway").click(function () {
 
 
         patwname = $('#pathwayname').val();
-        
+
         if (patwname == '')
         {
 
@@ -2841,7 +2989,7 @@ $(document).ready(function () {
             });
             return false;
         }
-        
+
         if (patwname != '')
         {
             var lastmodifiedtime = formatAMPM(new Date());
@@ -3120,8 +3268,8 @@ function updatePathwayInfo(pid, pname)
             {
                                         var newmsg='';
                                         var msg=JSON.parse(response.data);
-                                        
-                                        
+
+
                                         $.toast({
                                             heading: 'Add Block',
                                             text: msg.pathwayName,

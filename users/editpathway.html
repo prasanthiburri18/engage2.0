@@ -15,7 +15,7 @@
         <link href="css/jquery.toast.css" rel="stylesheet">
         <link href="engagecalci/fullcalendar.print.css" media="print" rel="stylesheet">
         <link href="engagecalci/fullcalendar.css" rel="stylesheet">
-        <link href="engagecalci/spectrum.css" rel="stylesheet">    
+        <link href="engagecalci/spectrum.css" rel="stylesheet">
         <link href="engagecalci/jquery-ui-timepicker-addon.css" rel="stylesheet">
 <style type="text/css">
 a.disabled {
@@ -67,7 +67,7 @@ a.disabled {
                         <a href="javascript:void(0);" id="savepathway" class="savebtn">Save Pathway</a>
                         <a href="javascript:void(0);" id="exitpathway">Exit</a>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -92,14 +92,14 @@ a.disabled {
                                     <div class="form-group">
                                         <input type="text" name="eventname" id="eventname" class="form-control" autofocus/>
                                     </div>
-                                   
+
                                     <button type="button" id="createevent" class="savebtn">Save</button>
                                 </div>
                             </div>
 
                         </div>
                     </div>
-                    
+
                     <div class="modal fade" id="editeventModal" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -113,18 +113,18 @@ a.disabled {
                                         <input type="hidden" name="eventeditid" value="" id="eventeditid" class="form-control"/>
                                         <input type="hidden" name="eventeditcolindex" value="" id="eventeditcolindex" class="form-control" autofocus/>
                                     </div>
-                                   
+
                                     <button type="button" id="editevent" class="savebtn">Save</button>
                                 </div>
                             </div>
 
                         </div>
                     </div>
-     
-                    
+
+
                     <div class="modal fade" id="editeventblockModal" role="dialog">
                         <div class="modal-dialog">
-                 
+
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">X</button>
@@ -164,17 +164,20 @@ a.disabled {
                                                 <a class="upload-list"><i class="img-icon"></i><span>* Premium Only</span>Upload Images </a>
                                                 <a class="upload-list"><i class="video-icon"></i><span>* Premium Only</span>Upload Video </a>
                                             </div>
+                                                                       <p id="error-blockmessage" class="error fieldError"></p>
                                         </div>
-                              
+
                                         <div class="form-group" id="editremindermessage" style="display:none;">
                                             <label for="sel1">Reminder Message:</label>
                                             <textarea class="form-control" rows="5" id="editremainderblockmessage" name="editblockmessage"></textarea>
+                                            <p id="error-remindermessage" class="error fieldError"></p>
                                         </div>
                                         <div class="form-group" id="editfollowupmessage" style="display:none;">
                                             <label for="sel1">Follow Up Message</label>
                                             <textarea class="form-control" rows="5" id="editappointmentfollowup" name="editappointmentfollowup"></textarea>
+                                            <p id="error-followupmessage" class="error fieldError"></p>
                                         </div>
-                                        
+
                                         <div class="form-group">
                                              <div class="checkbox">
                                                 <input type="checkbox" value="Y" name="editphisecured" id="editphisecured">
@@ -193,10 +196,10 @@ a.disabled {
 
                         </div>
                     </div>
-                 
+
                     <div class="modal fade" id="addeventblockModal" role="dialog">
                         <div class="modal-dialog">
-             
+
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">X</button>
@@ -217,11 +220,12 @@ a.disabled {
                                         <div class="form-group">
                                             <label for="usr">Name:</label>
                                             <input type="text" name="blockname" id="blockname" class="form-control" id="usr">
+                                            <p id="error-addblockname" class="error fieldError"></p>
                                         </div>
                                         <div class="form-group">
                                             <label for="sel1">Trigger:</label>
                                             <select class="form-control" id="blocktrigger" name="blocktrigger">
-                       
+
 
                                             </select>
                                         </div>
@@ -229,15 +233,17 @@ a.disabled {
                                         <div class="form-group" id="cbblockmessage">
                                             <label for="sel1">Messages:</label>
                                             <textarea class="form-control" rows="5" id="blockmessage" name="blockmessage"></textarea>
-                                        
-                                            
+
+
+
                                             <div class="upload-plus" id="bblockuploadplus">+</div>
                                             <div class="upload-block" id="bblockupload">
                                                 <a class="upload-list"><i class="pdf-icon"></i><span>* Premium Only</span>Upload PDF </a>
                                                 <a class="upload-list"><i class="img-icon"></i><span>* Premium Only</span>Upload Images </a>
                                                 <a class="upload-list"><i class="video-icon"></i><span>* Premium Only</span>Upload Video </a>
                                             </div>
-                                            
+                                            <p id="error-addblockmessage" class="error fieldError"></p>
+
                                         </div>
                                         <div class="form-group" id="phisecuredgrp">
                                             <div class="checkbox">
@@ -251,6 +257,7 @@ a.disabled {
                                         <div class="form-group" id="remindermessage">
                                             <label for="sel1">Reminder Message:</label>
                                             <textarea class="form-control" rows="5" id="remainderblockmessage" name="blockmessage"></textarea>
+                                          <p id="error-addremindermessage" class="error fieldError"></p>
                                         </div>
    <div class="form-group" id="remainderphisecuredgrp">
                                             <div class="checkbox">
@@ -261,6 +268,7 @@ a.disabled {
                                         <div class="form-group" id="followupmessage">
                                             <label for="sel1">Follow Up Message</label>
                                             <textarea class="form-control" rows="5" id="appointmentfollowup" name="appointmentfollowup"></textarea>
+                                            <p id="error-addfollowupmessage" class="error fieldError"></p>
                                         </div>
    <div class="form-group" id="followupphisecuredgrp">
                                             <div class="checkbox">
@@ -268,10 +276,10 @@ a.disabled {
                                                 <label for="followphisecured"><span></span> PHI Secured</label>
                                             </div>
                                         </div>
-                                
-                                        
-                                        
-                                        
+
+
+
+
                                         <div class="form-group text-center" id="pathwaydelivery">
                                             <label class="leftlabel">Deliver</label>
                                             <div class="input-group">
@@ -336,7 +344,7 @@ a.disabled {
 
                         </div>
                     </div>
-            
+
                     <table id="pathwaytble">
                         <thead>
                             <tr id="headerrow">
