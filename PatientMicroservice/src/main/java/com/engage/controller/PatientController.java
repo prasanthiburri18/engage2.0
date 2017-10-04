@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -83,6 +84,7 @@ public class PatientController {
 	 * @Inputparam Patient JsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/addPatient", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage create(@RequestBody final PatientDto patientDto) {
 		JsonMessage response = new JsonMessage();
@@ -168,6 +170,7 @@ public class PatientController {
 	 * @Inputparam Patient JsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/editPatient", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage update(@RequestBody final PatientDto patientDto) {
 		JsonMessage response = new JsonMessage();
@@ -276,6 +279,8 @@ public class PatientController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/view_Patient", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage viewPatient(@RequestBody Map<String, Long> json, HttpServletRequest request) {
@@ -338,6 +343,7 @@ public class PatientController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/list_Patient", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage viewPatients(@RequestBody Map<String, Long> json) {
 		JsonMessage response = new JsonMessage();
@@ -384,6 +390,7 @@ public class PatientController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/delete_Patient", method = RequestMethod.DELETE)
 	public @ResponseBody JsonMessage deletePatient(@RequestBody Map<String, Long> json) {
 		JsonMessage response = new JsonMessage();

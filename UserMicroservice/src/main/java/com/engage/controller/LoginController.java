@@ -27,6 +27,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -67,9 +68,12 @@ public class LoginController {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 	@Value("${microService.URL}")
-	public String baseURL;
+	public String microserviceURL;
 	@Value("${portal.URL}")
 	public String portalURL;
+
+	@Autowired
+	private OAuth2RestTemplate restTemplate;
 
 	@Autowired
 	private UserDao _userDao;
@@ -227,9 +231,9 @@ public class LoginController {
 				userRoles.setUserId(id);
 				userRoles.setRoleId(1);
 				_userRolesDao.save(userRoles);
-				RestTemplate restTemplate = new RestTemplate();
+				//RestTemplate restTemplate = new RestTemplate();
 				Map<String, Object> data1 = new HashMap<String, Object>();
-				data1.put("from", "EngageApp<mr.anupamroy@gmail.com>");
+				data1.put("from", "EngageApp<support@quantifiedcare.com>");
 				data1.put("to", user.getEmail());
 				data1.put("subject", "Account Confirmation");
 				data1.put("text",
@@ -244,7 +248,7 @@ public class LoginController {
 				// restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send",
 				// data1,String.class );
 				// Engage2.0
-				final String simpleMailUrl = baseURL + "/email/send";
+				final String simpleMailUrl = microserviceURL + "/email/send";
 				restTemplate.postForObject(simpleMailUrl, data1, String.class);
 				// Engage2.0
 				response.setMessage("User registered successfully");
@@ -569,7 +573,7 @@ public class LoginController {
 				data.put("status", true);
 				// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
 				// data,String.class );
-				restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send", data, String.class);
+				restTemplate.postForObject(microserviceURL+"/email/send", data, String.class);
 				// restTemplate.postForObject("http://localhost:8080/email/send",
 				// data,String.class );
 

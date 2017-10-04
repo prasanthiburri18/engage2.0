@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,7 +52,7 @@ public class BlocksController {
 	 * @Inputparam pathwayBlock JsonObject
 	 * @return JsonObject
 	 */
-
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
 	@RequestMapping(value = "/addBlock", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage addBlock(@RequestBody Blocks pathwayBlock) {
 		JsonMessage response = new JsonMessage();
@@ -100,7 +101,7 @@ public class BlocksController {
 	 * @Inputparam PathwayBlockjsonObject
 	 * @return JsonObject
 	 */
-
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
 	@RequestMapping(value = "/deleteBlock", method = RequestMethod.DELETE)
 	public @ResponseBody JsonMessage deleteBlock(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
@@ -130,6 +131,7 @@ public class BlocksController {
 	 * @Inputparam Block JsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
 	@RequestMapping(value = "/updateBlock", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage updateBlock(@RequestBody Blocks pathway) {
 		JsonMessage response = new JsonMessage();
@@ -170,7 +172,7 @@ public class BlocksController {
 	 * @Inputparam Block JsonObject
 	 * @return Blocklist Json Object
 	 */
-
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/listBlocks", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage listBlocks(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
@@ -200,6 +202,7 @@ public class BlocksController {
 	 * @Inputparam BlockjsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
 	@RequestMapping(value = "/updateparentchildblocks", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage updateparentchildblocks(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
@@ -233,6 +236,7 @@ public class BlocksController {
 	 * @Inputparam jsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/listBlocksByParent", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage listBlocksByParent(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();

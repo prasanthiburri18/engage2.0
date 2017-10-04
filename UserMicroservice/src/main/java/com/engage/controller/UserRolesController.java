@@ -10,6 +10,7 @@ import javax.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,7 +32,7 @@ public class UserRolesController {
 
   @Autowired
   private Validator validator;
-  
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
   @RequestMapping(value="/delete", method=RequestMethod.DELETE)
   @ResponseBody
   public String delete(Integer id) {
@@ -44,6 +45,7 @@ public class UserRolesController {
     }
     return "User succesfully deleted!";
   }
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
   @RequestMapping(value="/get-by-userroles" ,method=RequestMethod.GET)
   public @ResponseBody List getAllUserRoles()
   {
@@ -52,7 +54,7 @@ public class UserRolesController {
   }
   
 
-
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
   @RequestMapping(value="/save",method = RequestMethod.POST)
 
   public ResponseEntity create(@RequestBody final UserRoles user) {

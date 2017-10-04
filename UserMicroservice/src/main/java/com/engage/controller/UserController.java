@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,7 +61,7 @@ public class UserController {
 	public String portalURL;
 	
 	@Value("${microService.URL}")
-	public String microservicURL;
+	public String microserviceURL;
 	
 	@Autowired
 	private Validator validator;
@@ -77,6 +78,7 @@ public class UserController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/profile", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage getProfile(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
@@ -110,6 +112,8 @@ public class UserController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
+	
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/change_password", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage changePassword(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
@@ -147,7 +151,7 @@ public class UserController {
 	 * @Inputparam user JsonObject
 	 * @return JsonObject
 	 */
-
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
 	@RequestMapping(value = "/addteammember", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage addteammember(@RequestBody final User user) {
 		JsonMessage response = new JsonMessage();
@@ -190,8 +194,8 @@ public class UserController {
 				userRoles.setRoleId(1);
 				_userRolesDao.save(userRoles);
 
-				RestTemplate restTemplate = new RestTemplate();
-				Map<String, Object> data1 = new HashMap<String, Object>();
+			//	RestTemplate restTemplate = new RestTemplate();
+			//	Map<String, Object> data1 = new HashMap<String, Object>();
 				// data1.put("from","EngageApp<support@quantifiedcare.com>");
 				// data1.put("to",user.getEmail());
 				// data1.put("subject","Added as team member");
@@ -230,6 +234,7 @@ public class UserController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
 	@RequestMapping(value = "/sendemailforteammember", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage sendemailforteammember(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
@@ -253,7 +258,7 @@ public class UserController {
 			data1.put("status", true);
 			// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
 			// data1,String.class );
-			restTemplate.postForObject(microservicURL+"/email/send", data1, String.class);
+			restTemplate.postForObject(microserviceURL+"/email/send", data1, String.class);
 
 			response.setMessage("Email sent successfully");
 			response.setStatuscode(200);
@@ -272,6 +277,7 @@ public class UserController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/teammemberslist", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage teammemberslist(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();

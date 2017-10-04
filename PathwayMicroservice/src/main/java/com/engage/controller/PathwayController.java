@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -68,7 +69,8 @@ public class PathwayController {
 	 * @Inputparam pathway object
 	 * @return Jsonobject
 	 */
-
+	
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/addPathway", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage addPathway(@RequestBody final Pathway pathway) {
 		JsonMessage response = new JsonMessage();
@@ -118,6 +120,7 @@ public class PathwayController {
 	 * @return Jsonobject
 	 */
 
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/deletePathway", method = RequestMethod.DELETE)
 	public @ResponseBody JsonMessage deletePathway(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
@@ -173,6 +176,7 @@ public class PathwayController {
 	 * @Inputparam pathway object
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/updatePathway", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage updatePathway(@RequestBody final Pathway pathway) {
 		JsonMessage response = new JsonMessage();
@@ -622,7 +626,7 @@ public class PathwayController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
-
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/updatePatientPathwayblock", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage updatePatientPathwayblock(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
@@ -706,7 +710,7 @@ public class PathwayController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
-
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/updatepathwayname", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage updatepathwayname(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();

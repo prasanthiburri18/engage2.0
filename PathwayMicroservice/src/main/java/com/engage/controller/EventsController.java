@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,6 +54,7 @@ public class EventsController {
 	 * @Inutparam eventObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
 	@RequestMapping(value = "/addEvent", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage addEvent(@RequestBody final Events events) {
 		JsonMessage response = new JsonMessage();
@@ -104,7 +106,7 @@ public class EventsController {
 	 * @Inutparam JsonObject
 	 * @return JsonObject
 	 */
-
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
 	@RequestMapping(value = "/deleteEvents", method = RequestMethod.DELETE)
 	public @ResponseBody JsonMessage deleteEvents(
 			@RequestBody Map<String, String> json) {
@@ -135,6 +137,7 @@ public class EventsController {
 	 * @Inutparam eventObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
 	@RequestMapping(value = "/updateEvents", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage updateEvents(
 			@RequestBody final Events events) {
@@ -176,7 +179,7 @@ public class EventsController {
 	 * @Inutparam JsonObject
 	 * @return JsonObject
 	 */
-
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/listEvents", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage listEvents(
 			@RequestBody Map<String, String> json) {
@@ -204,6 +207,7 @@ public class EventsController {
 	 * @Inutparam JsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/listEventsbyPathwayId", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage listEventsbyPathwayId(
 			@RequestBody Map<String, String> json) {

@@ -8,6 +8,7 @@ import javax.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,6 +44,8 @@ public class PatientPathwayController {
    * @Inputparam PatientPathway JsonObject
    * @return JsonObject
    */
+  
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
   @RequestMapping(value="/addPatientPathway",method = RequestMethod.POST)
   public @ResponseBody JsonMessage createPatientPathway(@RequestBody final PatientPathway user) 
   {
@@ -68,6 +71,7 @@ public class PatientPathwayController {
    * @Inputparam PatientPathway JsonObject
    * @return JsonObject
    */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
   @RequestMapping(value="/editPatientPathway",method = RequestMethod.POST)
 
   public @ResponseBody JsonMessage update(@RequestBody final PatientPathway user) 
@@ -103,6 +107,7 @@ public class PatientPathwayController {
    * @Inputparam PatientPathway JsonObject
    * @return JsonObject
    */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
   @RequestMapping(value="/view_PatientPathway",method = RequestMethod.POST)
   public @ResponseBody JsonMessage viewPatient(@RequestBody Map<String, Long> json) 
   {
@@ -119,7 +124,7 @@ public class PatientPathwayController {
     	}
     	else
     	{
-    		response.setMessage("PatientPathway doen't exists.");
+    		response.setMessage("PatientPathway doesn't exists.");
     		response.setStatuscode(204);
     		return response;
     	}
@@ -137,7 +142,7 @@ public class PatientPathwayController {
    * @Inputparam  JsonObject
    * @return JsonObject
    */
-  
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
   @RequestMapping(value="/list_PatientPathway",method = RequestMethod.POST)
 
   public @ResponseBody JsonMessage viewPatients(@RequestBody Map<String, Long> json) 
@@ -146,7 +151,7 @@ public class PatientPathwayController {
     try 
     {
     		List<PatientPathway> patient=_patientPathwayDao.getAll();
-    		response.setMessage("PatientPathway doen't exists.");
+    		response.setMessage("PatientPathway doesn't exists.");
     		response.setData(patient);
     		response.setStatuscode(200);
     		return response;
@@ -164,6 +169,7 @@ public class PatientPathwayController {
    * @Inputparam  JsonObject
    * @return JsonObject
    */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
   @RequestMapping(value="/delete_PatientPathway",method = RequestMethod.DELETE)
 
   public @ResponseBody JsonMessage deletePatient(@RequestBody Map<String, Long> json) 
@@ -181,7 +187,7 @@ public class PatientPathwayController {
     	}
     	else
     	{
-    		response.setMessage("PatientPathway doen't exists.");
+    		response.setMessage("PatientPathway doesn't exists.");
     		response.setStatuscode(204);
     		return response;
     	}

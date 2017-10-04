@@ -30,23 +30,21 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-	
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		
 
 		http// .authenticationProvider(getAuthenticationProvider())
-				
 		.authorizeRequests()
-		//.antMatchers("/api/v1/**").authenticated()
+		.antMatchers("/api/v1/**").authenticated()
 		.anyRequest().permitAll()
-				.and().csrf().disable().formLogin().disable().httpBasic()
+		.and().csrf().disable().formLogin().disable().httpBasic()
 				.disable();
 		;
 	}
-	
+
 	@Override
-	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+	public void configure(ResourceServerSecurityConfigurer resources)
+			throws Exception {
 
 		resources.tokenServices(tokenServices());
 	}
@@ -64,7 +62,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	}
 
 	@Bean
-
 	@Primary
 	public ResourceServerTokenServices tokenServices() {
 		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
