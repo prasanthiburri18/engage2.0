@@ -380,9 +380,29 @@ function patientDelete(id) {
 }
 function patientdelete()
 {
-    $("#psdelete").modal('hide');
+     $("#psdelete").modal('hide'); 
+    var retrievedObject = localStorage.getItem('userinfo');
+    var output = JSON.parse(retrievedObject);
+    var priv = output.userType;
+    if(priv!='A'){
+         $.toast({
+                    heading: 'Delete Patient',
+                    text: 'You don\'t have enough privileges to delete a patient',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+
+        return false;
+    }
+
+   
     var pdid = localStorage.getItem("deletepatient");
     var data = {"id": pdid};
+
     $.ajax({
         url: patientapibase + '/api/v1/delete_Patient',
         type: 'DELETE',
