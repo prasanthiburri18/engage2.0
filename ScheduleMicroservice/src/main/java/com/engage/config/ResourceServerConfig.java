@@ -33,7 +33,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 		http// .authenticationProvider(getAuthenticationProvider())
 		.authorizeRequests()
-		.antMatchers("/api/v1/**").authenticated()
+		.antMatchers("/api/v1/**").permitAll()
+		//.authenticated()
 		.anyRequest().permitAll()
 		.and().csrf().disable().formLogin().disable().httpBasic()
 				.disable();
