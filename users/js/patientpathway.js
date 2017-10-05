@@ -605,6 +605,26 @@ $('document').ready(function ()
      */
     $("#editblocsumbtn").click(function () {
 
+         var retrievedObject = localStorage.getItem('userinfo');
+    var output = JSON.parse(retrievedObject);
+    var priv = output.userType;
+
+          if(priv!='A'){
+         $.toast({
+                    heading: 'Edit Block',
+                    text: 'You don\'t have enough privileges to edit the block message',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+           $.LoadingOverlay("hide");
+
+        return false;
+    }
+
         var currenteditblock = $saveblocks[currentblockforupdateid];
 
         var editmessage = $("#editblockmessage").val();

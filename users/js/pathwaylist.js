@@ -103,14 +103,15 @@ $(document).ready(function () {
             {
                 "render": function (data, type, row) {
                     var pname = row.pathwayName;
-                    if (usertype == "U")
+                   /* if (usertype == "U")
                     {
                         var plink = pname;
                     }
                     if (usertype == "A")
                     {
                         var plink = '<a href="editpathway.html?pathwayid=' + row.id + '" target="_blank" style="color:#ec843e;">' + pname + '</a>';
-                    }
+                    }*/
+                     var plink = '<a href="editpathway.html?pathwayid=' + row.id + '" target="_blank" style="color:#ec843e;">' + pname + '</a>';
 
                     return plink;
                 },
@@ -200,9 +201,11 @@ $(document).ready(function () {
             },
             {
                 "render": function (data, type, row) {
+
+                    //In both cases edit icon enabled to view pathway
                     if (usertype == "U")
                     {
-                        var pedit = '<button class="btn btn-primary btn-xs" data-title="Edit" disabled  onClick="pathwaytEdit(\'' + row.id + '\')" ><span class="glyphicon glyphicon-pencil"></span></button>';
+                        var pedit = '<button class="btn btn-primary btn-xs" data-title="Edit"   onClick="pathwaytEdit(\'' + row.id + '\')" ><span class="glyphicon glyphicon-pencil"></span></button>';
                         //var pdelete = '<button class="btn btn-danger btn-xs" data-title="Delete" disabled onclick="pathwayDelete(\'' + row.id + '\')";  ><span class="glyphicon glyphicon-trash"></span></button>';
                     }
                     if (usertype == "A")

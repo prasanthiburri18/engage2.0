@@ -71,9 +71,11 @@ public class LoginController {
 	public String microserviceURL;
 	@Value("${portal.URL}")
 	public String portalURL;
-
+/*
 	@Autowired
-	private OAuth2RestTemplate restTemplate;
+	private OAuth2RestTemplate restTemplate;*/
+	
+	private RestTemplate restTemplate = new RestTemplate();
 
 	@Autowired
 	private UserDao _userDao;

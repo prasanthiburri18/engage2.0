@@ -5,6 +5,7 @@ package com.engage.controller;
 
 import javax.transaction.Transactional;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringRunner.class)
 @WebMvcTest
 @Transactional
+@Ignore
 public class BlocksControllerTest {
 
 	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(BlocksControllerTest.class);

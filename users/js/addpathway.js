@@ -1002,6 +1002,8 @@ $(document).ready(function () {
      */
     $(document).on('click', 'td .newcreateblock', function () {
 
+
+
         if ($(this).data('blockid'))
         {
             $('#addeventblockModal').modal('hide');
@@ -1163,6 +1165,25 @@ $(document).ready(function () {
      */
     $("#editblocsumbtn").click(function () {
 
+        var retrievedObject = localStorage.getItem('userinfo');
+    var output = JSON.parse(retrievedObject);
+    var priv = output.userType;
+
+          if(priv!='A'){
+         $.toast({
+                    heading: 'Edit Block',
+                    text: 'You don\'t have enough privileges to edit the block message',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+           $.LoadingOverlay("hide");
+
+        return false;
+    }
 $('.fieldError').text('');
 
         var currenteditblock = $saveblocks[currentblockforupdateid];
@@ -1459,6 +1480,23 @@ $('.fieldError').text('');
         ev.stopPropagation();
         $('.fieldError').text('');
 
+var retrievedObject = localStorage.getItem('userinfo');
+    var output = JSON.parse(retrievedObject);
+    var priv = output.userType;
+    if(priv!='A'){
+         $.toast({
+                    heading: 'Add Block',
+                    text: 'You don\'t have enough privileges to add a block',
+                    textAlign: 'center',
+                    position: 'top-center',
+                    icon: 'error',
+                    loader: false,
+                    allowToastClose: false,
+                    hideAfter: 5000,
+                });
+
+        return false;
+    }
 
         var blockname = $("#blockname").val();
         var blocknameregexp = new RegExp('^[a-zA-Z0-9\\s]+$');

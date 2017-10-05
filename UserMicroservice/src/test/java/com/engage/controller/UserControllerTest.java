@@ -37,7 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @WebMvcTest(controllers={UserController.class, UserDao.class, UserRolesDao.class }, excludeAutoConfiguration={SecurityAutoConfiguration.class})
 
 @Transactional
-//@Ignore
+@Ignore
 public class UserControllerTest {
 
 	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(UserControllerTest.class);

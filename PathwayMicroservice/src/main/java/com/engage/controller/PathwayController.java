@@ -626,7 +626,7 @@ public class PathwayController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
-	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
+	//@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/updatePatientPathwayblock", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage updatePatientPathwayblock(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();

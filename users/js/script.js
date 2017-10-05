@@ -283,7 +283,7 @@ $('document').ready(function ()
 
         $.ajax({
             url: userapibase + '/verify_emailForgetpwd',
-            type: 'POST',
+            type: 'PUT',
             dataType: 'json',
             contentType: "application/json",
             Accept: "application/json",
