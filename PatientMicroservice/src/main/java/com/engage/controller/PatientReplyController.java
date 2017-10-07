@@ -24,6 +24,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +55,8 @@ public class PatientReplyController {
   private PathwayDao _pathwayDao;
   @Autowired
   private PathwayEventsDao _pathwayEventsDao;
+  @Value("${countryCode}")
+	private String countryCode;
   //Add Patient 
   /**
    * patient Reply Method
@@ -70,7 +73,9 @@ public class PatientReplyController {
 	  {
 
 		  String ph=From;
-//		  ph=ph.substring(3);//for India/
+		  if(countryCode.equals("+91")){
+		  ph=ph.substring(3);//for India/
+		  }
 		  ph=ph.substring(2);//for US
 		 
 	 Patient patient=_patientDao.getByPhone(ph);

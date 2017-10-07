@@ -64,7 +64,7 @@ private String fromNumber;
 		 final Account mainAccount = client.getAccount();
 		 final SmsFactory messageFactory = mainAccount.getSmsFactory();
 		 final List<NameValuePair> messageParams = new ArrayList<NameValuePair>();
-		 messageParams.add(new BasicNameValuePair("To", "+919676719422")); 
+		 messageParams.add(new BasicNameValuePair("To", "+919663908949")); 
 		 messageParams.add(new BasicNameValuePair("From", fromNumber));
 		 messageParams.add(new BasicNameValuePair("Body", "Please Ignore"));
 		

@@ -259,7 +259,7 @@ public class UserController {
 			// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
 			// data1,String.class );
 			restTemplate.postForObject(microserviceURL+"/email/send", data1, String.class);
-
+			log.info("Email sent to team member: "+username);
 			response.setMessage("Email sent successfully");
 			response.setStatuscode(200);
 			return response;

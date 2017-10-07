@@ -7,12 +7,8 @@ import org.apache.commons.codec.binary.Base64;
 
 public class AdvancedEncryptionStandard
 {
-    private static String encryptionKey;
+    private static final String encryptionKey="Secure@helthapi1";
 
-    public AdvancedEncryptionStandard(String encryptionKey)
-    {
-        this.encryptionKey = "Secure@helthapi1";
-    }
 
     public static String encrypt(String plainText) throws Exception
     {

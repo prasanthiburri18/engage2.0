@@ -1,5 +1,7 @@
 package com.engage.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -66,7 +70,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public DefaultTokenServices tokenServices() {
 		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
 		defaultTokenServices.setTokenStore(tokenStore());
-		defaultTokenServices.setSupportRefreshToken(true);
+	//	defaultTokenServices.setSupportRefreshToken(true);
 		return defaultTokenServices;
 	}
 
@@ -75,8 +79,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	 */
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+		  TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+		    tokenEnhancerChain.setTokenEnhancers(
+		      Arrays.asList(tokenEnhancer(), accessTokenConverter()));
+		    
 		endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore())
-				.accessTokenConverter(accessTokenConverter());
+				.tokenEnhancer(tokenEnhancerChain);
 	}
 /**
  * Security on token endpoints
@@ -100,16 +108,20 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		clients.inMemory()
 		.withClient("users")
 		.secret("Password")
-		.authorizedGrantTypes("client_credentials", "password", "refresh_token")
+		.authorizedGrantTypes("password")
 		.scopes("client_app")
-		//.authorities("admin","user")
 		.accessTokenValiditySeconds(86400).and()
 		.withClient("mailmicroservice")
 		.secret("Password")
-		.authorizedGrantTypes("client_credentials", "password", "refresh_token")
+		.authorizedGrantTypes("client_credentials", "password")
 		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")
 		.authorities("admin","user")
 		.accessTokenValiditySeconds(86400);
 	}
 
+	@Bean
+	public TokenEnhancer tokenEnhancer(){
+		return new CustomTokenEnhancer();
+	}
+	
 }

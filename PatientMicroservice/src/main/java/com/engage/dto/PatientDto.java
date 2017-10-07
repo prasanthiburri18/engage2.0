@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Length.List;
 import org.hibernate.validator.constraints.NotBlank;
@@ -38,6 +39,8 @@ public class PatientDto {
 	/**
 	 * Current not present in Client side
 	 */
+	
+	@Email
 	private String email;
 	@NotNull(message = "First name cannot be empty")
 	@NotBlank(message = "First name cannot be empty")
@@ -59,6 +62,8 @@ public class PatientDto {
 	@ValidPhoneNumber(message = "Invalid phone number format.")
 	private String phone;
 	private String deviceToken;
+	
+	
 	private String status;
 	private Timestamp createDate;
 

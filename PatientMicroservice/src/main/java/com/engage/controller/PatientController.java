@@ -65,7 +65,9 @@ public class PatientController {
 	private PathwayDao _pathwayDao;
 	@Autowired
 	private PathwayEventsDao _pathwayEventsDao;
-
+	
+	@Value("${countryCode}")
+	private String countryCode;
 	@Value("${scheduleMicroserviceBaseUrl}")
 	private String scheduleMicroserviceBaseUrl;
 	
@@ -128,7 +130,7 @@ public class PatientController {
 				String results = restTemplate.getForObject(
 						patientPathwayCronUrl, String.class);
 				// data1.put("toNumber", "+91"+user.getPhone());
-				data1.put("toNumber", "+1" + user.getPhone());// for us
+				data1.put("toNumber", countryCode + user.getPhone());// for us
 				if (orgmessage.equals("")) {
 					sms = "Hi " + UtilityFunctions.toTitleCase(user.getFirstName())
 							+ ", Congrats on completing your surgery! Your Doctor has set up a new text messaging program to help you with your recovery. Reply with Y to accept. Contact CaringOne anytime to stop this service.";
@@ -229,7 +231,7 @@ public class PatientController {
 						String results = restTemplate.getForObject(
 								patientPathwayCronUrl, String.class);
 						// data1.put("toNumber", "+91"+user.getPhone());
-						data1.put("toNumber", "+1" + user.getPhone());// for us
+						data1.put("toNumber", countryCode + user.getPhone());// for us
 						if (orgmessage.equals("")) {
 							sms = "Hi " + UtilityFunctions.toTitleCase(user.getFirstName())
 									+ ", Congrats on completing your surgery! Your Doctor has set up a new text messaging program to help you with your recovery. Reply with Y to accept. Contact CaringOne anytime to stop this service.";

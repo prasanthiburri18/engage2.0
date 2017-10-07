@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,11 +47,13 @@ public class Application extends SpringBootServletInitializer {
 	@Bean
 	public FilterRegistrationBean jwtFilter() {
 		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+	
 		registrationBean.setFilter(new JwtFilter());
 		registrationBean.addUrlPatterns("/users/api/v1/*");
 		registrationBean.addUrlPatterns("/patient/api/v1/*");
 		registrationBean.addUrlPatterns("/pathway/api/v1/*");
 		registrationBean.addUrlPatterns("/scheduled/api/v1/*");
+		LOGGER.info("Registering JWT filter");
 		return registrationBean;
 	}
 
@@ -97,5 +101,14 @@ class GreetingController {
 		//LOGGER.error("this is in greeting controller :" + name);
 		
 		return "Hello, " + name + "!";
+	}
+	
+	@RequestMapping("/api/v1/initToken")
+	public ResponseEntity<String> getInitToken(HttpServletRequest req) {
+		LOGGER.info("**" + req.getContextPath() + "**");
+		LOGGER.info("this is in greeting controller :");
+		//LOGGER.error("this is in greeting controller :" + name);
+		
+		return new ResponseEntity<String>("_csrf token", HttpStatus.OK);
 	}
 }
