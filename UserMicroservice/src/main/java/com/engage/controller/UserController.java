@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
@@ -15,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,9 +26,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.engage.commons.exception.ConstraintViolationException;
+import com.engage.commons.exception.DataTamperingException;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.OrganizationDao;
 import com.engage.dao.UserDao;
@@ -44,9 +48,8 @@ import com.engage.util.JsonMessage;
 @RestController
 @RequestMapping(value = "/api/v1")
 public class UserController {
-	private static Logger log = LoggerFactory.getLogger(UserController.class);
-	static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
+	private static Logger LOG = LoggerFactory.getLogger(UserController.class);
+	
 	@Autowired
 	private OAuth2RestTemplate restTemplate;
 
@@ -56,13 +59,13 @@ public class UserController {
 	private UserRolesDao _userRolesDao;
 	@Autowired
 	private OrganizationDao _organizationDao;
-	
+
 	@Value("${portal.URL}")
 	public String portalURL;
-	
+
 	@Value("${microService.URL}")
 	public String microserviceURL;
-	
+
 	@Autowired
 	private Validator validator;
 
@@ -112,7 +115,7 @@ public class UserController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
-	
+
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/change_password", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage changePassword(@RequestBody Map<String, String> json) {
@@ -150,25 +153,35 @@ public class UserController {
 	 * 
 	 * @Inputparam user JsonObject
 	 * @return JsonObject
+	 * @throws DataTamperingException
+	 * 
 	 */
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
 	@RequestMapping(value = "/addteammember", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage addteammember(@RequestBody final User user) {
+	public @ResponseBody JsonMessage addteammember(@RequestBody final User user, HttpServletRequest request)
+			throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
-		try {
-			// Engage2.0 start
+		Set<ConstraintViolation<User>> violations = validator.validate(user);
+		if (!violations.isEmpty()) {
 
-			Set<ConstraintViolation<User>> violations = validator.validate(user);
-			if (!violations.isEmpty()) {
-				// Map<String, ConstraintViolation<User>> errors =
-				// violations.stream().collect(Collectors.toMap(ConstraintViolation::getMessage,
-				// Function.identity()));
-				// Set<String> errormessages =
-				// ConstraintValidationUtils.getArrayOfValidations(violations);
-				Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
+			Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
+			try {
 				throw new ConstraintViolationException(errormessages);
+			} catch (ConstraintViolationException ex) {
+				response.setData(ex.getJsonObject().toString());
+				response.setStatuscode(400);
+				response.setMessage("Invalid team member format");
+				return response;
 			}
-			// Engage2.0 end
+		}
+
+		if (!checkOrganizationIdFromAuthentication(Long.toString(user.getOrgid()))) {
+			throw new DataTamperingException("Organization Id doesn't match");
+		}
+		// Engage2.0 end
+
+		try {
+
 			if ((_userDao.getByEmail(user.getEmail())).size() > 0) {
 				response.setMessage("Email already exists.");
 				response.setStatuscode(208);
@@ -194,8 +207,8 @@ public class UserController {
 				userRoles.setRoleId(1);
 				_userRolesDao.save(userRoles);
 
-			//	RestTemplate restTemplate = new RestTemplate();
-			//	Map<String, Object> data1 = new HashMap<String, Object>();
+				// RestTemplate restTemplate = new RestTemplate();
+				// Map<String, Object> data1 = new HashMap<String, Object>();
 				// data1.put("from","EngageApp<support@quantifiedcare.com>");
 				// data1.put("to",user.getEmail());
 				// data1.put("subject","Added as team member");
@@ -216,16 +229,12 @@ public class UserController {
 				response.setData(pp);
 				return response;
 			}
-		} catch (ConstraintViolationException ex) {
-			response.setData(ex.getJsonObject().toString());
-			response.setStatuscode(400);
-			response.setMessage("Invalid team member format");
-			return response;
 		} catch (Exception ex) {
 			response.setMessage(ex.getMessage());
 			response.setStatuscode(203);
 			return response;
 		}
+
 	}
 
 	/**
@@ -233,14 +242,19 @@ public class UserController {
 	 * 
 	 * @Inputparam JsonObject
 	 * @return JsonObject
+	 * @throws DataTamperingException 
 	 */
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A')")
 	@RequestMapping(value = "/sendemailforteammember", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage sendemailforteammember(@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage sendemailforteammember(@RequestBody Map<String, String> json) throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
+		String mailcontent = json.get("mailcontent");
+		if(mailcontent.length()>500){
+			throw new DataTamperingException("Mail Content passed exceeds 500 character");
+		}
 		try {
 
-			String mailcontent = json.get("mailcontent");
+			
 			String useremail = json.get("useremail");
 			String userpp = json.get("userpp");
 			String username = json.get("username");
@@ -258,8 +272,8 @@ public class UserController {
 			data1.put("status", true);
 			// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
 			// data1,String.class );
-			restTemplate.postForObject(microserviceURL+"/email/send", data1, String.class);
-			log.info("Email sent to team member: "+username);
+			restTemplate.postForObject(microserviceURL + "/email/send", data1, String.class);
+			LOG.info("Email sent to team member: " + username);
 			response.setMessage("Email sent successfully");
 			response.setStatuscode(200);
 			return response;
@@ -276,14 +290,23 @@ public class UserController {
 	 * 
 	 * @Inputparam JsonObject
 	 * @return JsonObject
+	 * @throws DataTamperingException 
 	 */
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/teammemberslist", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage teammemberslist(@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage teammemberslist(@RequestBody Map<String, String> json) throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
+		try{
+		 Long.parseLong(json.get("orgid"));
+		}catch(Exception ex){
+			throw new DataTamperingException("Cannot parse org Id");
+		}
+		if (!checkOrganizationIdFromAuthentication(json.get("orgid"))) {
+			throw new DataTamperingException("Organization Id doesn't match");
+		}
 		try {
+			
 			Long orid = Long.parseLong(json.get("orgid"));
-
 			List<User> users = _userDao.getByOrgids(orid);
 			response.setMessage("Team Memebers List.");
 			response.setData(users);
@@ -303,25 +326,36 @@ public class UserController {
 	 * 
 	 * @Inputparam user JsonObject
 	 * @return JsonObject
+	 * @throws DataTamperingException 
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/updateprofile", method = RequestMethod.PUT)
-	public @ResponseBody JsonMessage updateprofile(@RequestBody final User user) {
+	public @ResponseBody JsonMessage updateprofile(@RequestBody final User user) throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
+		Set<ConstraintViolation<User>> violations = validator.validate(user);
+		if (!violations.isEmpty()) {
+
+			Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
+			if (user.getId() == null || user.getId().toString().matches("[0-9]")) {
+				LOG.info("Invalid User Id");
+				errormessages.put("id", "Invalid user id format");
+			}
+			if (!checkOrganizationIdFromAuthentication(Long.toString(user.getOrgid()))) {
+				throw new DataTamperingException("Organization Id doesn't match");
+			}
+			try {
+				throw new ConstraintViolationException(errormessages);
+			} catch (ConstraintViolationException ex) {
+				response.setData(ex.getJsonObject().toString());
+				response.setStatuscode(400);
+				response.setMessage("Invalid team member format");
+				return response;
+			}
+		}
+		
 		try {// Engage2.0 start
 
-			Set<ConstraintViolation<User>> violations = validator.validate(user);
-			if (!violations.isEmpty()) {
-				// Map<String, ConstraintViolation<User>> errors =
-				// violations.stream().collect(Collectors.toMap(ConstraintViolation::getMessage,
-				// Function.identity()));
-				// Set<String> errormessages =
-				// ConstraintValidationUtils.getArrayOfValidations(violations);
-				Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
-				if (user.getId() == null || user.getId().toString().matches("[0-9]")) {
-					errormessages.put("id", "Invalid user id format");
-				}
-				throw new ConstraintViolationException(errormessages);
-			}
+			
 			// Engage2.0 end
 			Organization org = new Organization();
 			org.setId(user.getOrgid());
@@ -339,12 +373,7 @@ public class UserController {
 			response.setStatuscode(200);
 			return response;
 
-		} catch (ConstraintViolationException ex) {
-			response.setData(ex.getJsonObject().toString());
-			response.setStatuscode(400);
-			response.setMessage("Invalid team member format");
-			return response;
-		} catch (Exception e) {
+		}  catch (Exception e) {
 			response.setMessage("Email not registered.");
 			response.setStatuscode(204);
 			return response;
@@ -358,6 +387,7 @@ public class UserController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/getorginfo", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage getorginfo(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
@@ -377,6 +407,27 @@ public class UserController {
 			response.setStatuscode(204);
 			return response;
 		}
+	}
+
+	/**
+	 * Checks if orgId passed in the method matches with orgId of authentication
+	 * token
+	 * 
+	 * @param string
+	 * @return
+	 * @throws DataTamperingException
+	 */
+
+	private boolean checkOrganizationIdFromAuthentication(String string) throws DataTamperingException {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		Set<String> roles = authentication.getAuthorities().stream().map(r -> r.getAuthority())
+				.collect(Collectors.toSet());
+
+		boolean isValidOrganization = roles.contains(string);
+
+		return isValidOrganization;
 	}
 
 }

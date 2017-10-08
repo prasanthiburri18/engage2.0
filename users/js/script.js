@@ -55,7 +55,7 @@ $('document').ready(function ()
            // contentType: 'application/json; charset=UTF-8',
             contentType:'application/x-www-form-urlencoded; charset=UTF-8',
             Accept: "application/json",
-            headers:{"Authorization":client_basic_auth("users","Password")},
+            headers:{"Authorization":client_basic_auth("users","ak#ANhKLLBRADHEadklj*$")},
             data:paramData,// JSON.stringify(datat),
             beforeSend: function ()
             {

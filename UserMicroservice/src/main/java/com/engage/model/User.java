@@ -72,7 +72,7 @@ public class User {
 	 * accordingly Min as 0 and Max integer max value
 	 */
 
-	@Min(value = 0, message = "Invalid organization id.")
+	@Min(value = 1, message = "Invalid organization id.")
 	@Max(value = Integer.MAX_VALUE, message = "Invalid organization id.")
 	@Column(name = "orgid")
 	private int orgid;

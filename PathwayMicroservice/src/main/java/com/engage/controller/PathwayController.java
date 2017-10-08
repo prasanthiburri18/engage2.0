@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
@@ -19,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.engage.commons.exception.ConstraintViolationException;
+import com.engage.commons.exception.DataTamperingException;
 import com.engage.commons.exception.InvalidAccessException;
 import com.engage.commons.util.HtmlEscapeUtil;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
@@ -68,23 +73,30 @@ public class PathwayController {
 	 * 
 	 * @Inputparam pathway object
 	 * @return Jsonobject
+	 * @throws DataTamperingException
 	 */
-	
+
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/addPathway", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage addPathway(@RequestBody final Pathway pathway) {
+	public @ResponseBody JsonMessage addPathway(@RequestBody final Pathway pathway) throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
-		try {
 
-			// Engage2.0 start
-
-			Set<ConstraintViolation<Pathway>> violations = validator.validate(pathway);
-			if (!violations.isEmpty()) {
-				Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
-				JSONObject json = new JSONObject(errormessages);
+		Set<ConstraintViolation<Pathway>> violations = validator.validate(pathway);
+		if (!violations.isEmpty()) {
+			Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
+			JSONObject json = new JSONObject(errormessages);
+			try {
 				throw new ConstraintViolationException(json.toString());
+			} catch (ConstraintViolationException ex) {
+				response.setMessage(ex.getMessage());
+				response.setStatuscode(204);
+				return response;
 			}
-			// Engage2.0 end
+		}
+		if (!checkOrganizationIdFromAuthentication(Long.toString(pathway.getorgId()))) {
+			throw new DataTamperingException("Organization Id doesn't match");
+		}
+		try {
 
 			Boolean isPathway = _pathwayDao.getByPathwayName(pathway.getPathwayName(), pathway.getorgId());
 			if (isPathway == true) {
@@ -118,14 +130,28 @@ public class PathwayController {
 	 * 
 	 * @Inputparam Json object
 	 * @return Jsonobject
+	 * @throws DataTamperingException
 	 */
 
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/deletePathway", method = RequestMethod.DELETE)
-	public @ResponseBody JsonMessage deletePathway(@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage deletePathway(@RequestBody Map<String, String> json, HttpServletRequest req)
+			throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
 		try {
-			Pathway pathway = _pathwayDao.getById(Long.parseLong(json.get("id")));
+			Long.parseLong(json.get("id"));
+		} catch (Exception ex) {
+			throw new DataTamperingException("Invalid id passed to " + req.getPathInfo());
+		}
+
+		Pathway pathway = _pathwayDao.getById(Long.parseLong(json.get("id")));
+
+		if (pathway != null && !checkOrganizationIdFromAuthentication(Long.toString(pathway.getorgId()))) {
+			throw new DataTamperingException("Organization Id doesn't match " + req.getPathInfo());
+		}
+
+		try {
+
 			if (pathway.getId() > 0) {
 				_pathwayDao.delete(pathway);
 				response.setMessage("Pathway deleted successfully.");
@@ -150,6 +176,7 @@ public class PathwayController {
 	 * @Inputparam Json object
 	 * @return Jsonobject
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/deletepatientchildblockbyid", method = RequestMethod.DELETE)
 	public @ResponseBody JsonMessage deletepatientchildblockbyid(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
@@ -175,22 +202,33 @@ public class PathwayController {
 	 * 
 	 * @Inputparam pathway object
 	 * @return JsonObject
+	 * @throws DataTamperingException
 	 */
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/updatePathway", method = RequestMethod.PUT)
-	public @ResponseBody JsonMessage updatePathway(@RequestBody final Pathway pathway) {
+	public @ResponseBody JsonMessage updatePathway(@RequestBody final Pathway pathway) throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
-		try {
+		// Engage2.0 start
 
-			// Engage2.0 start
-
-			Set<ConstraintViolation<Pathway>> violations = validator.validate(pathway);
-			if (!violations.isEmpty()) {
-				Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
-				JSONObject json = new JSONObject(errormessages);
+		Set<ConstraintViolation<Pathway>> violations = validator.validate(pathway);
+		if (!violations.isEmpty()) {
+			Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
+			JSONObject json = new JSONObject(errormessages);
+			try {
 				throw new ConstraintViolationException(json.toString());
+			} catch (ConstraintViolationException ex) {
+				response.setMessage(ex.getMessage());
+				response.setStatuscode(204);
+				return response;
 			}
-			// Engage2.0 end
+		}
+
+		if (!checkOrganizationIdFromAuthentication(Long.toString(pathway.getorgId()))) {
+			throw new DataTamperingException("Organization Id doesn't match");
+		}
+		// Engage2.0 end
+
+		try {
 
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
@@ -201,10 +239,6 @@ public class PathwayController {
 			response.setStatuscode(200);
 			return response;
 
-		} catch (ConstraintViolationException ex) {
-			response.setMessage(ex.getMessage());
-			response.setStatuscode(204);
-			return response;
 		} catch (Exception ex) {
 			response.setMessage("Pathway not registered");
 			response.setStatuscode(204);
@@ -218,10 +252,22 @@ public class PathwayController {
 	 * 
 	 * @Inputparam JsonObject
 	 * @return JsonObject
+	 * @throws DataTamperingException
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/listPathway", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage listPathway(@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage listPathway(@RequestBody Map<String, String> json, HttpServletRequest req)
+			throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
+		try {
+			Long.parseLong(json.get("orgId"));
+		} catch (Exception ex) {
+			throw new DataTamperingException("Invalid id passed to " + req.getPathInfo());
+		}
+		if (!checkOrganizationIdFromAuthentication(json.get("orgId"))) {
+			throw new DataTamperingException("Organization Id doesn't match " + req.getPathInfo());
+		}
+
 		try {
 			List<Pathway> patient = _pathwayDao.getAll(Long.parseLong(json.get("orgId")));
 
@@ -241,20 +287,33 @@ public class PathwayController {
 	 * 
 	 * @Inputparam JsonObject
 	 * @return JsonObject
+	 * @throws DataTamperingException
 	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/viewPathway", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage viewPathway(@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage viewPathway(@RequestBody Map<String, String> json, HttpServletRequest req)
+			throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
 		try {
+			Long.parseLong(json.get("id"));
+			Long.parseLong(json.get("orgId"));
+		} catch (Exception ex) {
+			throw new DataTamperingException("Invalid id passed to " + req.getPathInfo());
+		}
+		if (!checkOrganizationIdFromAuthentication(json.get("orgId"))) {
+			throw new DataTamperingException("Organization Id doesn't match " + req.getPathInfo());
+		}
+
+		try {
 			final Long orgId = Long.parseLong(json.get("orgId"));
-			Pathway pathway =_pathwayDao.getById(Long.parseLong(json.get("id")));
-			
+			Pathway pathway = _pathwayDao.getById(Long.parseLong(json.get("id")));
+
 			if (!(orgId == pathway.getorgId())) {
 				throw new InvalidAccessException("You don't have privileges to view this pathway");
 			}
-			
+
 			List<Pathway> patient = _pathwayDao.verifyId(Long.parseLong(json.get("id")));
-			if (patient != null && patient.size()>0) {
+			if (patient != null && patient.size() > 0) {
 				for (Pathway p : patient) {
 					if (p.getEvents() != null && p.getEvents().size() > 0) {
 						for (Events e : p.getEvents()) {
@@ -274,8 +333,7 @@ public class PathwayController {
 			response.setMessage(iaex.getMessage());
 			response.setStatuscode(203);
 			return response;
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			response.setMessage("You don't have privileges to view this pathway");
 			response.setStatuscode(203);
 			return response;
@@ -398,7 +456,7 @@ public class PathwayController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
-
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/getPatientpathway", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage getPatientpathway(@RequestBody Map<String, String> json) {
 
@@ -626,7 +684,7 @@ public class PathwayController {
 	 * @Inputparam JsonObject
 	 * @return JsonObject
 	 */
-	//@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/updatePatientPathwayblock", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage updatePatientPathwayblock(@RequestBody Map<String, String> json) {
 		JsonMessage response = new JsonMessage();
@@ -793,6 +851,27 @@ public class PathwayController {
 		}
 		return pathwayBlock;
 
+	}
+
+	/**
+	 * Checks if orgId passed in the method matches with orgId of authentication
+	 * token
+	 * 
+	 * @param string
+	 * @return
+	 * @throws DataTamperingException
+	 */
+
+	private boolean checkOrganizationIdFromAuthentication(String string) throws DataTamperingException {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		Set<String> roles = authentication.getAuthorities().stream().map(r -> r.getAuthority())
+				.collect(Collectors.toSet());
+
+		boolean isValidOrganization = roles.contains(string);
+
+		return isValidOrganization;
 	}
 
 }

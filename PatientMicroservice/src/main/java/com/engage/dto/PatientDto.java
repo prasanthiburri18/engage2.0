@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 import javax.persistence.Transient;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -13,7 +12,6 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Length.List;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.engage.commons.validators.annotations.ValidPhoneNumber;
@@ -63,7 +61,10 @@ public class PatientDto {
 	private String phone;
 	private String deviceToken;
 	
-	
+	@NotNull(message="Status cannot be empty")
+	@NotBlank(message = "Status cannot be empty")
+	@Pattern(regexp="^[YNyn]*$", message="Invalid Status")
+	@Length(min = 1, max = 1, message = "Invalid Status")
 	private String status;
 	private Timestamp createDate;
 

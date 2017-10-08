@@ -107,13 +107,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
 		.withClient("users")
-		.secret("Password")
+		.secret("ak#ANhKLLBRADHEadklj*$")
 		.authorizedGrantTypes("password")
 		.scopes("client_app")
 		.accessTokenValiditySeconds(86400).and()
 		.withClient("mailmicroservice")
 		.secret("Password")
-		.authorizedGrantTypes("client_credentials", "password")
+		.authorizedGrantTypes("client_credentials")
 		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")
 		.authorities("admin","user")
 		.accessTokenValiditySeconds(86400);

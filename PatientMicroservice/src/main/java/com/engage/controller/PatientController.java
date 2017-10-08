@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
@@ -24,6 +25,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.engage.commons.exception.ConstraintViolationException;
+import com.engage.commons.exception.DataTamperingException;
 import com.engage.commons.exception.InvalidAccessException;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.PathwayDao;
@@ -65,16 +69,15 @@ public class PatientController {
 	private PathwayDao _pathwayDao;
 	@Autowired
 	private PathwayEventsDao _pathwayEventsDao;
-	
+
 	@Value("${countryCode}")
 	private String countryCode;
 	@Value("${scheduleMicroserviceBaseUrl}")
 	private String scheduleMicroserviceBaseUrl;
-	
+
 	@Value("${pathwayMicroserviceBaseUrl}")
 	private String pathwayMicroserviceBaseUrl;
-	
-	
+
 	@Autowired
 	private Validator validator;
 
@@ -85,19 +88,31 @@ public class PatientController {
 	 * 
 	 * @Inputparam Patient JsonObject
 	 * @return JsonObject
+	 * @throws DataTamperingException
 	 */
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/addPatient", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage create(@RequestBody final PatientDto patientDto) {
+	public @ResponseBody JsonMessage create(@RequestBody final PatientDto patientDto) throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
-		try {
-			// Engage2.0
-			Set<ConstraintViolation<PatientDto>> errors = validator.validate(patientDto);
-			if (!errors.isEmpty()) {
-				Map<String, String> errorBody = ConstraintValidationUtils.getMapOfValidations(errors);
-				JSONObject json = new JSONObject(errorBody);
+		// Engage2.0
+		Set<ConstraintViolation<PatientDto>> errors = validator.validate(patientDto);
+		if (!errors.isEmpty()) {
+			Map<String, String> errorBody = ConstraintValidationUtils.getMapOfValidations(errors);
+			JSONObject json = new JSONObject(errorBody);
+			try {
 				throw new com.engage.commons.exception.ConstraintViolationException(json.toString());
+			} catch (com.engage.commons.exception.ConstraintViolationException ex) {
+				response.setData(ex.getMessage());
+				response.setMessage("Invalid Patient data");
+				response.setStatuscode(422);
+				return response;
 			}
+		}
+		if (!checkOrganizationIdFromAuthentication(Long.toString(patientDto.getorgId()))) {
+			throw new DataTamperingException("Organization Id doesn't match");
+		}
+		try {
+
 			Patient user = PatientDtoToModelUtils.convertDtoToModel(patientDto);
 			// Engage2.0s
 
@@ -126,9 +141,8 @@ public class PatientController {
 				// String results =
 				// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
 				// String.class);
-				String patientPathwayCronUrl = pathwayMicroserviceBaseUrl+"/api/v1/patientpathwaycron";
-				String results = restTemplate.getForObject(
-						patientPathwayCronUrl, String.class);
+				String patientPathwayCronUrl = pathwayMicroserviceBaseUrl + "/api/v1/patientpathwaycron";
+				String results = restTemplate.getForObject(patientPathwayCronUrl, String.class);
 				// data1.put("toNumber", "+91"+user.getPhone());
 				data1.put("toNumber", countryCode + user.getPhone());// for us
 				if (orgmessage.equals("")) {
@@ -142,9 +156,8 @@ public class PatientController {
 				// String
 				// Str=restTemplate.postForObject("http://35.166.195.23:8080/ScheduleMicroservice/api/v1/sendSms",
 				// data1,String.class );
-				final String sendSmsUrl = scheduleMicroserviceBaseUrl+"/api/v1/sendSms";
-				String Str = restTemplate.postForObject(sendSmsUrl,
-						data1, String.class);
+				final String sendSmsUrl = scheduleMicroserviceBaseUrl + "/api/v1/sendSms";
+				String Str = restTemplate.postForObject(sendSmsUrl, data1, String.class);
 			} else {
 				// ignore
 			}
@@ -153,12 +166,7 @@ public class PatientController {
 			response.setStatuscode(200);
 			return response;
 		}
-		catch (com.engage.commons.exception.ConstraintViolationException ex) {
-			response.setData(ex.getMessage());
-			response.setMessage("Invalid Patient data");
-			response.setStatuscode(422);
-			return response;
-		}
+
 		catch (Exception ex) {
 			response.setMessage(ex.getMessage());
 			response.setStatuscode(203);
@@ -171,25 +179,36 @@ public class PatientController {
 	 * 
 	 * @Inputparam Patient JsonObject
 	 * @return JsonObject
+	 * @throws DataTamperingException
 	 */
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/editPatient", method = RequestMethod.PUT)
-	public @ResponseBody JsonMessage update(@RequestBody final PatientDto patientDto) {
+	public @ResponseBody JsonMessage update(@RequestBody final PatientDto patientDto) throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
 		String orgmessage = "";
 		String sms = "";
 		String newpathway = "no";
+
+		Set<ConstraintViolation<PatientDto>> errors = validator.validate(patientDto);
+		if (!errors.isEmpty()) {
+			Map<String, String> errorBody = ConstraintValidationUtils.getMapOfValidations(errors);
+			JSONObject json = new JSONObject(errorBody);
+			try {
+				throw new com.engage.commons.exception.ConstraintViolationException(json.toString());
+			} catch (ConstraintViolationException ex) {
+				response.setData(ex.getMessage());
+				response.setMessage("Invalid Patient format");
+				response.setStatuscode(422);
+				return response;
+			}
+		}
+		if (!checkOrganizationIdFromAuthentication(Long.toString(patientDto.getorgId()))) {
+			throw new DataTamperingException("Organization Id doesn't match");
+		}
+
 		try {
 
-			// Engage2.0
-			Set<ConstraintViolation<PatientDto>> errors = validator.validate(patientDto);
-			if (!errors.isEmpty()) {
-				Map<String, String> errorBody = ConstraintValidationUtils.getMapOfValidations(errors);
-				JSONObject json = new JSONObject(errorBody);
-				throw new com.engage.commons.exception.ConstraintViolationException(json.toString());
-			}
 			Patient user = PatientDtoToModelUtils.convertDtoToModel(patientDto);
-			// Engage2.0s
 
 			PatientPathway patentPathway = new PatientPathway();
 			Patient patient = _patientDao.getById(user.getId());
@@ -227,11 +246,11 @@ public class PatientController {
 						// String results =
 						// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
 						// String.class);
-						String patientPathwayCronUrl = pathwayMicroserviceBaseUrl+"/api/v1/patientpathwaycron";
-						String results = restTemplate.getForObject(
-								patientPathwayCronUrl, String.class);
+						String patientPathwayCronUrl = pathwayMicroserviceBaseUrl + "/api/v1/patientpathwaycron";
+						String results = restTemplate.getForObject(patientPathwayCronUrl, String.class);
 						// data1.put("toNumber", "+91"+user.getPhone());
-						data1.put("toNumber", countryCode + user.getPhone());// for us
+						data1.put("toNumber", countryCode + user.getPhone());// for
+																				// us
 						if (orgmessage.equals("")) {
 							sms = "Hi " + UtilityFunctions.toTitleCase(user.getFirstName())
 									+ ", Congrats on completing your surgery! Your Doctor has set up a new text messaging program to help you with your recovery. Reply with Y to accept. Contact CaringOne anytime to stop this service.";
@@ -246,9 +265,8 @@ public class PatientController {
 						// String
 						// Str=restTemplate.postForObject("http://35.166.195.23:8080/ScheduleMicroservice/api/v1/sendSms",
 						// data1,String.class );
-						String sendSmsUrl = scheduleMicroserviceBaseUrl+"/api/v1/sendSms";
-						String Str = restTemplate.postForObject(
-								sendSmsUrl, data1, String.class);
+						String sendSmsUrl = scheduleMicroserviceBaseUrl + "/api/v1/sendSms";
+						String Str = restTemplate.postForObject(sendSmsUrl, data1, String.class);
 
 					}
 
@@ -262,13 +280,7 @@ public class PatientController {
 				response.setStatuscode(204);
 				return response;
 			}
-		} catch (ConstraintViolationException ex) {
-			response.setData(ex.getMessage());
-			response.setMessage("Invalid Patient format");
-			response.setStatuscode(422);
-			return response;
-		} 
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			response.setMessage(ex.getMessage());
 			response.setStatuscode(203);
 			return response;
@@ -280,18 +292,22 @@ public class PatientController {
 	 * 
 	 * @Inputparam JsonObject
 	 * @return JsonObject
+	 * @throws DataTamperingException
 	 */
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/view_Patient", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage viewPatient(@RequestBody Map<String, Long> json, HttpServletRequest request) {
+	public @ResponseBody JsonMessage viewPatient(@RequestBody Map<String, Long> json, HttpServletRequest request)
+			throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
+
+		if (!checkOrganizationIdFromAuthentication(Long.toString(json.get("orgId")))) {
+			throw new DataTamperingException("Organization Id doesn't match");
+		}
+
 		try {
-			if(request.getUserPrincipal()!=null){
-				String str = request.getUserPrincipal().getName();
-			}
-			String str = request.getUserPrincipal().getName();
+
 			Patient patient = _patientDao.getById(json.get("id"));
 			// Engage2.0
 			final Long orgId = json.get("orgId");
@@ -312,10 +328,9 @@ public class PatientController {
 				// Map<String,Object> pathway=(Map<String, Object>)
 				// restTemplate.postForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/listPathwayEventForPatients",
 				// data1,Object.class );
-				String listPathwayEventsUrl=pathwayMicroserviceBaseUrl+"/api/v1/listPathwayEventForPatients";
-				Map<String, Object> pathway = (Map<String, Object>) restTemplate.postForObject(
-						listPathwayEventsUrl, data1,
-						Object.class);
+				String listPathwayEventsUrl = pathwayMicroserviceBaseUrl + "/api/v1/listPathwayEventForPatients";
+				Map<String, Object> pathway = (Map<String, Object>) restTemplate.postForObject(listPathwayEventsUrl,
+						data1, Object.class);
 
 				data.put("pathwayInfo", pathway);
 				response.setMessage("Patient data");
@@ -344,11 +359,15 @@ public class PatientController {
 	 * 
 	 * @Inputparam JsonObject
 	 * @return JsonObject
+	 * @throws DataTamperingException
 	 */
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/list_Patient", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage viewPatients(@RequestBody Map<String, Long> json) {
+	public @ResponseBody JsonMessage viewPatients(@RequestBody Map<String, Long> json) throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
+		if (!checkOrganizationIdFromAuthentication(Long.toString(json.get("orgid")))) {
+			throw new DataTamperingException("Organization Id doesn't match");
+		}
 		try {
 			List<Patient> patient = _patientDao.getAll(json.get("orgid"));
 			List<Object> patientsData = new ArrayList<Object>();
@@ -366,10 +385,9 @@ public class PatientController {
 				// Map<String,Object> pathway=(Map<String, Object>)
 				// restTemplate.postForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/listPathwayEventForPatients",
 				// data1,Object.class );
-				String listPathwayEventsUrl=pathwayMicroserviceBaseUrl+"/api/v1/listPathwayEventForPatients";
-				Map<String, Object> pathway = (Map<String, Object>) restTemplate.postForObject(
-						listPathwayEventsUrl, data1,
-						Object.class);
+				String listPathwayEventsUrl = pathwayMicroserviceBaseUrl + "/api/v1/listPathwayEventForPatients";
+				Map<String, Object> pathway = (Map<String, Object>) restTemplate.postForObject(listPathwayEventsUrl,
+						data1, Object.class);
 
 				data.put("pathwayInfo", pathway);
 
@@ -391,11 +409,18 @@ public class PatientController {
 	 * 
 	 * @Inputparam JsonObject
 	 * @return JsonObject
+	 * @throws DataTamperingException
 	 */
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
 	@RequestMapping(value = "/delete_Patient", method = RequestMethod.DELETE)
-	public @ResponseBody JsonMessage deletePatient(@RequestBody Map<String, Long> json) {
+	public @ResponseBody JsonMessage deletePatient(@RequestBody Map<String, Long> json) throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
+		if (_patientDao.verifyId(json.get("id")).size() > 0) {
+			Patient patient = _patientDao.getById(json.get("id"));
+			if (!checkOrganizationIdFromAuthentication(Long.toString(patient.getorgId()))) {
+				throw new DataTamperingException("Organization Id doesn't match");
+			}
+		}
 		try {
 			if (_patientDao.verifyId(json.get("id")).size() > 0) {
 				Patient patient = _patientDao.getById(json.get("id"));
@@ -545,26 +570,24 @@ public class PatientController {
 
 	}
 
-  @RequestMapping(value="/getPatientEventsId",method = RequestMethod.POST)
-  public  @ResponseBody JsonMessage  getPatientEventsId(@RequestBody  Map<String, String> json ) 
-  {
-	  JsonMessage response=new JsonMessage();
-	  try
-	  {
-	Long pi=Long.parseLong(json.get("patient_id"));
-	ArrayList<Long> patientPathway= _patientPathwayDao.getEventsById(pi);
-	
-		  response.setData(patientPathway);
+	@RequestMapping(value = "/getPatientEventsId", method = RequestMethod.POST)
+	public @ResponseBody JsonMessage getPatientEventsId(@RequestBody Map<String, String> json) {
+		JsonMessage response = new JsonMessage();
+		try {
+			Long pi = Long.parseLong(json.get("patient_id"));
+			ArrayList<Long> patientPathway = _patientPathwayDao.getEventsById(pi);
+
+			response.setData(patientPathway);
 			response.setStatuscode(200);
-			return response; 
-	  }catch(Exception ex)
-	 {
-		  response.setMessage(ex.getMessage());
+			return response;
+		} catch (Exception ex) {
+			response.setMessage(ex.getMessage());
 			response.setStatuscode(200);
-			return response; 
-	 }
-	 	
-  }
+			return response;
+		}
+
+	}
+
 	/**
 	 * API Callback for twilio Reply
 	 * 
@@ -601,9 +624,8 @@ public class PatientController {
 				// String results =
 				// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
 				// String.class);
-				String patienPathwayCronUrl=pathwayMicroserviceBaseUrl+"/api/v1/patientpathwaycron";
-				String results = restTemplate.getForObject(
-						patienPathwayCronUrl, String.class);
+				String patienPathwayCronUrl = pathwayMicroserviceBaseUrl + "/api/v1/patientpathwaycron";
+				String results = restTemplate.getForObject(patienPathwayCronUrl, String.class);
 				response.setMessage("Thank you for joining. You will start receiving messages");
 				response.setStatuscode(200);
 				return new ResponseEntity<String>("Thank you for joining. You will start receiving messages.",
@@ -651,9 +673,8 @@ public class PatientController {
 				// String results =
 				// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
 				// String.class);
-				String patientPathwayCronUrl=pathwayMicroserviceBaseUrl+"/api/v1/patientpathwaycron";
-				String results = restTemplate.getForObject(
-						patientPathwayCronUrl, String.class);
+				String patientPathwayCronUrl = pathwayMicroserviceBaseUrl + "/api/v1/patientpathwaycron";
+				String results = restTemplate.getForObject(patientPathwayCronUrl, String.class);
 				response.setMessage("Thank you for joining. You will start receiving messages.");
 				response.setStatuscode(200);
 				return response;
@@ -669,6 +690,27 @@ public class PatientController {
 			return response;
 		}
 
+	}
+
+	/**
+	 * Checks if orgId passed in the method matches with orgId of authentication
+	 * token
+	 * 
+	 * @param string
+	 * @return
+	 * @throws DataTamperingException
+	 */
+
+	private boolean checkOrganizationIdFromAuthentication(String string) throws DataTamperingException {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		Set<String> roles = authentication.getAuthorities().stream().map(r -> r.getAuthority())
+				.collect(Collectors.toSet());
+
+		boolean isValidOrganization = roles.contains(string);
+
+		return isValidOrganization;
 	}
 
 }

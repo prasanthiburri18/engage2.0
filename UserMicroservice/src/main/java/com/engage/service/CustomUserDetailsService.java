@@ -74,6 +74,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 			Set<GrantedAuthority> grant = new HashSet<>();
 			SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getUserType());
 			grant.add(authority);
+			
+			SimpleGrantedAuthority organizationId = new SimpleGrantedAuthority(Long.toString(user.getOrgid()));
+			grant.add(organizationId);
 			boolean enabled =false;
 			boolean isNotLocked = false;
 			boolean isNotExpired = false;

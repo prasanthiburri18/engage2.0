@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -245,10 +246,7 @@ public class LoginController {
 								+ AdvancedEncryptionStandard.encrypt(user.getEmail())
 								+ "'>Verify</a><br><br>Thank You,<br>Team Engage at Quantified Care");
 				data1.put("status", true);
-				// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
-				// data1,String.class );
-				// restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send",
-				// data1,String.class );
+				
 				// Engage2.0
 				final String simpleMailUrl = microserviceURL + "/email/send";
 				restTemplate.postForObject(simpleMailUrl, data1, String.class);
@@ -591,7 +589,7 @@ public class LoginController {
 			return response;
 		}
 	}
-
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/api/v1/userbasicinfo", method = RequestMethod.GET)
 
 	public @ResponseBody JsonMessage getUserInfo(HttpServletRequest request) {

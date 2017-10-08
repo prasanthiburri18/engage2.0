@@ -46,6 +46,11 @@ public class Pathway {
 	private long orgId;
 	@Column(name = "team_id")
 	private long teamId;
+	
+	@NotNull(message="Status cannot be empty")
+	@NotBlank(message = "Status cannot be empty")
+	@Pattern(regexp="^[YNyn]*$", message="Invalid Status")
+	@Length(min = 1, max = 1, message = "Invalid Status")
 	private String status;
 	@Column(name = "created_date")
 	private Timestamp createDate;
