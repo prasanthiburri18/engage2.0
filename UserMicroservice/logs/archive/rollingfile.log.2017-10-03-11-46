@@ -1,5 +1,0 @@
-[INFO ] 2017-10-03 11:46:05.023 [http-nio-8081-exec-1] [/] - Initializing Spring FrameworkServlet 'dispatcherServlet'
-[INFO ] 2017-10-03 11:46:05.095 [http-nio-8081-exec-1] DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization started
-[INFO ] 2017-10-03 11:46:05.286 [http-nio-8081-exec-1] DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization completed in 191 ms
-[INFO ] 2017-10-03 11:46:19.696 [http-nio-8081-exec-1] ConstraintValidationUtils - Parsing constraint violations
-[INFO ] 2017-10-03 11:46:56.134 [http-nio-8081-exec-2] QueryTranslatorFactoryInitiator - HHH000397: Using ASTQueryTranslatorFactory
