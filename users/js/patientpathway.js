@@ -683,7 +683,7 @@ $('document').ready(function ()
                 $.LoadingOverlay("hide");
                 return false;
             }
-            var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+            var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\\*\-]*$");
             if (!punctPattern.test(updatemessage))
             {
 

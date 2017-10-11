@@ -30,7 +30,7 @@
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="RollingFile-Appender" />
 		</Root>
-		<Logger name="com.engage" level="info" additivity="false">
+		<Logger name="com.engage" level="error" additivity="false">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="Mail" />
 			<AppenderRef ref="RollingFile-Appender" /> 

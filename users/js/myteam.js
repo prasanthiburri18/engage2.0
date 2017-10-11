@@ -102,14 +102,17 @@ $(document).ready(function () {
     });
 
 
-    $('.phone').keypress(function (event) {
+$('.phone').keypress(function (event) {
 
         var charCode = (event.which) ? event.which : event.keyCode;
-        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
-        {
+       // if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+        //{
+       //     event.preventDefault();
+        //}
+
+	 if (charCode != 8 && isNaN(String.fromCharCode(charCode))) {
             event.preventDefault();
         }
-
 
         var phone_aval = $('#phone1').val().length;
         var phone_bval = $('#phone2').val().length;
@@ -126,6 +129,7 @@ $(document).ready(function () {
         }
 
     });
+
     /**
      * Showing the team members list by Organization
      * @Input JsonObject
@@ -212,7 +216,7 @@ $(document).ready(function () {
                     patientdob: {
                         required: true,
                     },
-                    phone1: {
+                    /*phone1: {
                         required: true,
                         minlength: 3,
                         number: true,
@@ -232,7 +236,7 @@ $(document).ready(function () {
                     },
                     groups: {
                         patientphone: "phone1 phone2 phone3"
-                    },
+                    },*/
                 },
         errorPlacement: function (error, element) {
 
@@ -423,7 +427,7 @@ $(document).ready(function () {
                     }
 
                     if(typeof(resData.phone) != "undefined" && resData.phone !== null){
-                        $('#error-phone').text(resData.password);
+                        $('#error-phone').text(resData.phone);
 
                 }
 

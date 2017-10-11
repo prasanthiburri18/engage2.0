@@ -1209,7 +1209,7 @@ $('.fieldError').text('');
                 $.LoadingOverlay("hide");
                 return false;
             }
-             var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+             var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\\*\-]*$");
             if (!punctPattern.test(editrmessage))
             {
 
@@ -1244,7 +1244,7 @@ $('.fieldError').text('');
                 $.LoadingOverlay("hide");
                 return false;
             }
-             var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+             var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\\*\-]*$");
             if (!punctPattern.test(editfmessage))
             {
 
@@ -1287,7 +1287,7 @@ $('.fieldError').text('');
               $.LoadingOverlay("hide");
               return false;
           }
-           var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+        var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\\*\-]*$");
             if (!punctPattern.test(editmessage))
             {
 
@@ -1566,7 +1566,7 @@ var retrievedObject = localStorage.getItem('userinfo');
             $.LoadingOverlay("hide");
             return false;
         }
-         var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+          var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\\*\-]*$");
             if (!punctPattern.test(blockmessage))
             {
 
@@ -1663,7 +1663,7 @@ var retrievedObject = localStorage.getItem('userinfo');
                 $.LoadingOverlay("hide");
                 return false;
             }
-             var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+         var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\\*\-]*$");
             if (!punctPattern.test(remindermessage))
             {
 
@@ -1698,7 +1698,7 @@ var retrievedObject = localStorage.getItem('userinfo');
                 $.LoadingOverlay("hide");
                 return false;
             }
-            var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\-]*$");
+           var punctPattern= new RegExp("^[A-Za-z0-9\\s_\.,\!\?\"\'\/\$\{\}\\(\\)\\[\\]\|&<>:;@#\+\\*\-]*$");
             if (!punctPattern.test(appointmentfollowup))
             {
 

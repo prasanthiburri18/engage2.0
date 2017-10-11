@@ -72,7 +72,7 @@ public class BlocksTest {
 	@Test
 	public void punctuationInSubject() {
 		Blocks blocks = new Blocks();
-		blocks.setSubjectOfMessage("#_A~`b  ?|");
+		blocks.setSubjectOfMessage("#_A~`b * ?|");
 
 		Set<ConstraintViolation<Blocks>> errors = validator.validateProperty(
 				blocks, "subjectOfMessage");
@@ -116,7 +116,7 @@ public class BlocksTest {
 	@Test
 	public void specialCharBody() {
 		Blocks blocks = new Blocks();
-		blocks.setBodyOfMessage("@qww1");
+		blocks.setBodyOfMessage("@qww1*");
 
 		Set<ConstraintViolation<Blocks>> errors = validator.validateProperty(
 				blocks, "bodyOfMessage");
