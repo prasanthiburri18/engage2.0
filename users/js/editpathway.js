@@ -1382,6 +1382,8 @@ $('.fieldError').text('');
         currentblockclick = $(this);
 
         $currenteventid = $(this).data('eventid');
+        //new fix
+        $blocktype='M';
         $("#blockname").val('');
 
 

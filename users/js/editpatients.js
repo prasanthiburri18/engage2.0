@@ -58,6 +58,11 @@ $('document').ready(function ()
     pvdata.orgId = orgid
     var clinicianId=output.id;
 
+if (output.userType == 'U')
+    {
+
+        $("#add_pathway").css('display', 'none');
+    }
 
 
     $(".lguser").html(output.fullName);

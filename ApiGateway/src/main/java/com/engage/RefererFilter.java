@@ -1,8 +1,10 @@
 package com.engage;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,6 +20,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
+
+import com.engage.exception.PropertyLoadingException;
 
 /**
  * 
@@ -41,7 +45,7 @@ public class RefererFilter extends GenericFilterBean {
 	/**
 	 * Spring container wires valid.referers from referer.properties file
 	 */
-	@Value(value = "${valid.referers}")
+
 	private String[] allowedReferers;
 	//@Value(value = "${valid.referers}")
 	//private List<String> allowedReferers=new ArrayList<>();
@@ -57,15 +61,23 @@ public class RefererFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		final String referer = req.getHeader("Referer");
-
-		// allowedReferers =environment.getProperty("valid.referers",
-		// String[].class);
+		try{
+		final FileInputStream blackListFile = new FileInputStream(
+				OriginFilter.class.getClassLoader().getResource("referer.properties").getFile());
+		final Properties props = new Properties();
+		props.load(blackListFile);
+		allowedReferers = props.getProperty("valid.referers").split(",");
+		}catch(Exception ex){
+			
+			LOGGER.error("Please configure referer properties");
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+			
+		}
+	
 		final List<String> listReferer = Arrays.asList(allowedReferers);
-	//	final List<String> listReferer = allowedReferers;
 
 		if (referer == null || listReferer.stream().noneMatch(s -> referer.contains(s))) {
-			// logout logic
-			//((HttpServletResponse)response).sendRedirect("http://192.168.0.24:8087/users");
+			
 			((HttpServletResponse)response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
 			
 			LOGGER.error("Invalid referer: " + referer);

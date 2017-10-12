@@ -72,10 +72,10 @@ public class LoginController {
 	public String microserviceURL;
 	@Value("${portal.URL}")
 	public String portalURL;
-/*
-	@Autowired
-	private OAuth2RestTemplate restTemplate;*/
-	
+	/*
+	 * @Autowired private OAuth2RestTemplate restTemplate;
+	 */
+
 	private RestTemplate restTemplate = new RestTemplate();
 
 	@Autowired
@@ -174,8 +174,9 @@ public class LoginController {
 				return response;
 			}
 		} catch (Exception ex) {
-			response.setMessage(ex.getMessage());
-
+			response.setMessage("Registration failed due to internal error.");
+			LOGGER.error("Registration exception: " + ex.getMessage() + " " + "user data" + user.getEmail() + " "
+					+ user.getFullName());
 			response.setStatuscode(204);
 			return response;
 		}
@@ -228,13 +229,7 @@ public class LoginController {
 				user.setCreateDate(timestamp);
 				user.setUpdateDate(timestamp);
 
-				BigInteger id = _userDao.save(user);
-
-				UserRoles userRoles = new UserRoles();
-				userRoles.setUserId(id);
-				userRoles.setRoleId(1);
-				_userRolesDao.save(userRoles);
-				//RestTemplate restTemplate = new RestTemplate();
+				// Mail is sent first, then user is added
 				Map<String, Object> data1 = new HashMap<String, Object>();
 				data1.put("from", "EngageApp<support@quantifiedcare.com>");
 				data1.put("to", user.getEmail());
@@ -246,10 +241,18 @@ public class LoginController {
 								+ AdvancedEncryptionStandard.encrypt(user.getEmail())
 								+ "'>Verify</a><br><br>Thank You,<br>Team Engage at Quantified Care");
 				data1.put("status", true);
-				
+
 				// Engage2.0
 				final String simpleMailUrl = microserviceURL + "/email/send";
 				restTemplate.postForObject(simpleMailUrl, data1, String.class);
+
+				BigInteger id = _userDao.save(user);
+
+				UserRoles userRoles = new UserRoles();
+				userRoles.setUserId(id);
+				userRoles.setRoleId(1);
+				_userRolesDao.save(userRoles);
+
 				// Engage2.0
 				response.setMessage("User registered successfully");
 				response.setStatuscode(200);
@@ -527,7 +530,9 @@ public class LoginController {
 	 */
 
 	@RequestMapping(value = "/getAllPraticeNames", method = RequestMethod.GET)
-	public @ResponseBody JsonMessage getAllPraticeNames(){//(@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage getAllPraticeNames() {// (@RequestBody
+															// Map<String,
+															// String> json) {
 		JsonMessage response = new JsonMessage();
 		try {
 			Map<String, Object> data = new HashMap<String, Object>();
@@ -573,7 +578,7 @@ public class LoginController {
 				data.put("status", true);
 				// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
 				// data,String.class );
-				restTemplate.postForObject(microserviceURL+"/email/send", data, String.class);
+				restTemplate.postForObject(microserviceURL + "/email/send", data, String.class);
 				// restTemplate.postForObject("http://localhost:8080/email/send",
 				// data,String.class );
 
@@ -589,6 +594,7 @@ public class LoginController {
 			return response;
 		}
 	}
+
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/api/v1/userbasicinfo", method = RequestMethod.GET)
 
@@ -609,20 +615,18 @@ public class LoginController {
 			} else {
 				throw new AuthenticationCredentialsNotFoundException("You are not authorized to access this resource");
 			}
-		} catch(AuthenticationCredentialsNotFoundException aex){
+		} catch (AuthenticationCredentialsNotFoundException aex) {
 			response.setData(aex.getMessage());
 			response.setStatuscode(403);
 			return response;
-			
-		}catch (Exception ex) {
-		
+
+		} catch (Exception ex) {
+
 			response.setMessage(ex.getMessage());
 
 			response.setStatuscode(204);
 			return response;
 		}
 	}
-	
-	
 
 }

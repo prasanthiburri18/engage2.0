@@ -38,6 +38,7 @@ public class OriginFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 	HttpServletRequest req = (HttpServletRequest) request;
 	
+
 	String origin = req.getHeader("origin");
 	
 	final FileInputStream blackListFile = new FileInputStream(

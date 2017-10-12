@@ -1127,6 +1127,8 @@ $(document).ready(function () {
         currentblockclick = $(this);
 
         $currenteventid = $(this).data('eventid');
+        //new fix
+        $blocktype='M';
         $("#blockname").val('');
 
 
@@ -3206,7 +3208,15 @@ var retrievedObject = localStorage.getItem('userinfo');
 
 
 
-                }
+                },
+                error: function(response, status){
+
+                            if(response.status==412) {
+                            $.LoadingOverlay("hide");
+                                logout();
+                            }
+
+                        }
             });
             return false;
 

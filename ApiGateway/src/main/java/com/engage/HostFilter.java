@@ -54,15 +54,11 @@ public class HostFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		final String host = req.getHeader("Host");
-		// List of allowed hosts
-		// allowedHosts =environment.getProperty("valid.hosts", String[].class);
+	
 		final List<String> listReferer = Arrays.asList(allowedHosts);
 
 		if (host == null || listReferer.stream().noneMatch(s -> s.contains(host))) {
-			// write logout logic here
-			//ResponseEntity<String> responseEntity = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		//	response = responseEntity;
-			//((HttpServletResponse)response).sendRedirect("https://engage.quantifiedcare.com/users");
+			
 			((HttpServletResponse)response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
 			LOGGER.error("Invalid host: " + host);
 		} else {
