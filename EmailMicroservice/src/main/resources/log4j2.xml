@@ -10,11 +10,9 @@
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
-		<SMTP name="Mail" subject="Error Report" to="s.krishna@mindtechlabs.com"
-			from="s.krishna@mindtechlabs.com" smtpHost="email-smtp.us-east-1.amazonaws.com"
-			smtpPort="587" bufferSize="50" smtpUsername="${env:aws.ses.username}"
-			smtpPassword="${env:aws.ses.password}">
-		</SMTP>
+		<SMTP name="Mail" subject="Error Report" to="s.krishna@mindtechlabs.com" from="s.krishna@mindtechlabs.com" 
+			smtpHost="email-smtp.us-east-1.amazonaws.com" smtpPort="587" bufferSize="50" smtpUsername="${sys:awsSesUsername}" 
+			smtpPassword="${sys:awsSesPassword}"> </SMTP> 
 		<RollingFile name="RollingFile-Appender" fileName="${logger-path}/rollingfile.log"
 			filePattern="${archive}/rollingfile.log.%d{yyyy-MM-dd-hh-mm}.gz">
 			<PatternLayout

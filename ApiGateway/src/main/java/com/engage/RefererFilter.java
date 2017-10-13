@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -63,10 +62,14 @@ public class RefererFilter extends GenericFilterBean {
 		final String referer = req.getHeader("Referer");
 		try{
 		final FileInputStream blackListFile = new FileInputStream(
-				OriginFilter.class.getClassLoader().getResource("referer.properties").getFile());
+				RefererFilter.class.getClassLoader().getResource("referer.properties").getFile());
 		final Properties props = new Properties();
 		props.load(blackListFile);
 		allowedReferers = props.getProperty("valid.referers").split(",");
+		if(allowedReferers==null||allowedReferers.length<1){
+			LOGGER.info("No allowed referers are present");
+			throw new PropertyLoadingException("Referer properties not configured properly");
+		}
 		}catch(Exception ex){
 			
 			LOGGER.error("Please configure referer properties");
@@ -79,7 +82,7 @@ public class RefererFilter extends GenericFilterBean {
 		if (referer == null || listReferer.stream().noneMatch(s -> referer.contains(s))) {
 			
 			((HttpServletResponse)response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
-			
+			LOGGER.info("Invalid referer passed to access "+req.getRequestURI());
 			LOGGER.error("Invalid referer: " + referer);
 		} else {
 			LOGGER.info("Referer "+referer+" is valid");

@@ -230,12 +230,16 @@ $('document').ready(function ()
      * @return {JsonObject} JsonObject with status Code
      */
     $("#savepathway").click(function () {
+         var retrievedObject = localStorage.getItem('userinfo');
+    var output = JSON.parse(retrievedObject);
 
+    var priv = output.userType;
+    if(priv=='A'){
         var inputdata = {"id": pid, "pathwayName": currentpathwayname, "orgId": output.orgid, "teamId": 1, "status": "Y"};
 
         $.toast({
             heading: 'Save Pathway',
-            text: 'Pathway has been saved successfully.',
+            text: 'Pathway saved successfully.',
             textAlign: 'center',
             position: 'top-center',
             loader: false,
@@ -247,7 +251,18 @@ $('document').ready(function ()
         lastmodifiedtime = 'Last saved at ' + lastmodifiedtime;
         $("#lastsavedtime").html(lastmodifiedtime);
         //Save Pathway Here
-
+    }
+    else{
+        $.toast({
+                heading: 'Save Pathway',
+                text: 'You don\'t have enough privileges to save pathway.',
+                textAlign: 'center',
+                position: 'top-center',
+                loader: false,
+                icon: 'error',
+                stack: true
+            });
+    }
 
     });
     /**

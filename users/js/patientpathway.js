@@ -214,9 +214,14 @@ $('document').ready(function ()
     });
     $("#savepathway").click(function () {
 
-        $.toast({
-            heading: 'Add Pathway',
-            text: 'Pathway created successfully.',
+         var retrievedObject = localStorage.getItem('userinfo');
+    var output = JSON.parse(retrievedObject);
+
+    var priv = output.userType;
+    if(priv=='A'){
+     $.toast({
+            heading: 'Patient Pathway',
+            text: 'Pathway saved successfully.',
             textAlign: 'center',
             position: 'top-center',
             loader: false,
@@ -230,6 +235,19 @@ $('document').ready(function ()
         var lastmodifiedtime = formatAMPM(new Date());
         lastmodifiedtime = 'Last Save at ' + lastmodifiedtime;
         $("#lastsavedtime").html(lastmodifiedtime);
+    }
+    else{
+
+        $.toast({
+                heading: 'Save Pathway',
+                text: 'You don\'t have enough privileges to save pathway.',
+                textAlign: 'center',
+                position: 'top-center',
+                loader: false,
+                icon: 'error',
+                stack: true
+            });
+    }
     });
 
 

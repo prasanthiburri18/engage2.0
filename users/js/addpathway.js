@@ -146,6 +146,11 @@ $(document).ready(function () {
 
     $("#savepathway").click(function () {
 
+    var retrievedObject = localStorage.getItem('userinfo');
+    var output = JSON.parse(retrievedObject);
+
+    var priv = output.userType;
+    if(priv=='A'){
         if(currentpathwayname==''){
              $.toast({
             heading: 'Add Pathway',
@@ -172,7 +177,19 @@ $(document).ready(function () {
             lastmodifiedtime = 'Last saved at ' + lastmodifiedtime;
             $("#lastsavedtime").html(lastmodifiedtime);
         }
+    }
+    else{
 
+        $.toast({
+                heading: 'Save Pathway',
+                text: 'You don\'t have enough privileges to save pathway.',
+                textAlign: 'center',
+                position: 'top-center',
+                loader: false,
+                icon: 'error',
+                stack: true
+            });
+    }
 
 
 

@@ -43,7 +43,10 @@ public class Application extends SpringBootServletInitializer {
 	//Logger implementation
 	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 	
-	
+	/**
+	 * All the urls with /api/v1/ should have auth header, which is validated in JWT filter
+	 * @return
+	 */
 	@Bean
 	public FilterRegistrationBean jwtFilter() {
 		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
