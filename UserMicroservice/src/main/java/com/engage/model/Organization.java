@@ -28,7 +28,7 @@ public class Organization {
   @NotEmpty(message="Organization name cannot be empty.")
   @NotBlank(message="Organization name cannot be blank.")
 	  @Length(max=60, message="Organization name exceeds {max} characters.")
-  @Pattern(regexp="^[a-zA-z\\s]*$", message="Only alphabetic characters are allowed.")
+  @Pattern(regexp = "^[a-zA-z0-9\\s]*$", message = "Only alphanumeric characters are allowed.")
   @Column(name="name")
   private String name;
 

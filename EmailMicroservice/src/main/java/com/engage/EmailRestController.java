@@ -1,21 +1,17 @@
 package com.engage;
-import java.io.File;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.mail.internet.MimeMessage;
+import javax.annotation.PostConstruct;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,93 +19,115 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.model.Body;
+import com.amazonaws.services.simpleemail.model.Content;
+import com.amazonaws.services.simpleemail.model.Destination;
+import com.amazonaws.services.simpleemail.model.Message;
+import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 
-
+@Profile(value={"staging", "prod"})
 @RestController
 @RequestMapping("/email")
-@PropertySource("classpath:mail.properties")
-public class EmailRestController{
-	
-	private static Logger LOGGER = LoggerFactory.getLogger(EmailRestController.class);
-	@Value("${mail.from}")	
-public String fromEmail;
-	@Autowired
-	private JavaMailSender javaMailSender;
+public class EmailRestController {
 
+	private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(EmailRestController.class);
+    @Value("${mail.from}")
+    public String from;
 
-	@Autowired
-	private VelocityEngine velocityEngine;
+    public String username=System.getProperty("awsSesUsername");
 
-	@RequestMapping("version")
-	@ResponseStatus(HttpStatus.OK)
-	public String version() {
-		return "[OK] Welcome to withdraw Restful version 1.0";
-	}
+    public String password=System.getProperty("awsSesPassword");;
 
-	@RequestMapping(value = "send", method = RequestMethod.POST, produces = { "application/xml", "application/json" })
-	public ResponseEntity<Email> sendSimpleMail(@RequestBody Email email)throws Exception {
-		
-		LOGGER.error("Testing error using system properties");
-		LOGGER.info("Testing error using system properties");
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+    @Autowired
+    private VelocityEngine velocityEngine;
 
-		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-		mimeMessageHelper.setFrom(fromEmail);
-		mimeMessageHelper.setTo(email.getTo());
-		mimeMessageHelper.setSubject(email.getSubject());
-		mimeMessageHelper.setText("<html><body>" + email.getText() + "</body></html>", true);
-		javaMailSender.send(mimeMessage);
-		email.setStatus(true);
-		return new ResponseEntity<Email>(email, HttpStatus.OK);
-	}
+    private AmazonSimpleEmailService client;
 
-	@RequestMapping(value = "attachments", method = RequestMethod.POST, produces = { "application/xml", "application/json" })
-	public ResponseEntity<Email> attachments(@RequestBody Email email) throws Exception {
-		
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+    @PostConstruct
+    public void init() {
+        this.client = AmazonSimpleEmailServiceClient.builder()
+                .withRegion(Regions.US_EAST_1)
+                .withCredentials(new AWSStaticCredentialsProvider(new AWSCredentials() {
+                    @Override
+                    public String getAWSAccessKeyId() {
+                        return username;
+                    }
 
-		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-		mimeMessageHelper.setFrom(fromEmail);
-		mimeMessageHelper.setTo(email.getTo());
-		mimeMessageHelper.setSubject(email.getSubject());
-		mimeMessageHelper.setText("<html><body><img src=\"cid:banner\" >" + email.getText() + "</body></html>", true);
+                    @Override
+                    public String getAWSSecretKey() {
+                        return password;
+                    }
+                }))
+                .build();
+    }
 
-		FileSystemResource file = new FileSystemResource(new File("banner.jpg"));
-		mimeMessageHelper.addInline("banner", file);
+    @RequestMapping("version")
+    @ResponseStatus(HttpStatus.OK)
+    public String version() {
+    	LOGGER.error("mail test" );
+    	return "[OK] Welcome to withdraw Restful version 1.0";
+    }
 
-		FileSystemResource fileSystemResource = new FileSystemResource(new File("Attachment.jpg"));
-		mimeMessageHelper.addAttachment("Attachment.jpg", fileSystemResource);
+    @RequestMapping(value = "send", method = RequestMethod.POST, produces = {"application/xml", "application/json"})
+    public ResponseEntity<Email> sendSimpleMail(@RequestBody Email email) throws Exception {
+        Message message = new Message()
+                .withSubject(new Content(email.getSubject()))
+                .withBody(new Body().withHtml(new Content().withData("<html><body>" + email.getText() + "</body></html>")));
 
-		javaMailSender.send(mimeMessage);
-		email.setStatus(true);
+        SendEmailRequest request = new SendEmailRequest()
+                .withSource(from)
+                .withDestination(new Destination().withToAddresses(email.getTo()))
+                .withMessage(message);
 
-		return new ResponseEntity<Email>(email, HttpStatus.OK);
-	}
+        client.sendEmail(request);
 
-	@RequestMapping(value = "template", method = RequestMethod.POST, produces = { "application/xml", "application/json" })
-	public ResponseEntity<Email> template(@RequestBody Email email) throws Exception {
+        email.setStatus(true);
 
-		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("title", email.getSubject());
-		model.put("body", email.getText());
-		String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "email.vm", "UTF-8", model);
-		
-		System.out.println(text);
+        return new ResponseEntity<>(email, HttpStatus.OK);
+    }
 
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		
-		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-		mimeMessageHelper.setFrom(fromEmail);
-		mimeMessageHelper.setTo(email.getTo());
-		mimeMessageHelper.setSubject(email.getSubject());
-		mimeMessageHelper.setText(text, true);
+    @RequestMapping(value = "attachments", method = RequestMethod.POST, produces = {"application/xml", "application/json"})
+    public ResponseEntity<Email> attachments(@RequestBody Email email) throws Exception {
+        Message message = new Message()
+                .withSubject(new Content(email.getSubject()))
+                .withBody(new Body().withHtml(new Content().withData("<html><body>" + email.getText() + "</body></html>")));
 
-		javaMailSender.send(mimeMessage);
-		
-		email.setStatus(true);
+        SendEmailRequest request = new SendEmailRequest()
+                .withSource(from)
+                .withDestination(new Destination().withToAddresses(email.getTo()))
+                .withMessage(message);
 
-		return new ResponseEntity<Email>(email, HttpStatus.OK);
-	}
-	
-	
+        client.sendEmail(request);
+
+        email.setStatus(true);
+
+        return new ResponseEntity<>(email, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "template", method = RequestMethod.POST, produces = {"application/xml", "application/json"})
+    public ResponseEntity<Email> template(@RequestBody Email email) throws Exception {
+        Map<String, Object> model = new HashMap<>();
+        model.put("title", email.getSubject());
+        model.put("body", email.getText());
+
+        Message message = new Message()
+                .withSubject(new Content(email.getSubject()))
+                .withBody(new Body().withHtml(new Content().withData(VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "email.vm", "UTF-8", model))));
+
+        SendEmailRequest request = new SendEmailRequest()
+                .withSource(from)
+                .withDestination(new Destination().withToAddresses(email.getTo()))
+                .withMessage(message);
+
+        client.sendEmail(request);
+
+        email.setStatus(true);
+
+        return new ResponseEntity<>(email, HttpStatus.OK);
+    }
 }

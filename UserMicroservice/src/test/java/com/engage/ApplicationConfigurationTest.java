@@ -1,5 +1,6 @@
 package com.engage;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite.SuiteClasses;
@@ -12,6 +13,7 @@ import com.engage.model.ValidateUserTest;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @SuiteClasses(value={ValidateUserTest.class, ValidateOrganizationEntityTest.class})
+@Ignore
 public class ApplicationConfigurationTest {
 
 	@Test

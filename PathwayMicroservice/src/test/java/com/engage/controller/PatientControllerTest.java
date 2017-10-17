@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringRunner.class)
 @WebMvcTest
 @Transactional
-
+@Ignore
 public class PatientControllerTest {
 	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(PatientControllerTest.class);
 	

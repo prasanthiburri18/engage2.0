@@ -113,10 +113,11 @@ if (output.userType == 'U')
      */
     $('.phone').keypress(function (event) {
 
+      var charCode = (event.which) ? event.which : event.keyCode;
 
-        if (event.which != 8 && isNaN(String.fromCharCode(event.which))) {
-            event.preventDefault();
-        }
+      if (charCode != 8 && isNaN(String.fromCharCode(charCode))) {
+          event.preventDefault();
+      }
 
 
         var phone_aval = $('#phone1').val().length;

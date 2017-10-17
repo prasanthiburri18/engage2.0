@@ -2,6 +2,7 @@ package com.engage.util;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,6 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.engage.dao.EncryptKeyDao;
 
+
+
 /**
  * Test is written to check whether {@link EncryptKeyDao} is autowired to
  * {@link AdvancedEncryptionStandard} class
@@ -21,6 +24,7 @@ import com.engage.dao.EncryptKeyDao;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class EncryptionUtilTest {
 	private String testString;
 	private Logger logger = LoggerFactory.getLogger(EncryptionUtilTest.class);

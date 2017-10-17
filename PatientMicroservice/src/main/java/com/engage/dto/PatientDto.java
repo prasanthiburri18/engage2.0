@@ -61,8 +61,7 @@ public class PatientDto {
 	private String phone;
 	private String deviceToken;
 	
-	@NotNull(message="Status cannot be empty")
-	@NotBlank(message = "Status cannot be empty")
+	
 	@Pattern(regexp="^[YNyn]*$", message="Invalid Status")
 	@Length(min = 1, max = 1, message = "Invalid Status")
 	private String status;

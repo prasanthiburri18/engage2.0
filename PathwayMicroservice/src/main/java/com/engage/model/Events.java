@@ -47,10 +47,9 @@ public class Events {
 	@Column(name = "event_pos_col")
 	private long eventPocCol;
 	
-	@NotNull(message="Status cannot be empty")
-	@NotBlank(message = "Status cannot be empty")
+	
 	@Pattern(regexp="^[YNyn]*$", message="Invalid Status")
-	@Length(min = 1, max = 1, message = "Invalid Status")
+	@Length( max = 1, message = "Invalid Status")
 	private String status;
 	@Column(name = "created_date")
 	private Date createDate;
