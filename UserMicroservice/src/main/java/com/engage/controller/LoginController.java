@@ -100,87 +100,7 @@ public class LoginController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	/**
-	 * User Login Method
-	 * 
-	 * @Inputparam user
-	 * @return JsonObject
-	 */
-
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-
-	public @ResponseBody JsonMessage login(@RequestBody final User user) {
-		JsonMessage response = new JsonMessage();
-		try {
-			// Engage2.0 start
-			// Check Validations for email and password only
-			// Email violations
-			Set<ConstraintViolation<User>> violations = validator.validateProperty(user, "email");
-			// Password violations
-			Set<ConstraintViolation<User>> passwordViolations = validator.validateProperty(user, "password");
-			// Club both violations together
-			violations.addAll(passwordViolations);
-
-			if (!violations.isEmpty()) {
-				// Map<String, ConstraintViolation<User>> errors =
-				// violations.stream().collect(Collectors.toMap(ConstraintViolation::getMessage,
-				// Function.identity()));
-				// Set<String> errormessages =
-				// ConstraintValidationUtils.getArrayOfValidations(violations);
-				Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
-				throw new ConstraintViolationException(errormessages.toString());
-			}
-			// Engage2.0 end
-			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-
-			boolean isValidAuthentication = authentication != null
-					&& !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
-
-			// User validateUser=
-			// _userDao.getByUserName(user.getEmail(),AdvancedEncryptionStandard.encrypt(user.getPassword()));
-			// to comply with previous code
-			User validateUser = null;
-			LOGGER.info("Is valid user?" + isValidAuthentication);
-
-			if (isValidAuthentication) {
-				validateUser = _userDao.getById(authentication.getName());
-			}
-			// User validateUser=
-			// _userDao.getByUserName(user.getEmail(),passwordEncoder.encode(user.getPassword()));
-			if (!(validateUser.getEmail() == null || validateUser.getEmail().equals(""))) {
-				if (validateUser.getStatus() == "N") {
-					response.setMessage("Account is disbled.");
-					response.setStatuscode(401);
-					return response;
-				}
-				Map<String, Object> data1 = new HashMap<String, Object>();
-				data1.put("UserBacsicInfo", validateUser);
-
-				Date today = new Date();
-				long ltime = today.getTime() + 1 * 24 * 60 * 60 * 1000;
-				Date expDate = new Date(ltime);
-				String token = Jwts.builder().setSubject(validateUser.getEmail()).setIssuedAt(new Date())
-						.setExpiration(expDate).signWith(SignatureAlgorithm.HS256, "secretkey").compact();
-				data1.put("token", token);
-				response.setMessage("User login successfully.");
-				response.setData(data1);
-
-				response.setStatuscode(200);
-				return response;
-			} else {
-				response.setMessage("Incorrect Email/Pasword combination. Please try again.");
-				response.setStatuscode(204);
-				return response;
-			}
-		} catch (Exception ex) {
-			response.setMessage("Registration failed due to internal error.");
-			LOGGER.error("Registration exception: " + ex.getMessage() + " " + "user data" + user.getEmail() + " "
-					+ user.getFullName());
-			response.setStatuscode(204);
-			return response;
-		}
-	}
+		
 
 	/**
 	 * User Registration Method
@@ -198,38 +118,24 @@ public class LoginController {
 			}
 			Set<ConstraintViolation<User>> violations = validator.validate(user);
 			if (!violations.isEmpty()) {
-				// Map<String, ConstraintViolation<User>> errors =
-				// violations.stream().collect(Collectors.toMap(ConstraintViolation::getMessage,
-				// Function.identity()));
+				LOGGER.info("Checking validation for user");
 				Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
 				if (user.getPassword() == null || user.getPassword().trim().equals("")) {
+					LOGGER.info("Server side validation for password");
 					errormessages.put("password", "Password cannot be blank");
 				}
 				throw new ConstraintViolationException(errormessages);
 			}
 			// Engage 2.0
 			if ((_userDao.getByEmail(user.getEmail())).size() > 0) {
+				LOGGER.warn("Email already exists");
 				response.setMessage("Email already exists.");
 				response.setStatuscode(208);
 				return response;
 			} else {
 
-				Organization org = new Organization();
-				org.setName(user.getPracticeName());
-
-				Integer orgid = _organizationDao.save(org);
-				user.setOrgid(orgid);
-				// user.setPassword(AdvancedEncryptionStandard.encrypt(user.getPassword()));
-				user.setPassword(passwordEncoder.encode(user.getPassword()));
-				// user.setUserType("A");
-				// user.setStatus("Y");
-
-				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-				user.setCreateDate(timestamp);
-				user.setUpdateDate(timestamp);
-
-				// Mail is sent first, then user is added
+			
+			
 				Map<String, Object> data1 = new HashMap<String, Object>();
 				data1.put("from", "EngageApp<support@quantifiedcare.com>");
 				data1.put("to", user.getEmail());
@@ -242,10 +148,25 @@ public class LoginController {
 								+ "'>Verify</a><br><br>Thank You,<br>Team Engage at Quantified Care");
 				data1.put("status", true);
 
-				// Engage2.0
+				
 				final String simpleMailUrl = microserviceURL + "/email/send";
 				restTemplate.postForObject(simpleMailUrl, data1, String.class);
+				
+				Organization org = new Organization();
+				org.setName(user.getPracticeName());
 
+				Integer orgid = _organizationDao.save(org);
+				user.setOrgid(orgid);
+			
+				user.setPassword(passwordEncoder.encode(user.getPassword()));
+			
+
+				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+				user.setCreateDate(timestamp);
+				user.setUpdateDate(timestamp);
+
+				
 				BigInteger id = _userDao.save(user);
 
 				UserRoles userRoles = new UserRoles();
@@ -253,7 +174,6 @@ public class LoginController {
 				userRoles.setRoleId(1);
 				_userRolesDao.save(userRoles);
 
-				// Engage2.0
 				response.setMessage("User registered successfully");
 				response.setStatuscode(200);
 				return response;
@@ -269,13 +189,13 @@ public class LoginController {
 			return response;
 		}
 	}
-
-	/**
+/*
+	*//**
 	 * Loading Patient Pathway Block anonymous call
 	 * 
 	 * @Inputparam user
 	 * @return JsonObject
-	 */
+	 *//*
 
 	@RequestMapping(value = "/getPatientpathwayblockbyId", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage getPatientpathwayblockbyId(@RequestBody Map<String, String> json) {
@@ -299,12 +219,12 @@ public class LoginController {
 
 	}
 
-	/**
+	*//**
 	 * Loading Patient by DOB anonymous call
 	 * 
 	 * @Inputparam user
 	 * @return JsonObject
-	 */
+	 *//*
 
 	@RequestMapping(value = "/getPatientBydob", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage getPatientBydob(@RequestBody Map<String, String> json) {
@@ -324,12 +244,12 @@ public class LoginController {
 
 	}
 
-	/**
+	*//**
 	 * Patient Reply Call Back for Twilio (anonymous call)
 	 * 
 	 * @Inputparam user
 	 * @return JsonObject
-	 */
+	 *//*
 	@RequestMapping(value = "/userreply", method = RequestMethod.POST)
 	public ResponseEntity<String> receiveBody(@RequestParam("From") String From, @RequestParam("Body") String Body) {
 		JsonMessage response = new JsonMessage();
@@ -376,9 +296,8 @@ public class LoginController {
 				}
 				String res = restTemplate.postForObject("http://localhost:8080/PatientMicroservice/api/v1/patientreply",
 						data1, String.class);
-				// String
-				// res=restTemplate.postForObject("http://localhost:8081/api/v1/patientreply",
-				// data1,String.class );
+			
+				
 				JsonFactory factory = new JsonFactory();
 				JsonParser parser = factory.createParser(res);
 				while (!parser.isClosed()) {
@@ -401,7 +320,7 @@ public class LoginController {
 					responseHeaders, HttpStatus.OK);
 		}
 	}
-
+*/
 	/**
 	 * 
 	 * Organization Create Call
