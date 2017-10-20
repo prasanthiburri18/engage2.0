@@ -311,7 +311,7 @@ $('document').ready(function ()
                     }
 
                     if(typeof(resData.email) != "undefined" && resData.email !== null){
-                        $('#error-useremail').text(resData.email);
+                        $('#error-email').text(resData.email);
                     }
                     if(typeof(resData.phone) != "undefined" && resData.phone !== null){
                         $('#error-phone').text(resData.phone);

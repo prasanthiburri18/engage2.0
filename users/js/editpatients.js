@@ -120,9 +120,9 @@ if (output.userType == 'U')
       }
 
 
-        var phone_aval = $('#phone1').val().length;
-        var phone_bval = $('#phone2').val().length;
-        var phone_cval = $('#phone3').val().length;
+        var phone_aval = $('#editphone1').val().length;
+        var phone_bval = $('#editphone2').val().length;
+        var phone_cval = $('#editphone3').val().length;
         if (phone_aval < 3) {
             $("#phone1").focus();
         } else if (phone_aval > 2 && phone_bval < 3) {

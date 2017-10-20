@@ -10,15 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.engage.util.AdvancedEncryptionStandard;
 
@@ -34,19 +29,11 @@ public class Patient {
 	 */
 	private String email;
 	//removed validations from entity. All validation are present on PatientDto
-	/*@NotNull(message = "First name cannot be empty")
-	@NotBlank(message = "First name cannot be empty")
-	@Length(max = 60, message = "First name exceeds {max} characters.")
-	@Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Only alphabet characters are allowed.")*/
 	@Column(name = "first_name")
 	private String firstName;
 
 	//removed validations from entity. All validation are present on PatientDto
-	/*
-	@NotNull(message = "Last name cannot be empty")
-	@NotBlank(message = "Last name cannot be empty")
-	@Length(max = 60, message = "Last name exceeds {max} characters.")
-	@Pattern(regexp = "^[a-zA-z\\s]*$", message = "Only alphabet characters are allowed.")*/
+
 	@Column(name = "last_name")
 	private String lastName;
 
@@ -120,8 +107,7 @@ public class Patient {
 		try {
 			return AdvancedEncryptionStandard.decrypt(email);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-
+		
 			e.printStackTrace();
 			return email;
 		}
@@ -132,7 +118,6 @@ public class Patient {
 			this.email = AdvancedEncryptionStandard.encrypt(email);
 		} catch (Exception e) {
 			this.email = null;
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -142,7 +127,6 @@ public class Patient {
 		try {
 			return AdvancedEncryptionStandard.decrypt(firstName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return firstName;
 		}
@@ -152,8 +136,7 @@ public class Patient {
 		try {
 			this.firstName = AdvancedEncryptionStandard.encrypt(firstName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-
+		
 			this.firstName = null;
 			e.printStackTrace();
 		}
@@ -163,7 +146,6 @@ public class Patient {
 		try {
 			return AdvancedEncryptionStandard.decrypt(lastName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return lastName;
 		}
@@ -173,7 +155,6 @@ public class Patient {
 		try {
 			this.lastName = AdvancedEncryptionStandard.encrypt(lastName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			this.lastName = null;
 		}
@@ -183,7 +164,6 @@ public class Patient {
 		try {
 			return AdvancedEncryptionStandard.decrypt(phone);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return this.phone = null;
 		}
@@ -194,7 +174,6 @@ public class Patient {
 		try {
 			this.phone = AdvancedEncryptionStandard.encrypt(phone);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			this.phone = null;
 		}
@@ -205,7 +184,6 @@ public class Patient {
 		try {
 			return AdvancedEncryptionStandard.decrypt(deviceToken);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return deviceToken;
 		}
@@ -216,7 +194,6 @@ public class Patient {
 			this.deviceToken = AdvancedEncryptionStandard.encrypt(deviceToken);
 		} catch (Exception e) {
 			this.deviceToken = null;
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -255,7 +232,7 @@ public class Patient {
 
 	public Patient() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public long getClinicianId() {

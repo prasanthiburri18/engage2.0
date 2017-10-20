@@ -45,9 +45,9 @@ $.ajax({
                 }
             },
             error: function(response, status){
-
+            		  $.LoadingOverlay("hide");
               if(response.status==412) {
-              $.LoadingOverlay("hide");
+            
                 logout();
               }
 
@@ -155,9 +155,9 @@ var binput={"id":bid};
 
             },
             error: function(response, status){
-
+            	  $.LoadingOverlay("hide");
               if(response.status==412) {
-              $.LoadingOverlay("hide");
+            
                 logout();
               }
 
@@ -182,9 +182,9 @@ var binput={"id":bid};
 
             },
             error: function(response, status){
-
+            	 $.LoadingOverlay("hide");
               if(response.status==412) {
-              $.LoadingOverlay("hide");
+             
                 logout();
               }
 
@@ -206,5 +206,5 @@ function formatDate(date) {
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
 
-    return [year, month, day].join('-');
+    return [year, month, day].join('/');
 }

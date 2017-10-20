@@ -16,6 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.engage.commons.validators.annotations.ValidPhoneNumber;
 import com.engage.model.Patient;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * {@link PatientDto} is created because {@link Patient} class coded in
@@ -91,6 +92,7 @@ public class PatientDto {
 
 	@NotNull(message = "Invalid Date of birth")
 	@Past(message = "Invalid Date of birth")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="EST")
 	private Date dob;
 
 	/*@Min(value = 1, message = "Invalid Clinician Id")

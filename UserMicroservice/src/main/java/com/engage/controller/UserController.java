@@ -65,7 +65,7 @@ public class UserController {
 	public String portalURL;
 
 	@Value("${microService.URL}")
-	public String microserviceURL;
+	public String emailMicroserviceURL;
 
 	@Autowired
 	private Validator validator;
@@ -274,7 +274,7 @@ public class UserController {
 			// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
 			// data1,String.class );
 			LOG.info("Sending Email to "+ useremail);
-			restTemplate.postForObject(microserviceURL + "/email/send", data1, String.class);
+			restTemplate.postForObject(emailMicroserviceURL + "/email/send", data1, String.class);
 			LOG.info("Email sent to team member: " + username);
 			response.setMessage("Email sent successfully");
 			response.setStatuscode(200);
@@ -371,7 +371,7 @@ public class UserController {
 			_userDao.update(user);
 			_organizationDao.update(org);
 
-			response.setMessage("Profile Udated.");
+			response.setMessage("Profile Updated.");
 			response.setStatuscode(200);
 			return response;
 

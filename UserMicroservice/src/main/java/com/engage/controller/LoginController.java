@@ -68,15 +68,15 @@ public class LoginController {
 	 * Class' LOGGER
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
-	@Value("${microService.URL}")
-	public String microserviceURL;
+	@Value("${emailMicroService.URL}")
+	public String emailMicroserviceURL;
 	@Value("${portal.URL}")
 	public String portalURL;
-	/*
-	 * @Autowired private OAuth2RestTemplate restTemplate;
-	 */
+	
+	  @Autowired private OAuth2RestTemplate restTemplate;
+	 
 
-	private RestTemplate restTemplate = new RestTemplate();
+	//private RestTemplate restTemplate = new RestTemplate();
 
 	@Autowired
 	private UserDao _userDao;
@@ -149,7 +149,7 @@ public class LoginController {
 				data1.put("status", true);
 
 				
-				final String simpleMailUrl = microserviceURL + "/email/send";
+				final String simpleMailUrl = emailMicroserviceURL + "/email/send";
 				restTemplate.postForObject(simpleMailUrl, data1, String.class);
 				
 				Organization org = new Organization();
@@ -189,13 +189,13 @@ public class LoginController {
 			return response;
 		}
 	}
-/*
-	*//**
+
+	/**
 	 * Loading Patient Pathway Block anonymous call
 	 * 
 	 * @Inputparam user
 	 * @return JsonObject
-	 *//*
+	 */
 
 	@RequestMapping(value = "/getPatientpathwayblockbyId", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage getPatientpathwayblockbyId(@RequestBody Map<String, String> json) {
@@ -219,12 +219,12 @@ public class LoginController {
 
 	}
 
-	*//**
+	/**
 	 * Loading Patient by DOB anonymous call
 	 * 
 	 * @Inputparam user
 	 * @return JsonObject
-	 *//*
+	 */
 
 	@RequestMapping(value = "/getPatientBydob", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage getPatientBydob(@RequestBody Map<String, String> json) {
@@ -244,12 +244,12 @@ public class LoginController {
 
 	}
 
-	*//**
+	/**
 	 * Patient Reply Call Back for Twilio (anonymous call)
 	 * 
 	 * @Inputparam user
 	 * @return JsonObject
-	 *//*
+	 */
 	@RequestMapping(value = "/userreply", method = RequestMethod.POST)
 	public ResponseEntity<String> receiveBody(@RequestParam("From") String From, @RequestParam("Body") String Body) {
 		JsonMessage response = new JsonMessage();
@@ -320,7 +320,7 @@ public class LoginController {
 					responseHeaders, HttpStatus.OK);
 		}
 	}
-*/
+
 	/**
 	 * 
 	 * Organization Create Call
@@ -497,7 +497,7 @@ public class LoginController {
 				data.put("status", true);
 				// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
 				// data,String.class );
-				restTemplate.postForObject(microserviceURL + "/email/send", data, String.class);
+				restTemplate.postForObject(emailMicroserviceURL + "/email/send", data, String.class);
 				// restTemplate.postForObject("http://localhost:8080/email/send",
 				// data,String.class );
 

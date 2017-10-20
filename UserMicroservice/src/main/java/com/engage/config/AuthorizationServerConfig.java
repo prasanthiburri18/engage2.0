@@ -91,7 +91,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
  */
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-		// TODO Auto-generated method stub
+		
 		/*security.tokenKeyAccess("permitAll()").checkTokenAccess(
 				"isAuthenticated()");
 		*/
@@ -107,11 +107,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
 		.withClient("users")
+		//don't change this password
 		.secret("ak#ANhKLLBRADHEadklj*$")
 		.authorizedGrantTypes("password")
 		.scopes("client_app")
 		.accessTokenValiditySeconds(86400).and()
-		.withClient("mailmicroservice")
+		.withClient("usermicroservice")
 		.secret("Password")
 		.authorizedGrantTypes("client_credentials")
 		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")

@@ -22,6 +22,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length.List;
 
 import com.engage.commons.validators.annotations.ValidPhoneNumber;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "dt_users")
@@ -47,7 +48,9 @@ public class User {
 	 * @NotNull(message = "Password cannot be empty.")
 	 * 
 	 * @NotBlank(message = "Password cannot be empty.")
-	 */private String password;
+	 */
+	@JsonIgnore
+	private String password;
 	@NotNull(message = "Full name cannot be empty.")
 	@NotBlank(message = "Full name cannot be empty.")
 	@Length(max = 60, message = "Full name exceeds {max} characters.")
