@@ -18,22 +18,23 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.security.oauth2.client.token.DefaultAccessTokenRequest;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 
 @Configuration
 @EnableWebSecurity
-//Order is specified as lowest. So that ResourceServerConfig has higher priority
+@EnableOAuth2Client
+// Order is specified as lowest. So that ResourceServerConfig has higher
+// priority
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
-
 
 	@Bean
 	@Override
@@ -59,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	/**
 	 * Wire CustomUserDetailService here
+	 * 
 	 * @return
 	 */
 	@Bean
@@ -76,6 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(getAuthenticationProvider());
 	}
+
 	/**
 	 * This is lower order than resource server config
 	 */
@@ -84,29 +87,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		logger.info("Overriding spring security.");
 
 		http// .authenticationProvider(getAuthenticationProvider())
-		.authorizeRequests()
-		//.anyRequest().permitAll()
-		.antMatchers("/**").permitAll()
-		//.antMatchers("/api/v1/**").authenticated()
-		.and().csrf().disable().formLogin().disable().httpBasic()
-				.disable();
+				.authorizeRequests()
+				// .anyRequest().permitAll()
+				.antMatchers("/**").permitAll()
+				// .antMatchers("/api/v1/**").authenticated()
+				.and().csrf().disable().formLogin().disable().httpBasic().disable();
 		;
 	}
 	// @formatter:on
 
 	/**
-	 * Microservice to Microservice communication with {@link OAuth2RestTemplate}.
-	 * This should replace existing RestTemplate
+	 * Microservice to Microservice communication with
+	 * {@link OAuth2RestTemplate}. This should replace existing RestTemplate
+	 * 
 	 * @return
 	 */
-	@Bean
-	public OAuth2RestTemplate restTemplate() {
-		OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(clientCredentialsResourceDetails());
-		return restTemplate;
-	}
+	/*
+	 * @Bean public OAuth2RestTemplate restTemplate() { OAuth2RestTemplate
+	 * restTemplate = new
+	 * OAuth2RestTemplate(clientCredentialsResourceDetails()); return
+	 * restTemplate; }
+	 */
 
 	/**
 	 * Client details. Here, MailMicroservice
+	 * 
 	 * @return
 	 */
 	@Bean
@@ -114,29 +119,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public OAuth2ProtectedResourceDetails clientCredentialsResourceDetails() {
 		return new ClientCredentialsResourceDetails();
 	}
+
 	/**
-	 * Oauth2RestTemplate with Client Context and Details 
+	 * Oauth2RestTemplate with Client Context and Details
+	 * 
 	 * @param ccrd
 	 * @return
 	 */
-	@Bean(name = "ouath2RestTemplate")
-	public OAuth2RestTemplate getOAuth2RestTemplate(OAuth2ProtectedResourceDetails ccrd) {
-		AccessTokenRequest accessTokenRequest = new DefaultAccessTokenRequest();
-		OAuth2ClientContext context = new DefaultOAuth2ClientContext(accessTokenRequest);
+	@Bean(name = "oauth2RestTemplate")
+	public OAuth2RestTemplate getOAuth2RestTemplate(OAuth2ClientContext context, OAuth2ProtectedResourceDetails ccrd) {
+
 		logger.debug("Checking loading of security.oauth2.client properties------");
 		logger.info("Initializing oauth2RestTemplate, client Id:" + ccrd.getClientId());
 		logger.debug("Finished Checking loading of security.oauth2.client properties");
 
 		return new OAuth2RestTemplate(ccrd, context);
 	}
+
 	/**
 	 * Not necessary. But incase of multiple clients, this might be useful
+	 * 
 	 * @return
 	 */
-	@Bean
+	/*@Bean
 	public AccessTokenRequest getAccessTokenRequest() {
 		return new DefaultAccessTokenRequest();
 
-	}
+	}*/
 
 }

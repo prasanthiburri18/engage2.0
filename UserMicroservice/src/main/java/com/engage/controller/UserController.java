@@ -64,7 +64,7 @@ public class UserController {
 	@Value("${portal.URL}")
 	public String portalURL;
 
-	@Value("${microService.URL}")
+	@Value("${emailMicroService.URL}")
 	public String emailMicroserviceURL;
 
 	@Autowired

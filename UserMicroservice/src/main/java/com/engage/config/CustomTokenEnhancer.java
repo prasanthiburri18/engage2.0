@@ -22,13 +22,14 @@ public class CustomTokenEnhancer implements TokenEnhancer {
 	private UserDao userDao;
 	@Override
 	public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-		
+		if(authentication.getUserAuthentication()!=null){
 		User authenticatedUser = (User) authentication.getPrincipal();
         final Map<String, Object> additionalInfo = new HashMap<>();
         com.engage.model.User userFromDB = userDao.getById(authenticatedUser.getUsername());
         additionalInfo.put("organizationId", userFromDB.getOrgid());
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
-  		return accessToken;
+		}
+        return accessToken;
 		
 		
 	}

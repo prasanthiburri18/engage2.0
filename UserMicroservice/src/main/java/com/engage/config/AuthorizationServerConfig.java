@@ -2,6 +2,8 @@ package com.engage.config;
 
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +15,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
@@ -28,6 +32,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+	
+	
+	private static final Logger logger = LoggerFactory.getLogger(AuthorizationServerConfig.class);
 	/**
 	 * This is defined in {@link SecurityConfig}
 	 */
@@ -35,6 +42,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Qualifier("authenticationManagerBean")
 	private AuthenticationManager authenticationManager;
 
+	
+	@Autowired
+	public ClientDetailsService clientDetailsService;
+
+	
 	
 	/**
 	 * JwtTokenStore returns JwtToken
@@ -70,6 +82,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public DefaultTokenServices tokenServices() {
 		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
 		defaultTokenServices.setTokenStore(tokenStore());
+		logger.info(clientDetailsService.toString());
+		ClientDetails cd = clientDetailsService.loadClientByClientId("usermicroservice");
+		logger.info("Client Details"+ cd);
+		defaultTokenServices.setClientDetailsService(clientDetailsService);
 	//	defaultTokenServices.setSupportRefreshToken(true);
 		return defaultTokenServices;
 	}
@@ -84,7 +100,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		      Arrays.asList(tokenEnhancer(), accessTokenConverter()));
 		    
 		endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore())
-				.tokenEnhancer(tokenEnhancerChain);
+				.tokenEnhancer(tokenEnhancerChain).setClientDetailsService(clientDetailsService);;
 	}
 /**
  * Security on token endpoints
@@ -116,8 +132,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		.secret("Password")
 		.authorizedGrantTypes("client_credentials")
 		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")
-		.authorities("admin","user")
-		.accessTokenValiditySeconds(86400);
+	
+		;
+		
 	}
 
 	@Bean
