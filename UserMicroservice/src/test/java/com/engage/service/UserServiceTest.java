@@ -1,5 +1,7 @@
 package com.engage.service;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -18,7 +20,27 @@ public class UserServiceTest {
 
 	@Test
 	public void getPatientByDobTest(){
-		userService.verifyPatientInfobydob("1993-02-13");
+		userService.verifyPatientInfobydob("2000-02-01");
 		LOGGER.info("Test passed");
 	}
+	@Test
+	public void getPatientsByPhone(){
+		List<Object> patients = userService.patientidbyphone("1212121212");
+		if(patients!=null)
+		for(Object o : patients){
+			LOGGER.info(o.toString());
+		}
+		
+		LOGGER.info("Test passed");
+	}
+	
+	/**
+	 * Checks for patient's acceptance
+	 */
+	@Test
+	public void verifyPatientInfoTest(){
+		int size=userService.verifyPatientInfo(1);
+		LOGGER.info("Is accepted: "+size);
+	}
+	
 }

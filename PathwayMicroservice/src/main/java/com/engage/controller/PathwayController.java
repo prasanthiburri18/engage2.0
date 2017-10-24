@@ -855,7 +855,7 @@ public class PathwayController {
 	 * @return
 	 * @throws PatientNotAcceptedException 
 	 */
-	@RequestMapping(value="/api/v1/pathway/patient", method=RequestMethod.GET)
+	@RequestMapping(value="/pathway/patient", method=RequestMethod.GET)
 	public List<Pathwayaccept> verifyPatientInfo(@RequestParam("id")long patientId) throws PatientNotAcceptedException{
 		List<Pathwayaccept> patientAcceptList = pathwayService.findIfPatientAcceptedPathway(patientId);
 		return patientAcceptList;

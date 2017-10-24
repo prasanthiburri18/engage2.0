@@ -29,7 +29,7 @@ import com.engage.util.AdvancedEncryptionStandard;
 @Service
 @Transactional
 public class UserService {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
 	@Autowired
@@ -44,7 +44,7 @@ public class UserService {
 	public String portalURL;
 	@Value("${patientMicroserviceUrl}")
 	public String patientMicroserviceUrl;
-	
+
 	@Value("${pathwayMicroserviceUrl}")
 	private String pathwayMicroserviceUrl;
 	@Autowired
@@ -55,8 +55,6 @@ public class UserService {
 	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-	
 
 	public boolean register(User user) throws Exception {
 		boolean registerFlag = false;
@@ -127,28 +125,35 @@ public class UserService {
 	public int verifyPatientInfobydob(String pdob) {
 		List<Object> patientList = restTemplate.getForObject(patientMicroserviceUrl + "/api/v1/patient/dob/" + pdob,
 				List.class);
-		return patientList.size();
+		int size=0;
+		if(patientList!=null){
+			size=patientList.size();
+		}
+		return size;
 
 	}
 
 	public int verifyPatientInfo(long patientid) {
-		  
-			List<Object> patientPathwayInfoList=restTemplate.getForObject(pathwayMicroserviceUrl + "/api/v1/pathway/patient?id=" + patientid,
-					List.class);
-			int statuscode = patientPathwayInfoList.size();
-		  return statuscode;
-		  }
+
+		List<Object> patientPathwayInfoList = restTemplate
+				.getForObject(pathwayMicroserviceUrl + "/api/v1/pathway/patient?id=" + patientid, List.class);
+		int statuscode = 0;
+		if (patientPathwayInfoList != null) {
+			statuscode = patientPathwayInfoList.size();
+		}
+		return statuscode;
+	}
 
 	@SuppressWarnings({ "unchecked", "null" })
 	public List<Object> getPatientpathwayblockById(int id) {
 		List<Object> scheduledData = new ArrayList<Object>();
 		try {
-		
+
 			Map<String, String> json = new HashMap<>();
-			json.put("id",Integer.toString(id));
-			List<Object[]> results = restTemplate.postForObject(pathwayMicroserviceUrl + "/api/v1//getPatientpathwayblockbyId",json,
-					List.class);
-;
+			json.put("id", Integer.toString(id));
+			List<Object[]> results = restTemplate
+					.postForObject(pathwayMicroserviceUrl + "/api/v1//getPatientpathwayblockbyId", json, List.class);
+			;
 			ArrayList blockres = new ArrayList();
 			Object[] obj = new Object[] {};
 			ArrayList<Object> newObj = new ArrayList<Object>(Arrays.asList(obj));

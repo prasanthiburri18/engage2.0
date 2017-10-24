@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Profile("dev")
+@Profile(value={"dev","local"})
 @RestController
 @RequestMapping("/email")
 @PropertySource("classpath:mail.properties")

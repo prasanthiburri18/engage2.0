@@ -37,6 +37,7 @@ public class OAuth2RestTemplateTest {
 		data1.put("status", true);
 		OAuth2AccessToken accessToken = restTemplate.getAccessToken();
 		logger.info("Access Token" +accessToken);
+		logger.info("Email Microservice base uri "+emailMicroserviceURL);
 		restTemplate.postForObject(emailMicroserviceURL + "/email/send", data1, String.class);
 	logger.info("Mail sent");
 	}
