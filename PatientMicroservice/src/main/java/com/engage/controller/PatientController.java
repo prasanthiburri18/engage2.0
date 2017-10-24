@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -70,6 +71,10 @@ public class PatientController {
 	@Autowired
 	private PathwayEventsDao _pathwayEventsDao;
 
+	//private	RestTemplate restTemplate = new RestTemplate();
+	
+	@Autowired
+	private OAuth2RestTemplate restTemplate;
 	@Value("${countryCode}")
 	private String countryCode;
 	@Value("${scheduleMicroserviceBaseUrl}")
@@ -121,7 +126,7 @@ public class PatientController {
 			PatientPathway patentPathway = new PatientPathway();
 			user.setStatus("Y");
 			long id = _patientDao.save(user);
-			RestTemplate restTemplate = new RestTemplate();
+			
 
 			if (user.getPathwayId() != 0) {
 				ArrayList outs = (ArrayList) _patientDao.getPathwayFirstMessageforpatient(user.getPathwayId());
@@ -237,7 +242,7 @@ public class PatientController {
 				}
 
 				if (newpathway.equals("yes")) {
-					RestTemplate restTemplate = new RestTemplate();
+				//	RestTemplate restTemplate = new RestTemplate();
 					if (user.getPathwayId() != 0) {
 						ArrayList outs = (ArrayList) _patientDao.getPathwayFirstMessageforpatient(user.getPathwayId());
 						String mm = outs.get(0).toString();
@@ -321,7 +326,7 @@ public class PatientController {
 				ArrayList<Long> events = _patientPathwayDao.getEventsById(patient.getId());
 				Map<String, Object> data = new HashMap<String, Object>();
 				data.put("patient", patient);
-				RestTemplate restTemplate = new RestTemplate();
+			//	RestTemplate restTemplate = new RestTemplate();
 				Map<String, Object> data1 = new HashMap<String, Object>();
 				data1.put("id", patientPathway);
 				data1.put("evetIds", events);
@@ -378,7 +383,7 @@ public class PatientController {
 				Map<String, Object> data = new HashMap<String, Object>();
 
 				data.put("patient", p);
-				RestTemplate restTemplate = new RestTemplate();
+			//	RestTemplate restTemplate = new RestTemplate();
 				Map<String, Object> data1 = new HashMap<String, Object>();
 				data1.put("id", patientPathway);
 				data1.put("evetIds", events);
@@ -619,7 +624,7 @@ public class PatientController {
 
 				_patientDao.updatePatientInfofprpathway(patient.getId(),
 						Integer.parseInt(patientPathway.get(0).toString()), "Y", dd, Body.toUpperCase());
-				RestTemplate restTemplate = new RestTemplate();
+			//	RestTemplate restTemplate = new RestTemplate();
 				Map<String, Object> data1 = new HashMap<String, Object>();
 				// String results =
 				// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",
@@ -668,7 +673,7 @@ public class PatientController {
 				String dd = dateFormat.format(new Date());
 				_patientDao.updatePatientInfofprpathway(patient.getId(),
 						Integer.parseInt(patientPathway.get(0).toString()), "Y", dd, Body.toUpperCase());
-				RestTemplate restTemplate = new RestTemplate();
+			//	RestTemplate restTemplate = new RestTemplate();
 				Map<String, Object> data1 = new HashMap<String, Object>();
 				// String results =
 				// restTemplate.getForObject("http://35.166.195.23:8080/PathwayMicroservice/api/v1/patientpathwaycron",

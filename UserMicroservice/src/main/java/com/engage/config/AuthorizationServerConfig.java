@@ -98,7 +98,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		  TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
 		    tokenEnhancerChain.setTokenEnhancers(
 		      Arrays.asList(tokenEnhancer(), accessTokenConverter()));
-		    
+		 logger.info("Configuring auth server endpoints: tokenStore, tokenEnhancer and clientDetailsService");   
 		endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore())
 				.tokenEnhancer(tokenEnhancerChain).setClientDetailsService(clientDetailsService);;
 	}
@@ -107,11 +107,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
  */
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-		
-		/*security.tokenKeyAccess("permitAll()").checkTokenAccess(
-				"isAuthenticated()");
-		*/
-		
+				
 		security.tokenKeyAccess("permitAll()").checkTokenAccess(
 				"isAuthenticated()");
 	}
@@ -121,6 +117,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	 */
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+		logger.info("Configuring In memory clients");
 		clients.inMemory()
 		.withClient("users")
 		//don't change this password
@@ -132,7 +129,21 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		.secret("Password")
 		.authorizedGrantTypes("client_credentials")
 		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")
-	
+		.and()
+		.withClient("patientmicroservice")
+		.secret("Password")
+		.authorizedGrantTypes("client_credentials")
+		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")
+		.and()
+		.withClient("pathwaymicroservice")
+		.secret("Password")
+		.authorizedGrantTypes("client_credentials")
+		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")
+		.and()
+		.withClient("schedulemicroservice")
+		.secret("Password")
+		.authorizedGrantTypes("client_credentials")
+		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")
 		;
 		
 	}

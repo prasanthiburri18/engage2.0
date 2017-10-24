@@ -20,12 +20,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.engage.commons.exception.ConstraintViolationException;
 import com.engage.commons.exception.DataTamperingException;
@@ -50,10 +50,10 @@ import com.engage.util.JsonMessage;
 public class UserController {
 	private static Logger LOG = LoggerFactory.getLogger(UserController.class);
 	
-/*	@Autowired
-	private OAuth2RestTemplate restTemplate;*/
+	@Autowired
+	private OAuth2RestTemplate restTemplate;
 	
-	private RestTemplate restTemplate = new RestTemplate();
+//	private RestTemplate restTemplate = new RestTemplate();
 	@Autowired
 	private UserDao _userDao;
 	@Autowired

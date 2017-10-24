@@ -15,10 +15,12 @@ public class Jobs {
 	//2 Minute Cron
 	@Value("${example.scheduledJob.enabled:false}")
 	private boolean scheduledJobEnabled;
+	
+	private RestTemplate restTemplate = new RestTemplate();
 	@Scheduled(fixedRate = 120000)  // 2 min every 30 seconds
 	public void pullRandomComment() {
 		
-		RestTemplate restTemplate = new RestTemplate();
+		//RestTemplate restTemplate = new RestTemplate();
 		Map<String,Object> data1=new HashMap<String,Object>();
 	
 //		Map<String,Object> pathway=(Map<String, Object>) restTemplate.postForObject("http://35.166.195.23:8080/ScheduleMicroservice/api/v1/blockcronrun", data1,Object.class );
@@ -30,7 +32,7 @@ public class Jobs {
 	@Scheduled(cron = "0 0 9 * * ?",zone = "America/New_York")
 	public void Daytwomessagesrun(){
 
-		RestTemplate restTemplate = new RestTemplate();
+	//	RestTemplate restTemplate = new RestTemplate();
 		Map<String,Object> data1=new HashMap<String,Object>();
 //		Map<String,Object> pathway=(Map<String, Object>) restTemplate.postForObject("http://35.166.195.23:8080/ScheduleMicroservice/api/v1/blockcronrun", data1,Object.class );
 		Map<String,Object> pathway=(Map<String, Object>) restTemplate.postForObject("http://localhost:8080/ScheduleMicroservice/api/v1/blockcronrun", data1,Object.class );
