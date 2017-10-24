@@ -26,6 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,10 +38,13 @@ import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.BlocksDao;
 import com.engage.dao.EventsDao;
 import com.engage.dao.PathwayDao;
+import com.engage.exception.PatientNotAcceptedException;
 import com.engage.model.Blocks;
 import com.engage.model.Events;
 import com.engage.model.Pathway;
+import com.engage.model.Pathwayaccept;
 import com.engage.model.ScheduleJson;
+import com.engage.service.PathwayService;
 import com.engage.util.JsonMessage;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -68,6 +72,8 @@ public class PathwayController {
 	@Autowired
 	private BlocksDao _blocksDao;
 
+	@Autowired
+	private PathwayService pathwayService;
 	/**
 	 * Add Pathway Method
 	 * 
@@ -839,6 +845,21 @@ public class PathwayController {
 
 		}
 
+	}
+	
+	
+	/**
+	 * Used to check whether patient accepted to receive messages.
+	 * Queries IPathwayAcceptDao
+	 * @param patiendId
+	 * @return
+	 * @throws PatientNotAcceptedException 
+	 */
+	@RequestMapping(value="/api/v1/pathway/patient", method=RequestMethod.GET)
+	public List<Pathwayaccept> verifyPatientInfo(@RequestParam("id")long patientId) throws PatientNotAcceptedException{
+		List<Pathwayaccept> patientAcceptList = pathwayService.findIfPatientAcceptedPathway(patientId);
+		return patientAcceptList;
+		
 	}
 
 	private Blocks desanitizeMessagesOfBlock(Blocks pathwayBlock)

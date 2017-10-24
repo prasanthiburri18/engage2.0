@@ -40,4 +40,32 @@ public class PatientDtoToModelUtils {
 		return patient;
 	}
 
+	
+	public synchronized static PatientDto convertModelToDto(final Patient patient) {
+		PatientDto patientDto = null;
+		// getter of orgId has lower 'o' from engage1.0
+		if (patient != null) {
+			patientDto= new PatientDto();
+			patientDto.setEmail(patient.getEmail());
+			patientDto.setFirstName(patient.getFirstName());
+			patientDto.setLastName(patient.getLastName());
+			patientDto.setPhone(patient.getPhone());
+			patientDto.setDeviceToken(patient.getDeviceToken());
+			patientDto.setStatus(patient.getStatus());
+			patientDto.setCreateDate(patient.getCreateDate());
+			patientDto.setUpdateDate(patient.getUpdateDate());
+			patientDto.setDob(patient.getDob());
+			patientDto.setClinicianId(patient.getClinicianId());
+			patientDto.setorgId(patient.getorgId());
+
+			patientDto.setEvents(patient.getEvents());
+			// To tackle edit issue
+			if (patient.getId() != 0) {
+				patientDto.setId(patient.getId());
+			}
+			patientDto.setPathwayId(patient.getPathwayId());
+			patientDto.setPathwayName(patient.getPathwayName());
+		}
+		return patientDto;
+	}
 }

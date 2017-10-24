@@ -44,8 +44,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	private TokenStore tokenStore;
 */
 	
-	@Autowired
-	public ClientDetailsService clientDetailsService;
+	
 	/**
 	 * TokenServices configured with JwtTokenStore and JwtAccessTokenConverter
 	 * is leveraged here.
@@ -95,7 +94,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public ResourceServerTokenServices tokenServices() {
 		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
 		defaultTokenServices.setTokenStore(tokenStore());
-		defaultTokenServices.setClientDetailsService(clientDetailsService);
+		//defaultTokenServices.setClientDetailsService(clientDetailsService);
 		return defaultTokenServices;
 	}
 	

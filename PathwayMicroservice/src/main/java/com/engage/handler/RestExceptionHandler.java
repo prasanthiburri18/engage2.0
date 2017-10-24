@@ -13,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.engage.commons.exception.DataTamperingException;
+import com.engage.exception.PatientNotAcceptedException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -89,6 +90,18 @@ private static Logger LOGGER = LoggerFactory.getLogger(RestExceptionHandler.clas
 		
 		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
 				HttpStatus.PRECONDITION_FAILED, request);
+	}
+	
+	
+	@ExceptionHandler(PatientNotAcceptedException.class)
+	public ResponseEntity<Object> handlePatientNotAcceptedException(
+			PatientNotAcceptedException ex, WebRequest request) {
+		
+		
+		LOGGER.info("Handling "+ex.getClass().getName());
+		
+		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
+				HttpStatus.NO_CONTENT, request);
 	}
 
 }

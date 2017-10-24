@@ -1,26 +1,24 @@
 package com.engage.dao;
 
-import java.math.BigInteger;
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.engage.model.Organization;
-import com.engage.model.User;
 
 @Repository
 @Transactional
 public class OrganizationDao {
   
+	private static Logger LOGGER = LoggerFactory.getLogger(OrganizationDao.class);
+	
   @Autowired
   private SessionFactory _sessionFactory;
   
@@ -44,7 +42,7 @@ public class OrganizationDao {
 	    return organization;
 	  }catch(Exception e)
 	  {
-		  System.out.println(e.getMessage());
+		  LOGGER.info(e.getMessage());
 		  return organization;
 	  }
 	 

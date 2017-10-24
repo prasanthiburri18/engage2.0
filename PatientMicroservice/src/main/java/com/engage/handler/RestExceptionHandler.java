@@ -13,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.engage.commons.exception.DataTamperingException;
+import com.engage.exception.PatientNotFoundException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -89,5 +90,24 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
 				HttpStatus.PRECONDITION_FAILED, request);
+	}
+	
+	
+	
+	/**
+	 * This is exclusive for Data Tampering
+	 * @param ex
+	 * @param request
+	 * @return
+	 */
+	@ExceptionHandler(PatientNotFoundException.class)
+	public ResponseEntity<Object> handlePatientNotFoundException(
+			PatientNotFoundException ex, WebRequest request) {
+	
+		LOGGER.info("Handling "+ex.getClass().getName());
+		
+		LOGGER.warn("Return empty List of patients");
+		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
+				HttpStatus.NO_CONTENT, request);
 	}
 }

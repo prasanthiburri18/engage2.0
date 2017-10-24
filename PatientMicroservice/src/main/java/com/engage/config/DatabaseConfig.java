@@ -61,6 +61,7 @@ public class DatabaseConfig {
   }
   
   @Bean
+	@Profile(value={"dev","staging","prod"})
   public DataSource dataSourceSystem() {
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
     dataSource.setDriverClassName(DB_DRIVER);

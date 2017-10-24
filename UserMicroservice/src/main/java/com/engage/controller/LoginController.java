@@ -69,9 +69,12 @@ public class LoginController {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 	@Value("${emailMicroService.URL}")
-	public String emailMicroserviceURL;
+	private String emailMicroserviceURL;
 	@Value("${portal.URL}")
-	public String portalURL;
+	private String portalURL;
+	
+	@Value("${patientMicroserviceUrl}")
+	private String patientMicroserviceUrl;
 	
 	  @Autowired private OAuth2RestTemplate restTemplate;
 	 
@@ -294,7 +297,7 @@ public class LoginController {
 					resmessage = "Thank you for joining. You will start receiving messages.";
 
 				}
-				String res = restTemplate.postForObject("http://localhost:8080/PatientMicroservice/api/v1/patientreply",
+				String res = restTemplate.postForObject(patientMicroserviceUrl+"/api/v1/patientreply",
 						data1, String.class);
 			
 				

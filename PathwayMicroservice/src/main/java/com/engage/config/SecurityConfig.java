@@ -18,18 +18,13 @@ import org.springframework.security.oauth2.client.token.grant.client.ClientCrede
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
 @EnableOAuth2Client
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
-	/**
-	 * Encoder for password hashing. Changing logRounds is not advisable
-	 * 
-	 * @param args
-	 */
 
 	@Bean
 	@Override
