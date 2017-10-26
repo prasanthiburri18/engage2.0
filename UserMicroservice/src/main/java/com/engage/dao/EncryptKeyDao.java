@@ -9,19 +9,18 @@ import com.engage.model.EncryptionKey;
 
 @Repository
 @Transactional
-public class EncryptKeyDao extends AbstractDao{
+public class EncryptKeyDao extends AbstractDao<EncryptionKey> {
 
-	
-	public EncryptionKey getKeyById(int id){
-		
+	public EncryptionKey getKeyById(int id) {
+
 		return getSession().get(EncryptionKey.class, id);
 	}
-	
-public EncryptionKey getFirstKey(){
-		
-	Criteria crit = getSession().createCriteria(EncryptionKey.class);
-	  
-	EncryptionKey key = (EncryptionKey) crit.list().get(1);
+
+	public EncryptionKey getFirstKey() {
+
+		Criteria crit = getSession().createCriteria(EncryptionKey.class);
+
+		EncryptionKey key = (EncryptionKey) crit.list().get(1);
 		return key;
 	}
 }

@@ -1,8 +1,6 @@
 package com.engage.dao;
 
-import java.util.List;
-
-import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -15,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class UserDaoTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserDaoTest.class);

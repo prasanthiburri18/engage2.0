@@ -51,7 +51,9 @@ public class SchedulerController {
 
 	@Value("${pathwayMicroserviceUrl}")
 	private String pathwayMicroserviceUrl;
-
+	
+	@Value("${phiPageUrl}")
+	private String phiPageUrl;
 	// private RestTemplate restTemplate = new RestTemplate();
 	@Autowired
 	private OAuth2RestTemplate restTemplate;
@@ -243,7 +245,9 @@ public class SchedulerController {
 
 					if (phistatus.equals("yes")) {
 						// message="http://35.166.195.23:8080/users/phi.html?bid="+recordid+"&pathwayid="+pathwayid;
-						message = "https://engage-staging.quantifiedcare.com/users/phi.html?bid=" + recordid
+						//message = "https://engage-staging.quantifiedcare.com/users/phi.html?bid=" + recordid
+							//	+ "&pathwayid=" + pathwayid;
+						message = phiPageUrl+"?bid=" + recordid
 								+ "&pathwayid=" + pathwayid;
 
 					}
@@ -346,7 +350,9 @@ public class SchedulerController {
 					if (phistatus.equals("yes")) {
 
 						// message="http://35.166.195.23:8080/users/phi.html?bid="+recordid+"&pathwayid="+pathwayid;
-						message = "https://engage-staging.quantifiedcare.com/users/phi.html?bid=" + recordid
+						//message = "https://engage-staging.quantifiedcare.com/users/phi.html?bid=" + recordid
+							//	+ "&pathwayid=" + pathwayid;
+						message = phiPageUrl+"?bid=" + recordid
 								+ "&pathwayid=" + pathwayid;
 
 					}

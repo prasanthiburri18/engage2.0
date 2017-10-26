@@ -3,6 +3,7 @@ package com.engage.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class OAuth2RestTemplateTest {
 	
 	private static final Logger logger = LoggerFactory.getLogger(OAuth2RestTemplateTest.class);

@@ -5,7 +5,6 @@ package com.engage.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,7 @@ public class PatientService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientService.class);
 	@Autowired
-	IPatientDao patientDaoJpa;
+	private IPatientDao patientDaoJpa;
 
 	public List<PatientDto> getPatientsByPhoneNumber(String phone) throws PatientNotFoundException {
 		List<PatientDto> patientDtoList = null;

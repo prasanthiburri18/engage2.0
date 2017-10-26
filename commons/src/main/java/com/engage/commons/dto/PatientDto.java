@@ -1,4 +1,4 @@
-package com.engage.dto;
+package com.engage.commons.dto;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -15,6 +15,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.engage.commons.validators.annotations.ValidPhoneNumber;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**

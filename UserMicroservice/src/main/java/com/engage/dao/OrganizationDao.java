@@ -15,16 +15,16 @@ import com.engage.model.Organization;
 
 @Repository
 @Transactional
-public class OrganizationDao {
+public class OrganizationDao extends AbstractDao<Organization>{
   
 	private static Logger LOGGER = LoggerFactory.getLogger(OrganizationDao.class);
 	
   @Autowired
   private SessionFactory _sessionFactory;
   
-  private Session getSession() {
+ /* private Session getSession() {
     return _sessionFactory.getCurrentSession();
-  }
+  }*/
 
   public Integer save(Organization organization) {
     Integer id=(Integer) getSession().save(organization);

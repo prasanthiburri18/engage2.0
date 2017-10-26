@@ -50,24 +50,27 @@ public class DatabaseConfig {
   private String ENTITYMANAGER_PACKAGES_TO_SCAN;
   
   @Bean
-  @Profile("local")
+	@Profile(value={"dev","staging","prod"})
+  
   public DataSource dataSource() {
+    DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    dataSource.setDriverClassName(DB_DRIVER);
+    dataSource.setUrl(DB_URL);
+
+    dataSource.setUsername(System.getProperty("dbUsername"));
+    dataSource.setPassword(System.getProperty("dbPassword"));
+
+    return dataSource;
+  }
+  
+  @Bean
+  @Profile("local")
+  public DataSource dataSourceLocalSystem() {
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
     dataSource.setDriverClassName(DB_DRIVER);
     dataSource.setUrl(DB_URL);
     dataSource.setUsername(DB_USERNAME);
     dataSource.setPassword(DB_PASSWORD);
-    return dataSource;
-  }
-  
-  @Bean
-	@Profile(value={"dev","staging","prod"})
-  public DataSource dataSourceSystem() {
-    DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    dataSource.setDriverClassName(DB_DRIVER);
-    dataSource.setUrl(DB_URL);
-    dataSource.setUsername(System.getProperty("dbUsername"));
-    dataSource.setPassword(System.getProperty("dbPassword"));
     return dataSource;
   }
 

@@ -3,7 +3,6 @@ package com.engage.controller;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,11 +21,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,14 +41,12 @@ import com.engage.dao.UserRolesDao;
 import com.engage.model.Organization;
 import com.engage.model.User;
 import com.engage.model.UserRoles;
+import com.engage.service.UserService;
 import com.engage.util.AdvancedEncryptionStandard;
 import com.engage.util.JsonMessage;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
 /**
@@ -72,15 +66,16 @@ public class LoginController {
 	private String emailMicroserviceURL;
 	@Value("${portal.URL}")
 	private String portalURL;
-	
+
 	@Value("${patientMicroserviceUrl}")
 	private String patientMicroserviceUrl;
-	
-	  @Autowired private OAuth2RestTemplate restTemplate;
-	 
 
-	//private RestTemplate restTemplate = new RestTemplate();
+	@Autowired
+	private OAuth2RestTemplate restTemplate;
 
+	// private RestTemplate restTemplate = new RestTemplate();
+	@Autowired
+	private UserService userService;
 	@Autowired
 	private UserDao _userDao;
 	@Autowired
@@ -102,8 +97,6 @@ public class LoginController {
 	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-		
 
 	/**
 	 * User Registration Method
@@ -137,8 +130,6 @@ public class LoginController {
 				return response;
 			} else {
 
-			
-			
 				Map<String, Object> data1 = new HashMap<String, Object>();
 				data1.put("from", "EngageApp<support@quantifiedcare.com>");
 				data1.put("to", user.getEmail());
@@ -151,25 +142,25 @@ public class LoginController {
 								+ "'>Verify</a><br><br>Thank You,<br>Team Engage at Quantified Care");
 				data1.put("status", true);
 
-				
-				final String simpleMailUrl = emailMicroserviceURL + "/email/send";
-				restTemplate.postForObject(simpleMailUrl, data1, String.class);
-				
+				userService.sendEmail(data1);
+				// final String simpleMailUrl = emailMicroserviceURL +
+				// "/email/send";
+				// restTemplate.postForObject(simpleMailUrl, data1,
+				// String.class);
+
 				Organization org = new Organization();
 				org.setName(user.getPracticeName());
 
 				Integer orgid = _organizationDao.save(org);
 				user.setOrgid(orgid);
-			
+
 				user.setPassword(passwordEncoder.encode(user.getPassword()));
-			
 
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
 				user.setCreateDate(timestamp);
 				user.setUpdateDate(timestamp);
 
-				
 				BigInteger id = _userDao.save(user);
 
 				UserRoles userRoles = new UserRoles();
@@ -207,9 +198,10 @@ public class LoginController {
 		try {
 			Integer rid = Integer.parseInt(json.get("id").toString());
 
-			List resulst = _userDao.getPatientpathwayblockById(rid);
+			// List results = _userDao.getPatientpathwayblockById(rid);
+			List results = userService.getPatientpathwayblockById(rid);
 			response.setMessage("Scheduled data.");
-			response.setData(resulst);
+			response.setData(results);
 			response.setStatuscode(200);
 			return response;
 
@@ -235,7 +227,8 @@ public class LoginController {
 		try {
 			String pdob = json.get("dob");
 
-			int result = _userDao.verifyPatientInfobydob(pdob);
+			// int result = _userDao.verifyPatientInfobydob(pdob);
+			int result = userService.verifyPatientInfobydob(pdob);
 			response.setData(result);
 			response.setStatuscode(200);
 			return response;
@@ -297,10 +290,9 @@ public class LoginController {
 					resmessage = "Thank you for joining. You will start receiving messages.";
 
 				}
-				String res = restTemplate.postForObject(patientMicroserviceUrl+"/api/v1/patientreply",
-						data1, String.class);
-			
-				
+				String res = restTemplate.postForObject(patientMicroserviceUrl + "/api/v1/patientreply", data1,
+						String.class);
+
 				JsonFactory factory = new JsonFactory();
 				JsonParser parser = factory.createParser(res);
 				while (!parser.isClosed()) {
@@ -486,7 +478,7 @@ public class LoginController {
 				User user = _userDao.getById(json.get("emailid"));
 				response.setMessage("Password sent to your email.");
 				response.setStatuscode(200);
-				RestTemplate restTemplate = new RestTemplate();
+				// RestTemplate restTemplate = new RestTemplate();
 				Map<String, Object> data = new HashMap<String, Object>();
 				data.put("from", "EngageApp<bhanu735@gmail.com>");
 				data.put("to", user.getEmail());
@@ -500,7 +492,9 @@ public class LoginController {
 				data.put("status", true);
 				// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
 				// data,String.class );
-				restTemplate.postForObject(emailMicroserviceURL + "/email/send", data, String.class);
+				userService.sendEmail(data);
+				// restTemplate.postForObject(emailMicroserviceURL +
+				// "/email/send", data, String.class);
 				// restTemplate.postForObject("http://localhost:8080/email/send",
 				// data,String.class );
 
@@ -526,8 +520,8 @@ public class LoginController {
 			if (request.getUserPrincipal() != null) {
 				String userEmail = request.getUserPrincipal().getName();
 
-				User validateUser = _userDao.getById(userEmail);
-
+				// User validateUser = _userDao.getById(userEmail);
+				User validateUser = userService.getUserByEmail(userEmail);
 				Map<String, Object> data1 = new HashMap<String, Object>();
 				data1.put("UserBacsicInfo", validateUser);
 				response.setMessage("User info");

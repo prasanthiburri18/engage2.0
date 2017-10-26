@@ -36,6 +36,7 @@ import com.engage.dao.UserRolesDao;
 import com.engage.model.Organization;
 import com.engage.model.User;
 import com.engage.model.UserRoles;
+import com.engage.service.UserService;
 import com.engage.util.JsonMessage;
 
 /**
@@ -60,7 +61,10 @@ public class UserController {
 	private UserRolesDao _userRolesDao;
 	@Autowired
 	private OrganizationDao _organizationDao;
-
+	
+	@Autowired 
+	private UserService userService;
+	
 	@Value("${portal.URL}")
 	public String portalURL;
 
@@ -75,13 +79,14 @@ public class UserController {
 	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
+	
 	/**
+	 * Not used any more
 	 * Load user Profile Method
 	 * 
 	 * @Inputparam JsonObject
 	 * @return JsonObject
-	 */
+	 *//*
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/profile", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage getProfile(@RequestBody Map<String, String> json) {
@@ -90,7 +95,8 @@ public class UserController {
 			Map<String, Object> data = new HashMap<String, Object>();
 
 			if (!(_userDao.getByEmail(json.get("emailid"))).isEmpty()) {
-				List<User> user = _userDao.getByEmail(json.get("emailid"));
+				//List<User> user = _userDao.getByEmail(json.get("emailid"));
+				User user = userService.getUserByEmail(json.get("emailid"));
 				data.put("userData", user);
 				response.setMessage("User profile");
 				response.setStatuscode(200);
@@ -107,7 +113,7 @@ public class UserController {
 			return response;
 		}
 	}
-
+*/
 	/**
 	 * Change Password Method
 	 * 
@@ -123,14 +129,11 @@ public class UserController {
 		JsonMessage response = new JsonMessage();
 		try {
 			if (!(json.get("userid")).isEmpty()) {
-				// User
-				// user=_userDao.getByUserName(json.get("emailid"),AdvancedEncryptionStandard.decrypt(json.get("oldpassword")));
+			
 				BigInteger uid = new BigInteger(json.get("userid"));
 				User user = _userDao.getByUserByUid(uid);
 				final String password = json.get("password");
-				// Engage2.0 change
 				user.setPassword(passwordEncoder.encode(password));
-				// user.setPassword(AdvancedEncryptionStandard.encrypt(password));
 				_userDao.update(user);
 				response.setMessage("Password updated successfully.");
 				response.setStatuscode(200);
@@ -208,22 +211,7 @@ public class UserController {
 				userRoles.setRoleId(1);
 				_userRolesDao.save(userRoles);
 
-				// RestTemplate restTemplate = new RestTemplate();
-				// Map<String, Object> data1 = new HashMap<String, Object>();
-				// data1.put("from","EngageApp<support@quantifiedcare.com>");
-				// data1.put("to",user.getEmail());
-				// data1.put("subject","Added as team member");
-				// data1.put("text","Hi
-				// <b>"+user.getFullName()+",</b><br><br>Congratulations! Your
-				// have been added as team member. Please login with your email
-				// and password is "+pp+" <br> For Login <a
-				// href='"+portalURL+"'>Click Here</a><br>Thank You,<br>Team
-				// Engage at Quantified Care");
-				// data1.put("status",true);
-				// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
-				// data1,String.class );
-				// restTemplate.postForObject("http://localhost:8080/EmailMicroservice/email/send",
-				// data1,String.class );
+			
 
 				response.setMessage("Team Member added successfully");
 				response.setStatuscode(200);
@@ -274,7 +262,8 @@ public class UserController {
 			// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
 			// data1,String.class );
 			LOG.info("Sending Email to "+ useremail);
-			restTemplate.postForObject(emailMicroserviceURL + "/email/send", data1, String.class);
+			//restTemplate.postForObject(emailMicroserviceURL + "/email/send", data1, String.class);
+			userService.sendEmail(data1);
 			LOG.info("Email sent to team member: " + username);
 			response.setMessage("Email sent successfully");
 			response.setStatuscode(200);
@@ -309,8 +298,9 @@ public class UserController {
 		try {
 			
 			Long orid = Long.parseLong(json.get("orgid"));
-			List<User> users = _userDao.getByOrgids(orid);
-			response.setMessage("Team Memebers List.");
+		//	List<User> users = _userDao.getByOrgids(orid);
+			List<User> users = userService.getUsersByOrgId(orid);
+			response.setMessage("Team Members List.");
 			response.setData(users);
 			response.setStatuscode(200);
 			return response;

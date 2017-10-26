@@ -13,7 +13,6 @@ import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +24,14 @@ import com.engage.util.AdvancedEncryptionStandard;
 
 @Repository
 @Transactional
-public class UserDao {
+public class UserDao extends AbstractDao<User>{
   
-  @Autowired
+ /* @Autowired
   private SessionFactory _sessionFactory;
   
   private Session getSession() {
     return _sessionFactory.getCurrentSession();
-  }
+  }*/
 
   public BigInteger save(User user) {
     BigInteger id=(BigInteger) getSession().save(user);

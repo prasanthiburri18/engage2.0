@@ -50,8 +50,22 @@ public class DatabaseConfig {
   private String ENTITYMANAGER_PACKAGES_TO_SCAN;
   
   @Bean
-  @Profile("local")
+	@Profile(value={"dev","staging","prod"})
+  
   public DataSource dataSource() {
+    DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    dataSource.setDriverClassName(DB_DRIVER);
+    dataSource.setUrl(DB_URL);
+
+    dataSource.setUsername(System.getProperty("dbUsername"));
+    dataSource.setPassword(System.getProperty("dbPassword"));
+
+    return dataSource;
+  }
+  
+  @Bean
+  @Profile("local")
+  public DataSource dataSourceLocalSystem() {
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
     dataSource.setDriverClassName(DB_DRIVER);
     dataSource.setUrl(DB_URL);
@@ -59,22 +73,7 @@ public class DatabaseConfig {
     dataSource.setPassword(DB_PASSWORD);
     return dataSource;
   }
-  
-  @Bean
-	@Profile(value={"dev","staging","prod"})
-  public DataSource dataSourceSystem() {
-    DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    dataSource.setDriverClassName(DB_DRIVER);
-    dataSource.setUrl(DB_URL);
-    dataSource.setUsername(System.getProperty("dbUsername"));
-    dataSource.setPassword(System.getProperty("dbPassword"));
-    return dataSource;
-  }
 
-  /**
-   * Change datasource for profiles other than local
-   * @return
-   */
   @Bean
   public LocalSessionFactoryBean sessionFactory() {
     LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
@@ -97,7 +96,7 @@ public class DatabaseConfig {
     return transactionManager;
   }
   
-
+  
   @Bean
 	@Autowired
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -129,6 +128,4 @@ public class DatabaseConfig {
 		 transactionManager.setEntityManagerFactory( entityManagerFactory.getObject());
 		return transactionManager;
 	}
-
-
-} 
+} // class DatabaseConfig

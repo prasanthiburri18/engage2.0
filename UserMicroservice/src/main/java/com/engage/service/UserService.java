@@ -1,6 +1,5 @@
 package com.engage.service;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,8 +18,10 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
 import com.engage.commons.exception.DataTamperingException;
+import com.engage.commons.exception.UserNotFoundException;
 import com.engage.dao.OrganizationDao;
 import com.engage.dao.UserDao;
+import com.engage.dao.jpa.IUserDao;
 import com.engage.model.Organization;
 import com.engage.model.ScheduleJson;
 import com.engage.model.User;
@@ -35,6 +36,8 @@ public class UserService {
 	@Autowired
 	private UserDao _userDao;
 
+	@Autowired
+	private IUserDao userDaoJpa;
 	@Autowired
 	private OrganizationDao _organizationDao;
 
@@ -55,6 +58,19 @@ public class UserService {
 	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	public void sendEmail(Map<String, Object> data) {
+		final String simpleMailUrl = emailMicroserviceURL + "/email/send";
+		restTemplate.postForObject(simpleMailUrl, data, String.class);
+	}
+
+	public User getUserByEmail(String email) throws UserNotFoundException {
+		User user = userDaoJpa.findUserByEmailIgnoreCase(email);
+		if (user == null) {
+			throw new UserNotFoundException("Given email id doesn't exists");
+		}
+		return user;
+	}
 
 	public boolean register(User user) throws Exception {
 		boolean registerFlag = false;
@@ -88,8 +104,8 @@ public class UserService {
 		user.setCreateDate(timestamp);
 		user.setUpdateDate(timestamp);
 
-		BigInteger id = _userDao.save(user);
-
+		_userDao.save(user);
+		registerFlag = true;
 		return registerFlag;
 	}
 
@@ -125,9 +141,9 @@ public class UserService {
 	public int verifyPatientInfobydob(String pdob) {
 		List<Object> patientList = restTemplate.getForObject(patientMicroserviceUrl + "/api/v1/patient/dob/" + pdob,
 				List.class);
-		int size=0;
-		if(patientList!=null){
-			size=patientList.size();
+		int size = 0;
+		if (patientList != null) {
+			size = patientList.size();
 		}
 		return size;
 
@@ -152,7 +168,7 @@ public class UserService {
 			Map<String, String> json = new HashMap<>();
 			json.put("id", Integer.toString(id));
 			List<Object[]> results = restTemplate
-					.postForObject(pathwayMicroserviceUrl + "/api/v1//getPatientpathwayblockbyId", json, List.class);
+					.postForObject(pathwayMicroserviceUrl + "/api/v1/getPatientpathwayblockbyId", json, List.class);
 			;
 			ArrayList blockres = new ArrayList();
 			Object[] obj = new Object[] {};
@@ -218,6 +234,12 @@ public class UserService {
 			return scheduledData;
 		}
 
+	}
+
+	public List<User> getUsersByOrgId(Long orid) {
+		List<User> users = null;
+		users = userDaoJpa.getUserByOrgid(orid);
+		return users;
 	}
 
 }

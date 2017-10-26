@@ -12,7 +12,7 @@ import com.engage.model.User;
 @Repository
 public interface IUserDao extends JpaRepository<User, BigInteger>{
 
-	public List<User> getUserByOrgid(int orgid);
+	public List<User> getUserByOrgid(Long orgid);
 	
 	@Query("select distinct practiceName from User")
 	public List<String> getAllPracticeNames();
