@@ -236,7 +236,7 @@ public class UserService {
 
 	}
 
-	public List<User> getUsersByOrgId(Long orid) {
+	public List<User> getUsersByOrgId(Integer orid) {
 		List<User> users = null;
 		users = userDaoJpa.getUserByOrgid(orid);
 		return users;

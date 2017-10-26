@@ -8,14 +8,30 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.engage.model.User;
-
+/**
+ * 
+ * @author ai
+ *
+ */
 @Repository
 public interface IUserDao extends JpaRepository<User, BigInteger>{
-
-	public List<User> getUserByOrgid(Long orgid);
+	/**
+	 * 
+	 * @param orgid
+	 * @return
+	 */
+	public List<User> getUserByOrgid(Integer orgid);
 	
+	/**
+	 * 
+	 * @return
+	 */
 	@Query("select distinct practiceName from User")
 	public List<String> getAllPracticeNames();
-	
+	/**
+	 * 
+	 * @param string
+	 * @return
+	 */
 	public User findUserByEmailIgnoreCase(String string);
 }

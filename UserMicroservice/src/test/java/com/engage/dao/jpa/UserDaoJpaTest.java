@@ -19,35 +19,37 @@ import io.jsonwebtoken.lang.Assert;
 @Ignore
 public class UserDaoJpaTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoJpaTest.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(UserDaoJpaTest.class);
 	@Autowired
 	private IUserDao userDaoJpa;
-	
+
 	@Test
-	public void getUsersByOrgIdTest(){
-		
-		Long id =(long) 322;
+	public void getUsersByOrgIdTest() {
+
+		int id = 322;
 		List<User> users = userDaoJpa.getUserByOrgid(id);
-		
+
 		Assert.notEmpty(users);
 	}
-	
+
 	@Test
-	public void getAllPracticeNameTest(){
+	public void getAllPracticeNameTest() {
 		List<String> practiceNames = userDaoJpa.getAllPracticeNames();
 		LOGGER.info(practiceNames.toString());
-		
+
 		Assert.notEmpty(practiceNames);
-		
+
 	}
-	
+
 	@Test
-	public void findByEmailIgnoreCaseTest(){
-		
+	public void findByEmailIgnoreCaseTest() {
+
 		LOGGER.info("Getting users by email");
-		User user = userDaoJpa.findUserByEmailIgnoreCase("quantifiedcar111@gmail.com");
+		User user = userDaoJpa
+				.findUserByEmailIgnoreCase("quantifiedcar111@gmail.com");
 		LOGGER.info(user.toString());
 		Assert.notNull(user);
 	}
-	
+
 }

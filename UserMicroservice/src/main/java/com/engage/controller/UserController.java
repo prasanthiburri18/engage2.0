@@ -49,7 +49,7 @@ import com.engage.util.JsonMessage;
 @RestController
 @RequestMapping(value = "/api/v1")
 public class UserController {
-	private static Logger LOG = LoggerFactory.getLogger(UserController.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 	
 	@Autowired
 	private OAuth2RestTemplate restTemplate;
@@ -261,10 +261,10 @@ public class UserController {
 			data1.put("status", true);
 			// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
 			// data1,String.class );
-			LOG.info("Sending Email to "+ useremail);
+			LOGGER.info("Sending Email to "+ useremail);
 			//restTemplate.postForObject(emailMicroserviceURL + "/email/send", data1, String.class);
 			userService.sendEmail(data1);
-			LOG.info("Email sent to team member: " + username);
+			LOGGER.info("Email sent to team member: " + username);
 			response.setMessage("Email sent successfully");
 			response.setStatuscode(200);
 			return response;
@@ -297,9 +297,10 @@ public class UserController {
 		}
 		try {
 			
-			Long orid = Long.parseLong(json.get("orgid"));
+			Integer orid = Integer.parseInt(json.get("orgid"));
 		//	List<User> users = _userDao.getByOrgids(orid);
 			List<User> users = userService.getUsersByOrgId(orid);
+			LOGGER.info("No of team members in the organization: " +users.size());
 			response.setMessage("Team Members List.");
 			response.setData(users);
 			response.setStatuscode(200);
@@ -329,7 +330,7 @@ public class UserController {
 
 			Map<String, String> errormessages = ConstraintValidationUtils.getMapOfValidations(violations);
 			if (user.getId() == null || user.getId().toString().matches("[0-9]")) {
-				LOG.info("Invalid User Id");
+				LOGGER.info("Invalid User Id");
 				errormessages.put("id", "Invalid user id format");
 			}
 			if (!checkOrganizationIdFromAuthentication(Long.toString(user.getOrgid()))) {
