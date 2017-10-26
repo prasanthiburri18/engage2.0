@@ -57,7 +57,7 @@ public class PatientDto {
 	 */
 	@NotNull(message = "Phone number cannot be empty")
 	@NotBlank(message = "Phone number cannot be empty")
-	@ValidPhoneNumber(message = "Invalid phone number format.")
+	@Pattern(regexp="^([1-9][0-9]{9})$", message="Invalid phone number format")
 	private String phone;
 	private String deviceToken;
 	
