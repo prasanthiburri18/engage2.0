@@ -1,11 +1,12 @@
 package com.engage;
 
 import javax.servlet.http.HttpServletRequest;
-import com.netflix.zuul.context.RequestContext;
-import com.netflix.zuul.ZuulFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.netflix.zuul.ZuulFilter;
+import com.netflix.zuul.context.RequestContext;
 
 public class SimpleFilter extends ZuulFilter {
 

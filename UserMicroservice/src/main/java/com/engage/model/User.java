@@ -67,7 +67,7 @@ public class User {
 	@NotNull(message = "Practice name cannot be empty.")
 	@NotBlank(message = "Practice name cannot be empty.")
 	@Length(max = 60, message = "Practice exceeds {max} characters.")
-	@Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Only alphabet characters are allowed.")
+	@Pattern(regexp = "^[a-zA-Z0-9\\s]*$", message = "Only alphabet characters are allowed.")
 	@Column(name = "pratice_name")
 	private String practiceName;
 	/**

@@ -1,7 +1,5 @@
 package com.engage.model;
 
-import java.math.BigInteger;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,7 +9,6 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -39,7 +36,6 @@ public class EncryptionKey {
 	/**
 	 * Set as Y in constructor by default
 	 */
-	@Length
 	@Pattern(regexp="^[YN]*$", message="Invalid status")
 	@Column(name="is_active")
 	private char isActive;
