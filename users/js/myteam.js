@@ -53,10 +53,10 @@ $(document).ready(function () {
         "data": dataSet,
         "columns":
                 [
-                    {"data": "fullname"},
+                    {"data": "fullName"},
                     {"data": "email"},
                     {"data": "phone"},
-                    {"data": "role"}
+                    {"data": "userType"}
 
                 ],
         "columnDefs": [
@@ -77,7 +77,7 @@ $(document).ready(function () {
             },
             {
                 "render": function (data, type, row) {
-                    var userrole = row.role;
+                    var userrole = row.userType;
                     var displayrole = '';
                     if (userrole == 'A')
                     {

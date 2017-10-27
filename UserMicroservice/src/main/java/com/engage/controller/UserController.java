@@ -299,6 +299,7 @@ public class UserController {
 			
 			Integer orid = Integer.parseInt(json.get("orgid"));
 		//	List<User> users = _userDao.getByOrgids(orid);
+			LOGGER.info("Organization of team: "+orid);
 			List<User> users = userService.getUsersByOrgId(orid);
 			LOGGER.info("No of team members in the organization: " +users.size());
 			response.setMessage("Team Members List.");
@@ -307,6 +308,7 @@ public class UserController {
 			return response;
 
 		} catch (Exception e) {
+			LOGGER.warn(e.getMessage());
 			response.setMessage("No Data available.");
 			response.setStatuscode(204);
 			return response;
