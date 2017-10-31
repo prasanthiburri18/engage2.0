@@ -41,6 +41,7 @@ import com.engage.dao.BlocksDao;
 import com.engage.dao.EventsDao;
 import com.engage.dao.PathwayDao;
 import com.engage.dto.PathwayAndEventNames;
+import com.engage.dto.WrapperPathwayAndEventNames;
 import com.engage.exception.PatientNotAcceptedException;
 import com.engage.model.Blocks;
 import com.engage.model.Events;
@@ -870,10 +871,12 @@ public class PathwayController {
 	 * @return
 	 */
 	@RequestMapping(value="/patientpathwaylist", method=RequestMethod.GET)
-	public ResponseEntity<List<PathwayAndEventNames>> getPathwayandEventNames(@RequestParam("orgId") Long orgId){
+	public ResponseEntity<WrapperPathwayAndEventNames> getPathwayandEventNames(@RequestParam("orgId") Long orgId){
 		
 		List<PathwayAndEventNames> list = pathwayService.getPathwayEventNamesAndAcceptedStatus(orgId);
-		return new ResponseEntity<List<PathwayAndEventNames>>(list,HttpStatus.OK);
+		WrapperPathwayAndEventNames wrapper = new WrapperPathwayAndEventNames();
+		wrapper.setList(list);
+		return new ResponseEntity<WrapperPathwayAndEventNames>(wrapper,HttpStatus.OK);
 		
 	}
 	
