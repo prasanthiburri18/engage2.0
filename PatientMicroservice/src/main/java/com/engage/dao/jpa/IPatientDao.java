@@ -22,4 +22,7 @@ public interface IPatientDao extends JpaRepository<Patient,Long>{
 	
 	
 	public List<Patient> findPatientByDob(Date dob);
+	
+	public List<Patient> findByOrgId(Long orgId);
+
 }

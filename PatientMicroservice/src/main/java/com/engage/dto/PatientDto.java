@@ -37,7 +37,7 @@ public class PatientDto {
 	/**
 	 * Current not present in Client side
 	 */
-	
+
 	@Email
 	private String email;
 	@NotNull(message = "First name cannot be empty")
@@ -57,12 +57,11 @@ public class PatientDto {
 	 */
 	@NotNull(message = "Phone number cannot be empty")
 	@NotBlank(message = "Phone number cannot be empty")
-	@Pattern(regexp="^([1-9][0-9]{9})$", message="Invalid phone number format")
+	@Pattern(regexp = "^([1-9][0-9]{9})$", message = "Invalid phone number format")
 	private String phone;
 	private String deviceToken;
-	
-	
-	@Pattern(regexp="^[YNyn]*$", message="Invalid Status")
+
+	@Pattern(regexp = "^[YNyn]*$", message = "Invalid Status")
 	@Length(min = 1, max = 1, message = "Invalid Status")
 	private String status;
 	private Timestamp createDate;
@@ -91,11 +90,14 @@ public class PatientDto {
 
 	@NotNull(message = "Invalid Date of birth")
 	@Past(message = "Invalid Date of birth")
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="EST")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "EST")
 	private Date dob;
 
-	/*@Min(value = 1, message = "Invalid Clinician Id")
-	@Max(value = Integer.MAX_VALUE, message = "Invalid Clinician Id")*/
+	/*
+	 * @Min(value = 1, message = "Invalid Clinician Id")
+	 * 
+	 * @Max(value = Integer.MAX_VALUE, message = "Invalid Clinician Id")
+	 */
 	private long clinicianId;
 
 	@Min(value = 1, message = "Invalid Organization Id")
@@ -216,8 +218,10 @@ public class PatientDto {
 		this.orgId = orgId;
 	}
 
-	public PatientDto(String email, String firstName, String lastName, String phone, String deviceToken, String status,
-			Timestamp createDate, Timestamp updateDate, Date dob, long clinicianId, long orgId) {
+	public PatientDto(String email, String firstName, String lastName,
+			String phone, String deviceToken, String status,
+			Timestamp createDate, Timestamp updateDate, Date dob,
+			long clinicianId, long orgId) {
 		super();
 		this.email = email;
 		this.firstName = firstName;
@@ -230,6 +234,20 @@ public class PatientDto {
 		this.dob = dob;
 		this.clinicianId = clinicianId;
 		this.orgId = orgId;
+	}
+
+	public PatientDto(PatientDto patientDto) {
+		this.email = patientDto.email;
+		this.firstName = patientDto.firstName;
+		this.lastName = patientDto.lastName;
+		this.phone = patientDto.phone;
+		this.deviceToken = patientDto.deviceToken;
+		this.status = patientDto.status;
+		this.createDate = patientDto.createDate;
+		this.updateDate = patientDto.updateDate;
+		this.dob = patientDto.dob;
+		this.clinicianId = patientDto.clinicianId;
+		this.orgId = patientDto.orgId;
 	}
 
 }
