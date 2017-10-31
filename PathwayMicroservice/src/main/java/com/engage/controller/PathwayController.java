@@ -20,6 +20,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,6 +40,7 @@ import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.BlocksDao;
 import com.engage.dao.EventsDao;
 import com.engage.dao.PathwayDao;
+import com.engage.dto.PathwayAndEventNames;
 import com.engage.exception.PatientNotAcceptedException;
 import com.engage.model.Blocks;
 import com.engage.model.Events;
@@ -861,7 +864,20 @@ public class PathwayController {
 		return patientAcceptList;
 		
 	}
-
+	/**
+	 * Called from PatientMicroservice.
+	 * @param orgId
+	 * @return
+	 */
+	@RequestMapping(value="/patientpathwaylist", method=RequestMethod.GET)
+	public ResponseEntity<List<PathwayAndEventNames>> getPathwayandEventNames(@RequestParam("orgId") Long orgId){
+		
+		List<PathwayAndEventNames> list = pathwayService.getPathwayEventNamesAndAcceptedStatus(orgId);
+		return new ResponseEntity<List<PathwayAndEventNames>>(list,HttpStatus.OK);
+		
+	}
+	
+	
 	private Blocks desanitizeMessagesOfBlock(Blocks pathwayBlock)
 			throws JsonParseException, JsonMappingException, IOException {
 		if (pathwayBlock != null) {
