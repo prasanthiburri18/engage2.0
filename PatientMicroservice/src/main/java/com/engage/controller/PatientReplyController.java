@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.engage.dao.PathwayDao;
-import com.engage.dao.PathwayEventsDao;
 import com.engage.dao.PatientDao;
 import com.engage.dao.PatientPathwayDao;
 import com.engage.model.Patient;
@@ -43,10 +41,10 @@ public class PatientReplyController {
   private PatientDao _patientDao;
   @Autowired
   private PatientPathwayDao _patientPathwayDao;
-  @Autowired
-  private PathwayDao _pathwayDao;
-  @Autowired
-  private PathwayEventsDao _pathwayEventsDao;
+ // @Autowired
+  //private PathwayDao _pathwayDao;
+//  @Autowired
+ // private PathwayEventsDao _pathwayEventsDao;
   @Value("${countryCode}")
 	private String countryCode;
   

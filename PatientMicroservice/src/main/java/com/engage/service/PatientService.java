@@ -99,19 +99,20 @@ public class PatientService {
 					.map(p -> PatientDtoToModelUtils.convertModelToDto(p))
 					.collect(Collectors.toList());
 		} else {
-			LOGGER.warn("No patients found against given phone number");
+			LOGGER.warn("No patients found against given Organization Id");
 			throw new PatientNotFoundException(
-					"No patients found against the given phone number");
+					"No patients found against given Organization Id");
 		}
 		patientListDtos = new ArrayList<PatientListDto>();
 		
-		for (PatientDto p : patientDtoList) {
-			PathwayDto pathwayDto = restTemplate.getForObject(
-					pathwayMicroserviceBaseUrl
-							+ "/api/v1/patient/pathway?patientId=" + p.getId(),
-					PathwayDto.class);
+		PathwayDto pathwayDto = restTemplate.getForObject(
+				pathwayMicroserviceBaseUrl
+						+ "/api/v1/patientpathwaylist?orgId=" +orgId ,
+						PathwayDto.class);
+		/*for (PatientDto p : patientDtoList) {
+			
 			patientListDtos.add(new PatientListDto(p, pathwayDto));
-		}
+		}*/
 		return patientListDtos;
 	}
 }

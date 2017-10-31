@@ -41,8 +41,6 @@ import com.engage.commons.exception.ConstraintViolationException;
 import com.engage.commons.exception.DataTamperingException;
 import com.engage.commons.exception.InvalidAccessException;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
-import com.engage.dao.PathwayDao;
-import com.engage.dao.PathwayEventsDao;
 import com.engage.dao.PatientDao;
 import com.engage.dao.PatientPathwayDao;
 import com.engage.dto.PatientDto;
@@ -72,10 +70,10 @@ public class PatientController {
 	private PatientDao _patientDao;
 	@Autowired
 	private PatientPathwayDao _patientPathwayDao;
-	@Autowired
-	private PathwayDao _pathwayDao;
-	@Autowired
-	private PathwayEventsDao _pathwayEventsDao;
+	//@Autowired
+//	private PathwayDao _pathwayDao;
+	//@Autowired
+//	private PathwayEventsDao _pathwayEventsDao;
 
 	// private RestTemplate restTemplate = new RestTemplate();
 
