@@ -810,14 +810,19 @@ public class PatientController {
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	public @ResponseBody ResponseEntity<List<PatientListDto>> getPatientsList(
 			@RequestParam("orgId") Long orgId) throws DataTamperingException, PatientNotFoundException {
-		List<PatientListDto> list = null;
+		Map<Long,PatientListDto> list = null;
+		List<PatientListDto> listOfPatients =null;
 		if (checkOrganizationIdFromAuthentication(Long.toString(orgId))) {
 
 			list = patientService.getPatientList(orgId);
-
+			
+			if(list!=null){
+				listOfPatients =  list.values().stream().collect(Collectors.toList());
+			}
 		}
 
-		return new ResponseEntity<List<PatientListDto>>(list, HttpStatus.OK);
+		//return new ResponseEntity<Map<Long,PatientListDto>>(list, HttpStatus.OK);
+		return new ResponseEntity<List<PatientListDto>>(listOfPatients, HttpStatus.OK);
 	}
 
 	/**

@@ -87,6 +87,8 @@ public class RefererFilter extends GenericFilterBean {
 		 * LOGGER.info("Referer "+referer+" is valid"); chain.doFilter(request,
 		 * response); }
 		 */
+		
+		
 		List<Referer> referers = refererDao.findAll();
 
 		

@@ -1,16 +1,17 @@
 package com.engage.dto;
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 
 public class PathwayDto {
 
-	private long id;
+	private Long id;
 
 	private String pathwayName;
 	
-	private long orgId;
-	private long teamId;
+	private Long orgId;
+	private Long teamId;
 	
 	
 	
@@ -18,11 +19,11 @@ public class PathwayDto {
 	private Timestamp createDate;
 	private Timestamp updateDate;
 
-//	private Set<Events> events;
-//
-//	public Set<Events> getEvents() {
-//		return events;
-//	}
-//
-//	
+	private Set<String> events;
+
+	public Set<String> getEvents() {
+		return events;
+	}
+
+	
 }

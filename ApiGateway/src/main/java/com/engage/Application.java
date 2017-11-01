@@ -102,14 +102,15 @@ class GreetingController {
 		LOGGER.info("**" + req.getContextPath() + "**");
 		LOGGER.info("this is in greeting controller :" + name);
 		//LOGGER.error("this is in greeting controller :" + name);
-		
-		return "Hello, " + name + "!";
+		LOGGER.info(req.getUserPrincipal().toString());
+		return "Hello, " + req.getUserPrincipal().toString() + "!";
 	}
 	
 	@RequestMapping("/api/v1/initToken")
 	public ResponseEntity<String> getInitToken(HttpServletRequest req) {
 		LOGGER.info("**" + req.getContextPath() + "**");
 		LOGGER.info("this is in greeting controller :");
+		
 		//LOGGER.error("this is in greeting controller :" + name);
 		
 		return new ResponseEntity<String>("_csrf token", HttpStatus.OK);

@@ -14,6 +14,10 @@ public class PathwayAndEventNames {
 	private Integer pathwayId;
 	private String pathwayName;
 	private Integer eventId;
+	private Integer patientId;
+	private String eventName;
+	private Date acceptedDate;
+	private Integer orgId;
 
 	public Integer getPathwayId() {
 		return pathwayId;
@@ -57,9 +61,6 @@ public class PathwayAndEventNames {
 	public void setOrgId(Integer orgId) {
 		this.orgId = orgId;
 	}
-	private Integer patientId;
-	private String eventName;
-	private Date acceptedDate;
-	private Integer orgId;
+
 
 }

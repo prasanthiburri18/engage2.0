@@ -3,7 +3,7 @@
  */
 package com.engage.service;
 
-import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +31,24 @@ public class PatientServiceTest {
 	@Test
 	public void patientListTest() throws PatientNotFoundException{
 		Long orgId = new Long(285);
-		List<PatientListDto> pld=	patientService.getPatientList(orgId);
+		Map<Long,PatientListDto> pld=	patientService.getPatientList(orgId);
+		
+		for(Long l : pld.keySet()){
+			
+			logger.info(pld.get(l).toString());
+		}
+		logger.info(pld.toString());
+	}
+	
+	@Test
+	public void patientListTestSomePatientWithoutPathway() throws PatientNotFoundException{
+		Long orgId = new Long(274);
+		Map<Long,PatientListDto> pld=	patientService.getPatientList(orgId);
+		
+		for(Long l : pld.keySet()){
+			
+			logger.info(pld.get(l).toString());
+		}
 		logger.info(pld.toString());
 	}
 }

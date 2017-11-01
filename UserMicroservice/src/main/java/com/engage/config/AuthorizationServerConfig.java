@@ -144,6 +144,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		.secret("Password")
 		.authorizedGrantTypes("client_credentials")
 		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")
+		.and()
+		.withClient("apigateway")
+		.secret("Password")
+		.authorizedGrantTypes("client_credentials","password")
+		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")
 		;
 		
 	}
