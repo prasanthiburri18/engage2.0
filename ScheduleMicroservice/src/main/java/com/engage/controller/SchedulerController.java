@@ -54,9 +54,12 @@ public class SchedulerController {
 	
 	@Value("${phiPageUrl}")
 	private String phiPageUrl;
+	@Value("${countryCode}")
+	private String countryCode;
 	// private RestTemplate restTemplate = new RestTemplate();
 	@Autowired
 	private OAuth2RestTemplate restTemplate;
+	
 	private static Logger log = LoggerFactory.getLogger(SchedulerController.class);
 	@Autowired
 	private ScheduledQueueDao _scheduledQueueDao;
@@ -260,7 +263,7 @@ public class SchedulerController {
 					final List<NameValuePair> messageParams = new ArrayList<NameValuePair>();
 					// messageParams.add(new BasicNameValuePair("To",
 					// "+91"+pph)); // Replace with a valid phone number
-					messageParams.add(new BasicNameValuePair("To", "+1" + pph)); // Replace
+					messageParams.add(new BasicNameValuePair("To", countryCode + pph)); // Replace
 																					// with
 																					// a
 																					// valid
@@ -364,7 +367,7 @@ public class SchedulerController {
 					final List<NameValuePair> messageParams = new ArrayList<NameValuePair>();
 					// messageParams.add(new BasicNameValuePair("To",
 					// "+91"+pph));
-					messageParams.add(new BasicNameValuePair("To", "+1" + pph));
+					messageParams.add(new BasicNameValuePair("To", countryCode + pph));
 					messageParams.add(new BasicNameValuePair("From", fromNumber));
 					messageParams.add(new BasicNameValuePair("Body", message));
 					try {

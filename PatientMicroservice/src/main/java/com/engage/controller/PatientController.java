@@ -768,6 +768,7 @@ public class PatientController {
 			Patient patient = _patientDao.getByPhone(ph);
 			if (patient.getId() > 0) {
 				if (_patientDao.verifyPatientInfo(patient.getId()) > 0) {
+					log.info("Patient already accepted the pathway");
 					response.setMessage("Patient acceptence info already updated");
 					response.setStatuscode(200);
 					return response;
