@@ -82,11 +82,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public DefaultTokenServices tokenServices() {
 		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
 		defaultTokenServices.setTokenStore(tokenStore());
-		logger.info(clientDetailsService.toString());
-		ClientDetails cd = clientDetailsService.loadClientByClientId("usermicroservice");
-		logger.info("Client Details"+ cd);
 		defaultTokenServices.setClientDetailsService(clientDetailsService);
-	//	defaultTokenServices.setSupportRefreshToken(true);
+		defaultTokenServices.setSupportRefreshToken(true);
 		return defaultTokenServices;
 	}
 

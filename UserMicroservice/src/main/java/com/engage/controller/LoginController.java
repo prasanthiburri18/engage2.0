@@ -226,7 +226,7 @@ public class LoginController {
 		JsonMessage response = new JsonMessage();
 		try {
 			String pdob = json.get("dob");
-
+			LOGGER.info("Date of birth of patient: "+pdob);
 			// int result = _userDao.verifyPatientInfobydob(pdob);
 			int result = userService.verifyPatientInfobydob(pdob);
 			response.setData(result);

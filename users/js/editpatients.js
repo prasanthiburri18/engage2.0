@@ -646,7 +646,8 @@ function ViewpatientDetails()
                var bdate=results.patient.dob.split('-');
                var n = currentdate.getTimezoneOffset();
 
-               var new_date = moment(results.patient.dob).add(1, 'days');
+               //var new_date = moment(results.patient.dob).add(1, 'days');
+               var new_date = moment(results.patient.dob).add(0, 'days');
               // alert(new_date);
                //alert(new_date);
                 var day = new_date.format('DD');
@@ -658,7 +659,8 @@ function ViewpatientDetails()
                // alert(u_date);
                 u_date=new Date(u_date);
 
-                u_date.setDate(u_date.getDate()+1);
+              //  u_date.setDate(u_date.getDate()+1);
+                u_date.setDate(u_date.getDate());
                 //alert(results.patient.dob);
 
                 var d = new Date()
@@ -669,7 +671,8 @@ function ViewpatientDetails()
                     $('#editpatientdob').datepicker('setDate', new Date(u_date));
                 else{
                     d=new Date(results.patient.dob);
-                    d.setDate(d.getDate()+1);
+                   // d.setDate(d.getDate()+1);
+                    d.setDate(d.getDate());
                     $('#editpatientdob').datepicker('setDate', d);
                 }
 

@@ -2,6 +2,8 @@ package com.engage;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +25,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import com.sun.net.httpserver.Headers;
 
 @EnableZuulProxy
 @SpringBootApplication
@@ -98,12 +102,15 @@ class GreetingController {
 	private static Logger LOGGER = LoggerFactory.getLogger(GreetingController.class);
 
 	@RequestMapping("/api/v1/{name}")
-	String hello(@PathVariable String name, HttpServletRequest req) {
+	String hello(@PathVariable String name, HttpServletRequest req, HttpServletRequest res) {
 		LOGGER.info("**" + req.getContextPath() + "**");
 		LOGGER.info("this is in greeting controller :" + name);
 		//LOGGER.error("this is in greeting controller :" + name);
 		LOGGER.info(req.getUserPrincipal().toString());
-		return "Hello, " + req.getUserPrincipal().toString() + "!";
+		String headers = "";
+		
+		
+		return "Hello, " + req.getUserPrincipal().toString() + "!"+" "+res.getHeaderNames().toString();
 	}
 	
 	@RequestMapping("/api/v1/initToken")

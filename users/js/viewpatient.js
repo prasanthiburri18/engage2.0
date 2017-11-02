@@ -124,7 +124,8 @@ patientfname=results.patient.firstName;
                        //var bdate=results.patient.dob.split('-');
                        var bdate=results.patient.dob;
 
-                       var bdate1 = moment(bdate).add(1, 'days');
+                     //  var bdate1 = moment(bdate).add(1, 'days');
+                       var bdate1 = moment(bdate).add(0, 'days');
 
                        var formatted = moment(bdate1).format('L');
                      $('#pdob').html(formatted);
