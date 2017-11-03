@@ -360,6 +360,9 @@ public class UserController {
 
 			// user.setCreateDate(timestamp);
 			user.setUpdateDate(timestamp);
+			//get Existing user's password
+			User userForPassword = _userDao.getById(user.getEmail());
+			user.setPassword(userForPassword.getPassword());
 
 			_userDao.update(user);
 			_organizationDao.update(org);

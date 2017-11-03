@@ -106,11 +106,11 @@ class GreetingController {
 		LOGGER.info("**" + req.getContextPath() + "**");
 		LOGGER.info("this is in greeting controller :" + name);
 		//LOGGER.error("this is in greeting controller :" + name);
-		LOGGER.info(req.getUserPrincipal().toString());
+	//	LOGGER.info(req.getUserPrincipal().toString());
 		String headers = "";
 		
 		
-		return "Hello, " + req.getUserPrincipal().toString() + "!"+" "+res.getHeaderNames().toString();
+		return "Hello, " ;//+ req.getUserPrincipal().toString() + "!"+" "+res.getHeaderNames().toString();
 	}
 	
 	@RequestMapping("/api/v1/initToken")

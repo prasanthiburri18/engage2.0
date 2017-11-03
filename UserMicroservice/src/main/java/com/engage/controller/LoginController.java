@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.engage.commons.exception.ConstraintViolationException;
+import com.engage.commons.exception.UserNotFoundException;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.OrganizationDao;
 import com.engage.dao.UserDao;
@@ -130,6 +131,38 @@ public class LoginController {
 				return response;
 			} else {
 
+
+				// final String simpleMailUrl = emailMicroserviceURL +
+				// "/email/send";
+				// restTemplate.postForObject(simpleMailUrl, data1,
+				// String.class);
+				LOGGER.info("Saving Organization..");
+				Organization org = new Organization();
+				org.setName(user.getPracticeName());
+
+				Integer orgid = _organizationDao.save(org);
+				user.setOrgid(orgid);
+
+				user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+				user.setCreateDate(timestamp);
+				user.setUpdateDate(timestamp);
+				LOGGER.info("Registering new user");
+				BigInteger id = _userDao.save(user);
+
+				UserRoles userRoles = new UserRoles();
+				userRoles.setUserId(id);
+				userRoles.setRoleId(1);
+				LOGGER.info("Before saving Roles");
+				_userRolesDao.save(userRoles);
+				
+				LOGGER.info("Checking whether user stored into database..");
+				//check if user registered properly
+				User userRegistered = _userDao.getById(user.getEmail());
+				
+				if(userRegistered!=null&&userRegistered.getEmail().equalsIgnoreCase(user.getEmail())){
 				Map<String, Object> data1 = new HashMap<String, Object>();
 				data1.put("from", "EngageApp<support@quantifiedcare.com>");
 				data1.put("to", user.getEmail());
@@ -143,31 +176,11 @@ public class LoginController {
 				data1.put("status", true);
 
 				userService.sendEmail(data1);
-				// final String simpleMailUrl = emailMicroserviceURL +
-				// "/email/send";
-				// restTemplate.postForObject(simpleMailUrl, data1,
-				// String.class);
-
-				Organization org = new Organization();
-				org.setName(user.getPracticeName());
-
-				Integer orgid = _organizationDao.save(org);
-				user.setOrgid(orgid);
-
-				user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-				user.setCreateDate(timestamp);
-				user.setUpdateDate(timestamp);
-
-				BigInteger id = _userDao.save(user);
-
-				UserRoles userRoles = new UserRoles();
-				userRoles.setUserId(id);
-				userRoles.setRoleId(1);
-				_userRolesDao.save(userRoles);
-
+				}
+				else{
+					LOGGER.info("User not registered");
+					throw new UserNotFoundException("User not registered");
+				}
 				response.setMessage("User registered successfully");
 				response.setStatuscode(200);
 				return response;
@@ -178,6 +191,7 @@ public class LoginController {
 			response.setMessage("Invalid team member format");
 			return response;
 		} catch (Exception ex) {
+			LOGGER.info("Registration failed due to "+ex.getMessage());
 			response.setMessage(ex.getMessage());
 			response.setStatuscode(203);
 			return response;

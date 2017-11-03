@@ -10,20 +10,20 @@ import org.slf4j.LoggerFactory;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
-public class SimpleFilter extends ZuulFilter {
+public class ResponseFilter extends ZuulFilter {
 
-	private static Logger log = LoggerFactory.getLogger(SimpleFilter.class);
+	private static Logger log = LoggerFactory.getLogger(ResponseFilter.class);
 
 	private static final String OAUTH2_TOKEN_URL = "/ApiGateway/users/oauth/token";
 
 	@Override
 	public String filterType() {
-		return "pre";
+		return "post";
 	}
 
 	@Override
 	public int filterOrder() {
-		return 2;
+		return 7;
 	}
 
 	@Override

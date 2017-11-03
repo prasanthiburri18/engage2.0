@@ -47,6 +47,7 @@ public class CookieAuthenticationFilter extends GenericFilterBean {
 		Cookie cookie = new Cookie("AuthorizationToken", value);
 		cookie.setHttpOnly(true);
 		cookie.setSecure(true);
+		cookie.setMaxAge(1000000);
 		httpResponse.addCookie(cookie);
 		
 		LOGGER.info(httpResponse.getHeader("Cookie"));
