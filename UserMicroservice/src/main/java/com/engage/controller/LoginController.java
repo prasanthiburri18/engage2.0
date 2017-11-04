@@ -131,8 +131,8 @@ public class LoginController {
 				return response;
 			} else {
 
-
-				// final String simpleMailUrl = emailMicroserviceURL +
+				userService.register(user);
+/*				// final String simpleMailUrl = emailMicroserviceURL +
 				// "/email/send";
 				// restTemplate.postForObject(simpleMailUrl, data1,
 				// String.class);
@@ -159,10 +159,8 @@ public class LoginController {
 				_userRolesDao.save(userRoles);
 				
 				LOGGER.info("Checking whether user stored into database..");
-				//check if user registered properly
-				User userRegistered = _userDao.getById(user.getEmail());
 				
-				if(userRegistered!=null&&userRegistered.getEmail().equalsIgnoreCase(user.getEmail())){
+				
 				Map<String, Object> data1 = new HashMap<String, Object>();
 				data1.put("from", "EngageApp<support@quantifiedcare.com>");
 				data1.put("to", user.getEmail());
@@ -176,11 +174,7 @@ public class LoginController {
 				data1.put("status", true);
 
 				userService.sendEmail(data1);
-				}
-				else{
-					LOGGER.info("User not registered");
-					throw new UserNotFoundException("User not registered");
-				}
+				*/
 				response.setMessage("User registered successfully");
 				response.setStatuscode(200);
 				return response;

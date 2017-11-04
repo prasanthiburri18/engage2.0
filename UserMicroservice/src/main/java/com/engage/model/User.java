@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -18,11 +17,10 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.hibernate.validator.constraints.Length.List;
 
-import com.engage.commons.validators.annotations.ValidPhoneNumber;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "dt_users")
@@ -49,7 +47,7 @@ public class User {
 	 * 
 	 * @NotBlank(message = "Password cannot be empty.")
 	 */
-	@JsonIgnore
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	@NotNull(message = "Full name cannot be empty.")
 	@NotBlank(message = "Full name cannot be empty.")
@@ -151,7 +149,7 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}

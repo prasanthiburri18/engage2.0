@@ -2,10 +2,9 @@ package com.engage;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,10 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import com.sun.net.httpserver.Headers;
 
 @EnableZuulProxy
 @SpringBootApplication
@@ -43,18 +41,20 @@ import com.sun.net.httpserver.Headers;
  * 
  */
 public class Application extends SpringBootServletInitializer {
-	
-	//Logger implementation
+
+	// Logger implementation
 	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
-	
+
 	/**
-	 * All the urls with /api/v1/ should have auth header, which is validated in JWT filter
+	 * All the urls with /api/v1/ should have auth header, which is validated in
+	 * JWT filter
+	 * 
 	 * @return
 	 */
 	@Bean
 	public FilterRegistrationBean jwtFilter() {
 		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-	
+
 		registrationBean.setFilter(new JwtFilter());
 		registrationBean.addUrlPatterns("/users/api/v1/*");
 		registrationBean.addUrlPatterns("/patient/api/v1/*");
@@ -64,8 +64,6 @@ public class Application extends SpringBootServletInitializer {
 		return registrationBean;
 	}
 
-
-	
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurerAdapter() {
@@ -77,6 +75,7 @@ public class Application extends SpringBootServletInitializer {
 								"Access-Control-Allow-Credentials", "Access-Control-Allow-Headers")
 						.allowCredentials(false).maxAge(3600);
 			}
+
 		};
 	}
 
@@ -89,10 +88,16 @@ public class Application extends SpringBootServletInitializer {
 		LOGGER.info("Creating Simple Filter Bean");
 		return new SimpleFilter();
 	}
-	
+
 	@Bean
-	public static PropertySourcesPlaceholderConfigurer getPropertySourcesPlaceholderConfigurer(){
-		
+	public ResponseFilter responseFilter() {
+		LOGGER.info("Creating response Filter Bean");
+		return new ResponseFilter();
+	}
+
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer getPropertySourcesPlaceholderConfigurer() {
+
 		return new PropertySourcesPlaceholderConfigurer();
 	}
 }
@@ -105,21 +110,21 @@ class GreetingController {
 	String hello(@PathVariable String name, HttpServletRequest req, HttpServletRequest res) {
 		LOGGER.info("**" + req.getContextPath() + "**");
 		LOGGER.info("this is in greeting controller :" + name);
-		//LOGGER.error("this is in greeting controller :" + name);
-	//	LOGGER.info(req.getUserPrincipal().toString());
+		// LOGGER.error("this is in greeting controller :" + name);
+		// LOGGER.info(req.getUserPrincipal().toString());
 		String headers = "";
-		
-		
-		return "Hello, " ;//+ req.getUserPrincipal().toString() + "!"+" "+res.getHeaderNames().toString();
+
+		return "Hello, ";// + req.getUserPrincipal().toString() + "!"+"
+							// "+res.getHeaderNames().toString();
 	}
-	
+
 	@RequestMapping("/api/v1/initToken")
 	public ResponseEntity<String> getInitToken(HttpServletRequest req) {
 		LOGGER.info("**" + req.getContextPath() + "**");
 		LOGGER.info("this is in greeting controller :");
-		
-		//LOGGER.error("this is in greeting controller :" + name);
-		
+
+		// LOGGER.error("this is in greeting controller :" + name);
+
 		return new ResponseEntity<String>("_csrf token", HttpStatus.OK);
 	}
 }

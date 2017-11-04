@@ -119,7 +119,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		.withClient("users")
 		//don't change this password
 		.secret("ak#ANhKLLBRADHEadklj*$")
-		.authorizedGrantTypes("password")
+		.authorizedGrantTypes("password", "refresh_token")
 		.scopes("client_app")
 		.accessTokenValiditySeconds(86400).and()
 		.withClient("usermicroservice")

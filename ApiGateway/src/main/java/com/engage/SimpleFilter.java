@@ -45,9 +45,9 @@ public class SimpleFilter extends ZuulFilter {
 
 		String requestUrl = request.getRequestURI();
 		
-		HttpServletResponse httpResponse = ctx.getResponse();
+		//HttpServletResponse httpResponse = ctx.getResponse();
 		
-		if (requestUrl.contains(OAUTH2_TOKEN_URL)) {
+/*		if (requestUrl.contains(OAUTH2_TOKEN_URL)&&ctx.getResponseStatusCode()==200) {
 
 			String value = "oauth2 cookie";
 			Cookie cookie = new Cookie("AuthorizationToken", value);
@@ -58,14 +58,14 @@ public class SimpleFilter extends ZuulFilter {
 		log.info(ctx.getResponseBody().toString());
 		
 		}
-
-		String value = "Some cookie";
+*/
+/*		String value = "Some cookie";
 		Cookie cookie = new Cookie("Test ", value);
 		cookie.setHttpOnly(true);
 		cookie.setSecure(true);
 
-		cookie.setMaxAge(1000000);
-		httpResponse.addCookie(cookie);
+		cookie.setMaxAge(1000000);*/
+//		httpResponse.addCookie(cookie);
 		return null;
 	}
 

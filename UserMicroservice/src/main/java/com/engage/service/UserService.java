@@ -1,5 +1,6 @@
 package com.engage.service;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,10 +22,13 @@ import com.engage.commons.exception.DataTamperingException;
 import com.engage.commons.exception.UserNotFoundException;
 import com.engage.dao.OrganizationDao;
 import com.engage.dao.UserDao;
+import com.engage.dao.jpa.IOrganizationDao;
 import com.engage.dao.jpa.IUserDao;
+import com.engage.dao.jpa.IUserRolesDao;
 import com.engage.model.Organization;
 import com.engage.model.ScheduleJson;
 import com.engage.model.User;
+import com.engage.model.UserRoles;
 import com.engage.util.AdvancedEncryptionStandard;
 
 @Service
@@ -35,7 +39,11 @@ public class UserService {
 
 	@Autowired
 	private UserDao _userDao;
-
+	@Autowired
+	private IUserRolesDao userRolesDaoJpa;
+	
+	@Autowired
+	private IOrganizationDao organizationDaoJpa;
 	@Autowired
 	private IUserDao userDaoJpa;
 	@Autowired
@@ -71,42 +79,52 @@ public class UserService {
 		}
 		return user;
 	}
+	
+	@Transactional
+	public void register(User user) throws Exception {
 
-	public boolean register(User user) throws Exception {
-		boolean registerFlag = false;
-		if (user.getId() != null || user.getId().intValue() <= 0) {
+		if (user.getId() != null ) {
 			throw new DataTamperingException("Before Registering UserId should not be assigned");
 		}
-
-		Map<String, Object> data1 = new HashMap<String, Object>();
-		data1.put("from", "EngageApp<support@quantifiedcare.com>");
-		data1.put("to", user.getEmail());
-		data1.put("subject", "Account Confirmation");
-		data1.put("text", "Hi <b>" + user.getFullName()
-				+ ",</b><br><br>Congratulations! Your account has been created. Please click on the link to verify your email address and start using Engage.<br><br><a href='"
-				+ portalURL + "/userconfirmation.html?keyconfirm=" + AdvancedEncryptionStandard.encrypt(user.getEmail())
-				+ "'>Verify</a><br><br>Thank You,<br>Team Engage at Quantified Care");
-		data1.put("status", true);
-
-		final String simpleMailUrl = emailMicroserviceURL + "/email/send";
-		restTemplate.postForObject(simpleMailUrl, data1, String.class);
-
+		LOGGER.info("Saving Organization..");
 		Organization org = new Organization();
 		org.setName(user.getPracticeName());
 
 		Integer orgid = _organizationDao.save(org);
+		LOGGER.info(" Organization saved. OrgId = " +orgid);
 		user.setOrgid(orgid);
-
+		LOGGER.info("Check if password is null "+ user.getPassword());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-
+		LOGGER.info("Encoded password ");
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
+		LOGGER.info("Got time stam");
 		user.setCreateDate(timestamp);
 		user.setUpdateDate(timestamp);
+		LOGGER.info("Registering new user");
+		BigInteger id = _userDao.save(user);
 
-		_userDao.save(user);
-		registerFlag = true;
-		return registerFlag;
+		UserRoles userRoles = new UserRoles();
+		userRoles.setUserId(id);
+		userRoles.setRoleId(1);
+		LOGGER.info("Before saving Roles");
+		userRolesDaoJpa.save(userRoles);
+		
+		LOGGER.info("Checking whether user stored into database..");
+		
+		Map<String, Object> data1 = new HashMap<String, Object>();
+		data1.put("from", "EngageApp<support@quantifiedcare.com>");
+		data1.put("to", user.getEmail());
+		data1.put("subject", "Account Confirmation");
+		data1.put("text",
+				"Hi <b>" + user.getFullName()
+						+ ",</b><br><br>Congratulations! Your account has been created. Please click on the link to verify your email address and start using Engage.<br><br><a href='"
+						+ portalURL + "/userconfirmation.html?keyconfirm="
+						+ AdvancedEncryptionStandard.encrypt(user.getEmail())
+						+ "'>Verify</a><br><br>Thank You,<br>Team Engage at Quantified Care");
+		data1.put("status", true);
+
+		sendEmail(data1);
+		
 	}
 
 	public ArrayList<Object> patientidbyphone(final String phone) {
