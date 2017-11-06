@@ -40,8 +40,10 @@ public class Application extends SpringBootServletInitializer {
 	private boolean starttls;
 	@Value("${mail.from}")
 	private String from;
+	@Value("${mail.username}")
 	private String username;
-	 	private String password;
+	@Value("${mail.password}")
+ 	private String password;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -70,6 +72,28 @@ public class Application extends SpringBootServletInitializer {
 			throw new BeanCreationException("Ses username/password is not configured as system properties");
 		}
 
+		mailSender.setUsername(username);
+		mailSender.setPassword(password);
+		return mailSender;
+	}
+	
+	@Bean
+	@Profile("local")
+	public JavaMailSender javaMailSender2() {
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		Properties mailProperties = new Properties();
+	//	mailProperties.put("mail.smtp.auth", auth);
+	//	mailProperties.put("mail.smtp.starttls.enable", starttls);
+		mailSender.setJavaMailProperties(mailProperties);
+		mailSender.setHost(host);
+		mailSender.setPort(port);
+		mailSender.setProtocol(protocol);
+		/***
+		 * Used when username and password configured as System properties in
+		 * tomcat uncomment @Value annotation and edit mail properties of
+		 * username and password for local(eclipse) setup
+		 */
+		
 		mailSender.setUsername(username);
 		mailSender.setPassword(password);
 		return mailSender;

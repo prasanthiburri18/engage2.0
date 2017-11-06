@@ -16,6 +16,7 @@ import com.engage.util.JsonMessage;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 
 public class UserServiceTest {
 

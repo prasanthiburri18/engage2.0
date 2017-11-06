@@ -445,7 +445,7 @@ public class LoginController {
 	 * @return JsonObject
 	 */
 
-	@RequestMapping(value = "/getAllPraticeNames", method = RequestMethod.GET)
+	@RequestMapping(value = "/getAllPracticeNames", method = RequestMethod.GET)
 	public @ResponseBody JsonMessage getAllPraticeNames() {// (@RequestBody
 															// Map<String,
 															// String> json) {

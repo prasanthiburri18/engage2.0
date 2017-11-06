@@ -40,7 +40,11 @@ public class ResponseFilter extends SendResponseFilter {
 		String requestUrl = request.getRequestURI();
 
 		HttpServletResponse httpResponse = ctx.getResponse();
-
+		if(request.getCookies()!=null){
+		Cookie[] requestCookies = request.getCookies();
+		for(Cookie cookie : requestCookies){
+			log.info(cookie.getValue());
+		}}
 		if (requestUrl.contains(OAUTH2_TOKEN_URL) && ctx.getResponseStatusCode() == 200) {
 
 			ObjectMapper mapper = new ObjectMapper();
@@ -59,9 +63,10 @@ public class ResponseFilter extends SendResponseFilter {
 				Cookie authCookie = new Cookie("Authorization", token.getTokenType()+" "+token.getValue());
 				authCookie.setHttpOnly(true);
 				authCookie.setMaxAge(token.getExpiration().getSeconds() - (int) System.currentTimeMillis());
+				authCookie.setPath("/ApiGateway");
 				Cookie refreshCookie = new Cookie("refresh_token", token.getRefreshToken().getValue());
 				refreshCookie.setHttpOnly(true);
-
+				refreshCookie.setPath("/ApiGateway");
 				httpResponse.addCookie(authCookie);
 				httpResponse.addCookie(refreshCookie);
 				
@@ -70,7 +75,7 @@ public class ResponseFilter extends SendResponseFilter {
 				e.printStackTrace();
 			}
 
-			
+		
 
 		} 
 		return null;

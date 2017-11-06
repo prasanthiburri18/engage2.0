@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -15,7 +16,8 @@ public class SimpleFilter extends ZuulFilter {
 	private static Logger log = LoggerFactory.getLogger(SimpleFilter.class);
 
 	private static final String OAUTH2_TOKEN_URL = "/ApiGateway/users/oauth/token";
-
+	
+	
 	@Override
 	public String filterType() {
 		return "pre";
@@ -44,6 +46,9 @@ public class SimpleFilter extends ZuulFilter {
 		log.info(String.format("%s request to %s", request.getMethod(), request.getRequestURL().toString()));
 
 		String requestUrl = request.getRequestURI();
+
+
+		
 		
 		//HttpServletResponse httpResponse = ctx.getResponse();
 		
@@ -66,6 +71,11 @@ public class SimpleFilter extends ZuulFilter {
 
 		cookie.setMaxAge(1000000);*/
 //		httpResponse.addCookie(cookie);
+		return null;
+	}
+
+	private OAuth2AccessToken requestNewToken(String value) {
+		
 		return null;
 	}
 

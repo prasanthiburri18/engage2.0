@@ -94,7 +94,7 @@ public class RefererFilter extends GenericFilterBean {
 		
 		if (referer == null
 				|| referers.stream().noneMatch(
-						r -> r.getReferer().contains(referer))) {
+						r -> referer.contains(r.getReferer()))) {
 			((HttpServletResponse) response)
 					.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
 			LOGGER.info("Invalid referer header passed to access "

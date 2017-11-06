@@ -36,6 +36,7 @@ public class HostFilter extends GenericFilterBean {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(HostFilter.class);
 
+	private static final String OAUTH2_TOKEN_URL = "/ApiGateway/users/oauth/token";
 	@Autowired
 	private IHostDao hostDao;
 
@@ -58,14 +59,15 @@ public class HostFilter extends GenericFilterBean {
 		final String host = req.getHeader("Host");
 		final String customHeader = req.getHeader("X-Requested-With");
 		LOGGER.info("custom header " + customHeader);
-		if (customHeader == null
-				|| !customHeader.equalsIgnoreCase("XMLHttpRequest")) {
+/*		if ((customHeader == null
+				|| !customHeader.equalsIgnoreCase("XMLHttpRequest")) &&
+				!req.getRequestURI().equals(OAUTH2_TOKEN_URL)) {
 			LOGGER.error("Not an ajax call");
 			((HttpServletResponse) response)
 					.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
-
+			return;
 		}
-
+*/
 		
 		List<Host> hosts = hostDao.findAll();
 		
