@@ -1,11 +1,8 @@
 package com.engage.controller;
 
-import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,14 +31,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.engage.commons.exception.ConstraintViolationException;
-import com.engage.commons.exception.UserNotFoundException;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.OrganizationDao;
 import com.engage.dao.UserDao;
 import com.engage.dao.UserRolesDao;
 import com.engage.model.Organization;
 import com.engage.model.User;
-import com.engage.model.UserRoles;
 import com.engage.service.UserService;
 import com.engage.util.AdvancedEncryptionStandard;
 import com.engage.util.JsonMessage;
@@ -202,18 +197,17 @@ public class LoginController {
 	@RequestMapping(value = "/getPatientpathwayblockbyId", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage getPatientpathwayblockbyId(@RequestBody Map<String, String> json) {
 
-		JsonMessage response = new JsonMessage();
+		JsonMessage response = null;
 		try {
 			Integer rid = Integer.parseInt(json.get("id").toString());
 
-			// List results = _userDao.getPatientpathwayblockById(rid);
-			List results = userService.getPatientpathwayblockById(rid);
-			response.setMessage("Scheduled data.");
-			response.setData(results);
-			response.setStatuscode(200);
+			//List results = _userDao.getPatientpathwayblockById(rid);
+			 response = userService.getPatientpathwayblockById(rid);
+			
 			return response;
 
 		} catch (Exception ex) {
+			response = new JsonMessage();
 			response.setMessage(ex.getMessage());
 			response.setStatuscode(203);
 			return response;

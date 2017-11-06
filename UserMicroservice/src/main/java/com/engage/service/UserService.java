@@ -30,6 +30,7 @@ import com.engage.model.ScheduleJson;
 import com.engage.model.User;
 import com.engage.model.UserRoles;
 import com.engage.util.AdvancedEncryptionStandard;
+import com.engage.util.JsonMessage;
 
 @Service
 @Transactional
@@ -178,20 +179,32 @@ public class UserService {
 		return statuscode;
 	}
 
-	@SuppressWarnings({ "unchecked", "null" })
-	public List<Object> getPatientpathwayblockById(int id) {
-		List<Object> scheduledData = new ArrayList<Object>();
+	public JsonMessage getPatientpathwayblockById(int id) {
+		JsonMessage response = null;
+		Map<String, String> json = new HashMap<>();
+		json.put("id", Integer.toString(id));
+		LOGGER.info("Calling Pathway Microservice with phi block id");
+		response = restTemplate
+				.postForObject(pathwayMicroserviceUrl + "/api/v1/getPatientpathwayblockbyId", json, JsonMessage.class);
+		
+		return response;
+/*		List<Object> scheduledData = new ArrayList<Object>();
 		try {
 
 			Map<String, String> json = new HashMap<>();
 			json.put("id", Integer.toString(id));
+			LOGGER.info("Calling Pathway Microservice with phi block id");
 			List<Object[]> results = restTemplate
 					.postForObject(pathwayMicroserviceUrl + "/api/v1/getPatientpathwayblockbyId", json, List.class);
-			;
+			response = restTemplate
+					.postForObject(pathwayMicroserviceUrl + "/api/v1/getPatientpathwayblockbyId", json, JsonMessage.class);
+			
+			LOGGER.info("Pathway Microserivce request executed.");
 			ArrayList blockres = new ArrayList();
 			Object[] obj = new Object[] {};
 			ArrayList<Object> newObj = new ArrayList<Object>(Arrays.asList(obj));
 			for (Object[] row : results) {
+				LOGGER.info("Converting object array to ScheduleJson object");
 				ScheduleJson scheduleJson = new ScheduleJson();
 				Map<String, Object> assoc = new HashMap<String, Object>();
 				Integer rid = Integer.parseInt(row[0].toString());
@@ -250,10 +263,10 @@ public class UserService {
 			LOGGER.info(ex.getMessage());
 
 			return scheduledData;
-		}
+		}*/
 
 	}
-
+	
 	public List<User> getUsersByOrgId(Integer orid) {
 		List<User> users = null;
 		users = userDaoJpa.getUserByOrgid(orid);
