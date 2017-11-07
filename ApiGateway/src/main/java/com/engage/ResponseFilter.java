@@ -24,7 +24,9 @@ public class ResponseFilter extends SendResponseFilter {
 
 	private static final String OAUTH2_TOKEN_URL = "/ApiGateway/users/oauth/token";
 
-
+	private static final String DOMAIN_NAME ="192.168.0.20:8080";
+	private static final String BEARER ="Bearer";
+	private static final String EXPIRES_IN="validitiy";
 
 	@Override
 	public Object run() {
@@ -33,7 +35,7 @@ public class ResponseFilter extends SendResponseFilter {
 		HttpServletRequest request = ctx.getRequest();
 		log.info("Http Version " + request.getProtocol());
 
-		ctx.addZuulRequestHeader("Authorization", request.getHeader("Authorization"));
+	
 		log.info("Request scheme http/https: " + request.getScheme());
 		log.info(String.format("%s request to %s", request.getMethod(), request.getRequestURL().toString()));
 
@@ -60,13 +62,17 @@ public class ResponseFilter extends SendResponseFilter {
 				
 				InputStream responseDataStream = new ByteArrayInputStream(byteArray);
 				ctx.setResponseDataStream(responseDataStream);
-				Cookie authCookie = new Cookie("Authorization", token.getTokenType()+" "+token.getValue());
+				Cookie authCookie = new Cookie("Authorization", " Bearer"+" "+token.getValue()+"#"+EXPIRES_IN+token.getExpiration().getTime());
 				authCookie.setHttpOnly(true);
-				authCookie.setMaxAge(token.getExpiration().getSeconds() - (int) System.currentTimeMillis());
+				//authCookie.setMaxAge((int)(token.getExpiration().getTime() - System.currentTimeMillis())/1000);
 				authCookie.setPath("/ApiGateway");
-				Cookie refreshCookie = new Cookie("refresh_token", token.getRefreshToken().getValue());
+				authCookie.setVersion(1);
+				//authCookie.setDomain(DOMAIN_NAME);
+				Cookie refreshCookie = new Cookie("refresh_token", token.getRefreshToken().getValue()+"#"+EXPIRES_IN+token.getExpiration().getTime());
 				refreshCookie.setHttpOnly(true);
 				refreshCookie.setPath("/ApiGateway");
+				refreshCookie.setVersion(1);
+				//refreshCookie.setDomain(DOMAIN_NAME);
 				httpResponse.addCookie(authCookie);
 				httpResponse.addCookie(refreshCookie);
 				

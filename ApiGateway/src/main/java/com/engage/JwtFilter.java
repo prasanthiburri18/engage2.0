@@ -20,10 +20,11 @@ public class JwtFilter extends GenericFilterBean {
 
         final String authHeader = request.getHeader("Authorization");
    
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        //Write logic in interceptor
+  /*      if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new ServletException("Missing or invalid Authorization header.");
         }
-  
+  */
       
         chain.doFilter(req, res);
     }

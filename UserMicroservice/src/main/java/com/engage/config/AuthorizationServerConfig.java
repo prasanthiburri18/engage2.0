@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -42,7 +43,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Qualifier("authenticationManagerBean")
 	private AuthenticationManager authenticationManager;
 
-	
+	@Autowired
+	private UserDetailsService userDetailsService;
 	@Autowired
 	public ClientDetailsService clientDetailsService;
 
@@ -96,8 +98,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		    tokenEnhancerChain.setTokenEnhancers(
 		      Arrays.asList(tokenEnhancer(), accessTokenConverter()));
 		 logger.info("Configuring auth server endpoints: tokenStore, tokenEnhancer and clientDetailsService");   
-		endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore())
-				.tokenEnhancer(tokenEnhancerChain).setClientDetailsService(clientDetailsService);;
+		endpoints.authenticationManager(authenticationManager)
+				.userDetailsService(userDetailsService)	
+				.tokenStore(tokenStore())
+				.tokenEnhancer(tokenEnhancerChain)
+				.setClientDetailsService(clientDetailsService);;
 	}
 /**
  * Security on token endpoints
@@ -121,7 +126,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		.secret("ak#ANhKLLBRADHEadklj*$")
 		.authorizedGrantTypes("password", "refresh_token")
 		.scopes("client_app")
-		.accessTokenValiditySeconds(86400).and()
+		.accessTokenValiditySeconds(300)
+		.refreshTokenValiditySeconds(900)
+		.and()
 		.withClient("usermicroservice")
 		.secret("Password")
 		.authorizedGrantTypes("client_credentials")
@@ -144,7 +151,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		.and()
 		.withClient("apigateway")
 		.secret("Password")
-		.authorizedGrantTypes("client_credentials","password")
+		.authorizedGrantTypes("client_credentials","refresh_token","password")
 		.scopes("usermicroservice", "patientmicroservice","schedulemicroservice","pathwaymicroservice")
 		;
 		

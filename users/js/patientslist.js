@@ -38,8 +38,11 @@ $(document).ready(function () {
         type: 'POST',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+          //  'Authorization': securitytoken,
             'Content-Type': 'application/json'
+        },
+        xhrFields: {
+            withCredentials: true
         },
         Accept: "application/json",
         data: JSON.stringify(plist),
@@ -145,8 +148,11 @@ $(document).ready(function () {
                         type: 'POST',
                         dataType: 'json',
                         headers: {
-                            'Authorization': securitytoken,
+                           // 'Authorization': securitytoken,
                             'Content-Type': 'application/json'
+                        },
+                        xhrFields: {
+                            withCredentials: true
                         },
                         Accept: "application/json",
                         data: JSON.stringify(patientpathwayinput),
@@ -308,8 +314,11 @@ $(document).ready(function () {
         type: 'POST',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+         //   'Authorization': securitytoken,
             'Content-Type': 'application/json'
+        },
+        xhrFields: {
+            withCredentials: true
         },
         Accept: "application/json",
         data: JSON.stringify(pdata),
@@ -408,8 +417,11 @@ function patientdelete()
         type: 'DELETE',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+         //   'Authorization': securitytoken,
             'Content-Type': 'application/json'
+        },
+        xhrFields: {
+            withCredentials: true
         },
         Accept: "application/json",
         data: JSON.stringify(data),

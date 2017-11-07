@@ -51,6 +51,9 @@ $('document').ready(function ()
             type: 'POST',
             dataType: 'json',
             "async": true,
+            xhrFields: {
+                withCredentials: true
+            },
             "crossDomain": true,
            // contentType: 'application/json; charset=UTF-8',
             contentType:'application/x-www-form-urlencoded; charset=UTF-8',
@@ -92,8 +95,12 @@ $('document').ready(function ()
                         "crossDomain": true,
                         contentType: 'application/json; charset=UTF-8',
                         Accept: "application/json",
-                        headers:{ 'Authorization':securitytoken},
-                      //  data: JSON.stringify(datat),
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                       // headers:{ 'Authorization':securitytoken},
+                        
+                        //  data: JSON.stringify(datat),
                         beforeSend: function ()
                         {
 
@@ -348,7 +355,11 @@ function getUser() {
 function setRefreshToken(token){
 	localStorage.setItem("refresh_token", token);
 }
+function logout() {
+    localStorage.clear();
 
+    window.location.href = "index.html";
+}
 
 
 //Engage2.0 changes ends

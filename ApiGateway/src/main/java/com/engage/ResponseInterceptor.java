@@ -48,24 +48,24 @@ public class ResponseInterceptor extends HandlerInterceptorAdapter {
 			}
 		}
 		
+		
+		
 		}
 		
 	if(authCookie!=null&&authCookie.getMaxAge()<System.currentTimeMillis()){
 		if(refreshCookie!=null&&refreshCookie.getMaxAge()>System.currentTimeMillis()){
-			OAuth2AccessToken accessTokenFromRefreshToken =requestNewToken(refreshCookie.getValue());
+			OAuth2AccessToken aTFromRefreshToken =requestNewToken(refreshCookie.getValue());
+			if(aTFromRefreshToken!=null){
+				authCookie.setValue(aTFromRefreshToken.getTokenType()+" "+aTFromRefreshToken.getValue());
+				authCookie.setMaxAge((int) (aTFromRefreshToken.getExpiration().getSeconds()-System.currentTimeMillis()));
+			}
 		}
 	}
-		if (requestUrl.contains(OAUTH2_TOKEN_URL)&&httpResponse.getStatus()==200) {
-
-			String value = "oauth2 cookie";
-			Cookie cookie = new Cookie("AuthorizationToken", value);
-			
-			cookie.setHttpOnly(true);
-			cookie.setSecure(true);
-			httpResponse.addCookie(cookie);
-	LOGGER.info(httpResponse.getContentType().toString());
-		}
-		return true;
+	
+				
+	
+	
+	return true;
 	}
 
 	private OAuth2AccessToken requestNewToken(String value) {

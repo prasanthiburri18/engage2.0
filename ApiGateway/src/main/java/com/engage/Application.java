@@ -73,7 +73,7 @@ public class Application extends SpringBootServletInitializer {
 				registry.addMapping("*")
 						.allowedMethods("PUT", "DELETE", "POST", "GET").allowedHeaders("Access-Control-Allow-Origin",
 								"Access-Control-Allow-Credentials", "Access-Control-Allow-Headers")
-						.allowCredentials(false).maxAge(3600);
+						.allowCredentials(true).maxAge(3600);
 			}
 
 		};
