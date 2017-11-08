@@ -150,9 +150,9 @@ var securitytoken = '';
  * using logout functionality
  */
 
-if (localStorage.getItem("authtoken") != null)
+if (sessionStorage.getItem("authtoken") != null)
 {
-    var usertoken = localStorage.getItem("authtoken");
+    var usertoken = sessionStorage.getItem("authtoken");
     var br = 'Bearer ';
     securitytoken = br.concat(usertoken);
 } else {
@@ -160,7 +160,7 @@ if (localStorage.getItem("authtoken") != null)
 
 }
 
-var retrievedObject = localStorage.getItem('userinfo');
+var retrievedObject = sessionStorage.getItem('userinfo');
 var output = JSON.parse(retrievedObject);
 
 
@@ -214,7 +214,7 @@ $('document').ready(function ()
     });
     $("#savepathway").click(function () {
 
-         var retrievedObject = localStorage.getItem('userinfo');
+         var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
 
     var priv = output.userType;
@@ -428,9 +428,12 @@ $('document').ready(function ()
         type: 'POST',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+            //'Authorization': securitytoken,
             'Content-Type': 'application/json'
         },
+        xhrFields: {
+               withCredentials: true
+           },
         Accept: "application/json",
         data: JSON.stringify(ptdata),
         beforeSend: function ()
@@ -475,9 +478,12 @@ $('document').ready(function ()
                             type: 'POST',
                             dataType: 'json',
                             headers: {
-                                'Authorization': securitytoken,
+                                //'Authorization': securitytoken,
                                 'Content-Type': 'application/json'
                             },
+                            xhrFields: {
+               withCredentials: true
+           },
                             Accept: "application/json",
                             data: JSON.stringify(patientpathwayinput),
                             beforeSend: function ()
@@ -553,9 +559,12 @@ $('document').ready(function ()
             type: 'POST',
             dataType: 'json',
             headers: {
-                'Authorization': securitytoken,
+                //'Authorization': securitytoken,
                 'Content-Type': 'application/json'
             },
+            xhrFields: {
+               withCredentials: true
+           },
             Accept: "application/json",
             data: JSON.stringify(evinputdata),
             beforeSend: function ()
@@ -623,7 +632,7 @@ $('document').ready(function ()
      */
     $("#editblocsumbtn").click(function () {
 
-         var retrievedObject = localStorage.getItem('userinfo');
+         var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
     var priv = output.userType;
 
@@ -736,9 +745,12 @@ $('document').ready(function ()
                 async: false,
                 dataType: 'json',
                 headers: {
-                    'Authorization': securitytoken,
+                    //'Authorization': securitytoken,
                     'Content-Type': 'application/json'
                 },
+                xhrFields: {
+               withCredentials: true
+           },
                 Accept: "application/json",
                 data: JSON.stringify(bins),
                 beforeSend: function ()
@@ -828,9 +840,12 @@ $('document').ready(function ()
                         async: false,
                         dataType: 'json',
                         headers: {
-                            'Authorization': securitytoken,
+                            //'Authorization': securitytoken,
                             'Content-Type': 'application/json'
                         },
+                        xhrFields: {
+               withCredentials: true
+           },
                         Accept: "application/json",
                         data: JSON.stringify(inputBloc),
                         beforeSend: function ()
@@ -952,9 +967,12 @@ $('document').ready(function ()
                                         async: false,
                                         dataType: 'json',
                                         headers: {
-                                            'Authorization': securitytoken,
+                                            //'Authorization': securitytoken,
                                             'Content-Type': 'application/json'
                                         },
+                                        xhrFields: {
+               withCredentials: true
+           },
                                         Accept: "application/json",
                                         data: JSON.stringify(inputBloc),
                                         beforeSend: function ()
@@ -1047,9 +1065,12 @@ $('document').ready(function ()
                                         async: false,
                                         dataType: 'json',
                                         headers: {
-                                            'Authorization': securitytoken,
+                                            //'Authorization': securitytoken,
                                             'Content-Type': 'application/json'
                                         },
+                                        xhrFields: {
+               withCredentials: true
+           },
                                         Accept: "application/json",
                                         data: JSON.stringify(inputBloc),
                                         beforeSend: function ()
@@ -1141,9 +1162,12 @@ $('document').ready(function ()
                                         async: false,
                                         dataType: 'json',
                                         headers: {
-                                            'Authorization': securitytoken,
+                                            //'Authorization': securitytoken,
                                             'Content-Type': 'application/json'
                                         },
+                                        xhrFields: {
+               withCredentials: true
+           },
                                         Accept: "application/json",
                                         data: JSON.stringify(inputBloc),
                                         beforeSend: function ()
@@ -1255,9 +1279,12 @@ $('document').ready(function ()
                                         async: false,
                                         dataType: 'json',
                                         headers: {
-                                            'Authorization': securitytoken,
+                                            //'Authorization': securitytoken,
                                             'Content-Type': 'application/json'
                                         },
+                                        xhrFields: {
+               withCredentials: true
+           },
                                         Accept: "application/json",
                                         data: JSON.stringify(inputBloc),
                                         beforeSend: function ()
@@ -1347,9 +1374,12 @@ $('document').ready(function ()
                                         async: false,
                                         dataType: 'json',
                                         headers: {
-                                            'Authorization': securitytoken,
+                                            //'Authorization': securitytoken,
                                             'Content-Type': 'application/json'
                                         },
+                                        xhrFields: {
+               withCredentials: true
+           },
                                         Accept: "application/json",
                                         data: JSON.stringify(inputBloc),
                                         beforeSend: function ()
@@ -1441,9 +1471,12 @@ $('document').ready(function ()
                                         async: false,
                                         dataType: 'json',
                                         headers: {
-                                            'Authorization': securitytoken,
+                                            //'Authorization': securitytoken,
                                             'Content-Type': 'application/json'
                                         },
+                                        xhrFields: {
+               withCredentials: true
+           },
                                         Accept: "application/json",
                                         data: JSON.stringify(inputBloc),
                                         beforeSend: function ()
@@ -1550,9 +1583,12 @@ $('document').ready(function ()
                                         async: false,
                                         dataType: 'json',
                                         headers: {
-                                            'Authorization': securitytoken,
+                                            //'Authorization': securitytoken,
                                             'Content-Type': 'application/json'
                                         },
+                                        xhrFields: {
+               withCredentials: true
+           },
                                         Accept: "application/json",
                                         data: JSON.stringify(inputBloc),
                                         beforeSend: function ()
@@ -1646,9 +1682,12 @@ $('document').ready(function ()
                                         async: false,
                                         dataType: 'json',
                                         headers: {
-                                            'Authorization': securitytoken,
+                                            //'Authorization': securitytoken,
                                             'Content-Type': 'application/json'
                                         },
+                                        xhrFields: {
+               withCredentials: true
+           },
                                         Accept: "application/json",
                                         data: JSON.stringify(inputBloc),
                                         beforeSend: function ()
@@ -1758,9 +1797,12 @@ $('document').ready(function ()
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -1829,9 +1871,12 @@ $('document').ready(function ()
                 async: false,
                 dataType: 'json',
                 headers: {
-                    'Authorization': securitytoken,
+                    //'Authorization': securitytoken,
                     'Content-Type': 'application/json'
                 },
+                xhrFields: {
+               withCredentials: true
+           },
                 Accept: "application/json",
                 data: JSON.stringify(pathwayupdateinput),
                 beforeSend: function ()
@@ -2130,9 +2175,12 @@ function viewPathway()
         type: 'POST',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+            //'Authorization': securitytoken,
             'Content-Type': 'application/json'
         },
+        xhrFields: {
+               withCredentials: true
+           },
         Accept: "application/json",
         data: JSON.stringify(pdata),
         beforeSend: function ()
@@ -2302,10 +2350,12 @@ function renderevent(pathswaysdata, maxRowNumber) {
             type: 'POST',
             dataType: 'json',
             headers: {
-                'Authorization':securitytoken,
+              //  'Authorization':securitytoken,
                 'Content-Type':'application/json'
             },
-
+            xhrFields: {
+               withCredentials: true
+           },
             Accept: "application/json",
             data: JSON.stringify(ptin),
             async: false,
@@ -2511,9 +2561,12 @@ function loadpatientblocks(eid)
         type: 'POST',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+            //'Authorization': securitytoken,
             'Content-Type': 'application/json'
         },
+        xhrFields: {
+               withCredentials: true
+           },
         Accept: "application/json",
         data: JSON.stringify(eventcountinput),
         beforeSend: function ()
@@ -2672,9 +2725,12 @@ function renderblockOrgRemove(blocks) {
             type: 'POST',
             dataType: 'json',
             headers: {
-                'Authorization': securitytoken,
+                //'Authorization': securitytoken,
                 'Content-Type': 'application/json'
             },
+            xhrFields: {
+               withCredentials: true
+           },
             Accept: "application/json",
             data: JSON.stringify(painp),
             beforeSend: function ()
@@ -2747,9 +2803,12 @@ function patientChildblockdelete(id)
         async: false,
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+            //'Authorization': securitytoken,
             'Content-Type': 'application/json'
         },
+        xhrFields: {
+               withCredentials: true
+           },
         Accept: "application/json",
         data: JSON.stringify(inpid),
         beforeSend: function ()
@@ -2775,7 +2834,7 @@ function patientChildblockdelete(id)
 function logout() {
 
 
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.href = "index.html";
 
 }

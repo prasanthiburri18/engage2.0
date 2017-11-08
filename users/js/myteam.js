@@ -11,9 +11,9 @@ $(document).ready(function () {
      * If not fouund then explicitly we are logging out
      * using logout functionality
      */
-    if (localStorage.getItem("authtoken") != null)
+    if (sessionStorage.getItem("authtoken") != null)
     {
-        var usertoken = localStorage.getItem("authtoken");
+        var usertoken = sessionStorage.getItem("authtoken");
         var br = 'Bearer ';
         var securitytoken = br.concat(usertoken);
     } else {
@@ -21,7 +21,7 @@ $(document).ready(function () {
         return;
     }
 
-    var retrievedObject = localStorage.getItem('userinfo');
+    var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
     orgid = output.orgid;
     currentpraticename = output.practiceName;
@@ -143,9 +143,12 @@ $('.phone').keypress(function (event) {
         type: 'POST',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+            //'Authorization': securitytoken,
             'Content-Type': 'application/json'
         },
+        xhrFields: {
+               withCredentials: true
+           },
         Accept: "application/json",
         data: JSON.stringify(listinpu),
         beforeSend: function (request)
@@ -316,9 +319,12 @@ $('.phone').keypress(function (event) {
             type: 'POST',
             dataType: 'json',
             headers: {
-                'Authorization': securitytoken,
+                //'Authorization': securitytoken,
                 'Content-Type': 'application/json'
             },
+            xhrFields: {
+               withCredentials: true
+           },
             Accept: "application/json",
             data: JSON.stringify(teaminputobj),
             beforeSend: function ()
@@ -341,9 +347,12 @@ $('.phone').keypress(function (event) {
                         type: 'POST',
                         dataType: 'json',
                         headers: {
-                            'Authorization': securitytoken,
+                            //'Authorization': securitytoken,
                             'Content-Type': 'application/json'
                         },
+                        xhrFields: {
+               withCredentials: true
+           },
                         Accept: "application/json",
                         data: JSON.stringify(sendemailobj),
                         beforeSend: function ()

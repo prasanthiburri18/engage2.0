@@ -8,9 +8,9 @@ $(document).ready(function () {
      */
     var dataSet = [];
     $(".helpblock").css('display', 'none');
-    if (localStorage.getItem("authtoken") != null)
+    if (sessionStorage.getItem("authtoken") != null)
     {
-        var usertoken = localStorage.getItem("authtoken");
+        var usertoken = sessionStorage.getItem("authtoken");
         var br = 'Bearer ';
         securitytoken = br.concat(usertoken);
     } else {
@@ -18,7 +18,7 @@ $(document).ready(function () {
         return;
     }
 
-    var retrievedObject = localStorage.getItem('userinfo');
+    var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
 
 
@@ -384,13 +384,13 @@ function patientEdit(id) {
     window.location.href = "editpatient.html?patientid=" + id;
 }
 function patientDelete(id) {
-    localStorage.setItem("deletepatient", id);
+    sessionStorage.setItem("deletepatient", id);
     $("#psdelete").modal('show');
 }
 function patientdelete()
 {
      $("#psdelete").modal('hide'); 
-    var retrievedObject = localStorage.getItem('userinfo');
+    var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
     var priv = output.userType;
     if(priv!='A'){
@@ -409,7 +409,7 @@ function patientdelete()
     }
 
    
-    var pdid = localStorage.getItem("deletepatient");
+    var pdid = sessionStorage.getItem("deletepatient");
     var data = {"id": pdid};
 
     $.ajax({
@@ -460,7 +460,7 @@ function patientdelete()
     });
 }
 function logout() {
-    localStorage.clear();
+    sessionStorage.clear();
 
     window.location.href = "index.html";
 }

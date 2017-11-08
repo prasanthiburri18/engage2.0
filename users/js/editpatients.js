@@ -39,9 +39,9 @@ $('document').ready(function ()
      * If not fouund then explicitly we are logging out
      * using logout functionality
      */
-    if (localStorage.getItem("authtoken") != null)
+    if (sessionStorage.getItem("authtoken") != null)
     {
-        var usertoken = localStorage.getItem("authtoken");
+        var usertoken = sessionStorage.getItem("authtoken");
         var br = 'Bearer ';
         securitytoken = br.concat(usertoken);
     } else {
@@ -51,7 +51,7 @@ $('document').ready(function ()
 
 
 
-    var retrievedObject = localStorage.getItem('userinfo');
+    var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
     orgid = output.orgid;
     //for view_patient
@@ -87,7 +87,7 @@ if (output.userType == 'U')
         $("#emailpremier").css('display', 'block');
     })
     $("#logoutbtn").click(function () {
-        localStorage.clear();
+        sessionStorage.clear();
 
         window.location.href = "index.html";
     });
@@ -176,9 +176,12 @@ if (output.userType == 'U')
         type: 'POST',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+            //'Authorization': securitytoken,
             'Content-Type': 'application/json'
         },
+        xhrFields: {
+               withCredentials: true
+           },
         Accept: "application/json",
         data: JSON.stringify(pdata),
         beforeSend: function ()
@@ -479,9 +482,12 @@ if (output.userType == 'U')
             type: 'PUT',
             dataType: 'json',
             headers: {
-                'Authorization': securitytoken,
+                //'Authorization': securitytoken,
                 'Content-Type': 'application/json'
             },
+            xhrFields: {
+               withCredentials: true
+           },
             Accept: "application/json",
             data: JSON.stringify(pedidata),
             beforeSend: function ()
@@ -559,7 +565,7 @@ $("#cancel").click(function () {
 function logout() {
 
 
-    localStorage.clear();
+    sessionStorage.clear();
 
     window.location.href = "index.html";
 
@@ -574,9 +580,12 @@ function ViewpatientDetails()
         type: 'POST',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+            //'Authorization': securitytoken,
             'Content-Type': 'application/json'
         },
+        xhrFields: {
+               withCredentials: true
+           },
         Accept: "application/json",
         data: JSON.stringify(pvdata),
         beforeSend: function ()

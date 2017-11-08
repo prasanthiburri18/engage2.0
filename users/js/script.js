@@ -73,16 +73,16 @@ $('document').ready(function ()
 
                 if (response != null) {
 
-                   // localStorage.setItem('userinfo', JSON.stringify(response.data.UserBacsicInfo));
+                   // sessionStorage.setItem('userinfo', JSON.stringify(response.data.UserBacsicInfo));
 
                     //setUser(response.data.UserBacsicInfo);
                 //    setToken(response.data.token);
                     //New security change
                     setToken(response.access_token);
                     setRefreshToken(response.refresh_token);
-                    if(localStorage.getItem("authtoken")!=null)
+                    if(sessionStorage.getItem("authtoken")!=null)
                     {
-                     var usertoken=localStorage.getItem("authtoken");
+                     var usertoken=sessionStorage.getItem("authtoken");
                      var br='Bearer ';
                       var securitytoken = br.concat(usertoken);
                     }
@@ -279,7 +279,7 @@ $('document').ready(function ()
     function changepasswordsubmitForm()
     {
 
-        var cp = localStorage.getItem("changepasswordkey");
+        var cp = sessionStorage.getItem("changepasswordkey");
 
         var changepassstr = new Object();
         changepassstr.emailid = cp;
@@ -334,29 +334,29 @@ $('document').ready(function ()
 function setToken(token) {
 
 
-    localStorage.setItem("authtoken", token);
+    sessionStorage.setItem("authtoken", token);
 }
 function getToken() {
 
-    var authtoken = localStorage.getItem("authtoken");
+    var authtoken = sessionStorage.getItem("authtoken");
     return authtoken;
 }
 function setUser(userdata) {
-    localStorage.setItem("userinfo", JSON.stringify(userdata));
+    sessionStorage.setItem("userinfo", JSON.stringify(userdata));
 }
 function getUser() {
 
-    var userdata = localStorage.getItem("userinfo");
+    var userdata = sessionStorage.getItem("userinfo");
     return userdata;
 }
 
 
 //Engage2.0 change
 function setRefreshToken(token){
-	localStorage.setItem("refresh_token", token);
+	sessionStorage.setItem("refresh_token", token);
 }
 function logout() {
-    localStorage.clear();
+    sessionStorage.clear();
 
     window.location.href = "index.html";
 }

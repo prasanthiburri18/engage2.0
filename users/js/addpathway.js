@@ -146,7 +146,7 @@ $(document).ready(function () {
 
     $("#savepathway").click(function () {
 
-    var retrievedObject = localStorage.getItem('userinfo');
+    var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
 
     var priv = output.userType;
@@ -215,9 +215,9 @@ $(document).ready(function () {
      * If not fouund then explicitly we are logging out
      * using logout functionality
      */
-    if (localStorage.getItem("authtoken") != null)
+    if (sessionStorage.getItem("authtoken") != null)
     {
-        var usertoken = localStorage.getItem("authtoken");
+        var usertoken = sessionStorage.getItem("authtoken");
         var br = 'Bearer ';
         securitytoken = br.concat(usertoken);
     } else {
@@ -226,7 +226,7 @@ $(document).ready(function () {
     }
 
 
-    var retrievedObject = localStorage.getItem('userinfo');
+    var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
 
     orgid = output.orgid;
@@ -733,9 +733,12 @@ $(document).ready(function () {
                 type: 'POST',
                 dataType: 'json',
                 headers: {
-                    'Authorization': securitytoken,
+                    //'Authorization': securitytoken,
                     'Content-Type': 'application/json'
                 },
+                xhrFields: {
+               withCredentials: true
+           },
                 Accept: "application/json",
                 data: JSON.stringify(inputdata),
                 beforeSend: function ()
@@ -802,9 +805,12 @@ $(document).ready(function () {
                         type: 'POST',
                         dataType: 'json',
                         headers: {
-                            'Authorization': securitytoken,
+                            //'Authorization': securitytoken,
                             'Content-Type': 'application/json'
                         },
+                        xhrFields: {
+               withCredentials: true
+           },
                         Accept: "application/json",
                         data: JSON.stringify(inputBloc),
                         beforeSend: function ()
@@ -916,9 +922,12 @@ $(document).ready(function () {
                 type: 'POST',
                 dataType: 'json',
                 headers: {
-                    'Authorization': securitytoken,
+                    //'Authorization': securitytoken,
                     'Content-Type': 'application/json'
                 },
+                xhrFields: {
+               withCredentials: true
+           },
                 Accept: "application/json",
                 data: JSON.stringify(inputdata),
                 beforeSend: function ()
@@ -1184,7 +1193,7 @@ $(document).ready(function () {
      */
     $("#editblocsumbtn").click(function () {
 
-        var retrievedObject = localStorage.getItem('userinfo');
+        var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
     var priv = output.userType;
 
@@ -1334,9 +1343,12 @@ $('.fieldError').text('');
             async: false,
             dataType: 'json',
             headers: {
-                'Authorization': securitytoken,
+                //'Authorization': securitytoken,
                 'Content-Type': 'application/json'
             },
+            xhrFields: {
+               withCredentials: true
+           },
             Accept: "application/json",
             data: JSON.stringify(currenteditblock),
             beforeSend: function ()
@@ -1499,7 +1511,7 @@ $('.fieldError').text('');
         ev.stopPropagation();
         $('.fieldError').text('');
 
-var retrievedObject = localStorage.getItem('userinfo');
+var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
     var priv = output.userType;
     if(priv!='A'){
@@ -1764,9 +1776,12 @@ var retrievedObject = localStorage.getItem('userinfo');
                 async: false,
                 dataType: 'json',
                 headers: {
-                    'Authorization': securitytoken,
+                    //'Authorization': securitytoken,
                     'Content-Type': 'application/json'
                 },
+                xhrFields: {
+               withCredentials: true
+           },
                 Accept: "application/json",
                 data: JSON.stringify(inputBloc),
                 beforeSend: function ()
@@ -1892,9 +1907,12 @@ var retrievedObject = localStorage.getItem('userinfo');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -1999,9 +2017,12 @@ var retrievedObject = localStorage.getItem('userinfo');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2102,9 +2123,12 @@ var retrievedObject = localStorage.getItem('userinfo');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2225,9 +2249,12 @@ var retrievedObject = localStorage.getItem('userinfo');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2326,9 +2353,12 @@ var retrievedObject = localStorage.getItem('userinfo');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2428,9 +2458,12 @@ var retrievedObject = localStorage.getItem('userinfo');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2549,9 +2582,12 @@ var retrievedObject = localStorage.getItem('userinfo');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2654,9 +2690,12 @@ var retrievedObject = localStorage.getItem('userinfo');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2777,9 +2816,12 @@ var retrievedObject = localStorage.getItem('userinfo');
                         async: false,
                         dataType: 'json',
                         headers: {
-                            'Authorization': securitytoken,
+                            //'Authorization': securitytoken,
                             'Content-Type': 'application/json'
                         },
+                        xhrFields: {
+               withCredentials: true
+           },
                         Accept: "application/json",
                         data: JSON.stringify(inputBloc),
                         beforeSend: function ()
@@ -2879,9 +2921,12 @@ var retrievedObject = localStorage.getItem('userinfo');
                     async: false,
                     dataType: 'json',
                     headers: {
-                        'Authorization': securitytoken,
+                        //'Authorization': securitytoken,
                         'Content-Type': 'application/json'
                     },
+                    xhrFields: {
+               withCredentials: true
+           },
                     Accept: "application/json",
                     data: JSON.stringify(inputBloc),
                     beforeSend: function ()
@@ -3162,9 +3207,12 @@ var retrievedObject = localStorage.getItem('userinfo');
                 type: 'POST',
                 dataType: 'json',
                 headers: {
-                    'Authorization': securitytoken,
+                    //'Authorization': securitytoken,
                     'Content-Type': 'application/json'
                 },
+                xhrFields: {
+               withCredentials: true
+           },
                 Accept: "application/json",
                 data: JSON.stringify(inputdata),
                 beforeSend: function ()
@@ -3214,8 +3262,8 @@ var retrievedObject = localStorage.getItem('userinfo');
                     $currentpthwayId = response.data;
                     patwayinfo['name'] = patwname;
                     pathwaycreatedts = currenttime;
-                    localStorage.setItem("pathwayinfo", patwayinfo);
-                    var pathwind = localStorage.getItem("pathwayinfo");
+                    sessionStorage.setItem("pathwayinfo", patwayinfo);
+                    var pathwind = sessionStorage.getItem("pathwayinfo");
 
                     $isnewpathway = true;
                     $(".pathwayfilename").html(patwname);
@@ -3418,9 +3466,12 @@ function updatePathwayInfo(pid, pname)
         type: 'PUT',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+            //'Authorization': securitytoken,
             'Content-Type': 'application/json'
         },
+        xhrFields: {
+               withCredentials: true
+           },
         Accept: "application/json",
         data: JSON.stringify(inputdata),
         beforeSend: function ()

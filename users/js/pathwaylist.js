@@ -9,9 +9,9 @@ $(document).ready(function () {
  * If not fouund then explicitly we are logging out
  * using logout functionality
  */
-    if (localStorage.getItem("authtoken") != null)
+    if (sessionStorage.getItem("authtoken") != null)
     {
-        var usertoken = localStorage.getItem("authtoken");
+        var usertoken = sessionStorage.getItem("authtoken");
         var br = 'Bearer ';
         var securitytoken = br.concat(usertoken);
     } else {
@@ -20,7 +20,7 @@ $(document).ready(function () {
     }
 
 
-    var retrievedObject = localStorage.getItem('userinfo');
+    var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
     orgid = output.orgid;
     usertype = output.userType;
@@ -156,9 +156,12 @@ $(document).ready(function () {
                         type: 'POST',
                         dataType: 'json',
                         headers: {
-                            'Authorization': securitytoken,
+                            //'Authorization': securitytoken,
                             'Content-Type': 'application/json'
                         },
+                        xhrFields: {
+               withCredentials: true
+           },
                         Accept: "application/json",
                         data: JSON.stringify(pinfo),
                         beforeSend: function (request)
@@ -269,9 +272,12 @@ $(document).ready(function () {
         type: 'POST',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+            //'Authorization': securitytoken,
             'Content-Type': 'application/json'
         },
+        xhrFields: {
+               withCredentials: true
+           },
         Accept: "application/json",
         data: JSON.stringify(pdata),
         beforeSend: function (request)
@@ -339,7 +345,7 @@ function pathwaytEdit(id) {
 }
 function pathwaytDelete(id) {
 
-    localStorage.setItem("deletepathwayid", id);
+    sessionStorage.setItem("deletepathwayid", id);
 
     $("#psdelete").modal('show');
 }
@@ -348,7 +354,7 @@ function pathwaytDelete(id) {
 function logout() {
 
 
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.href = "index.html";
 
 }

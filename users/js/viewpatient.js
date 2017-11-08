@@ -29,9 +29,9 @@ $(document).ready(function() {
  * If not fouund then explicitly we are logging out
  * using logout functionality
  */
-if(localStorage.getItem("authtoken")!=null)
+if(sessionStorage.getItem("authtoken")!=null)
 {
- var usertoken=localStorage.getItem("authtoken");
+ var usertoken=sessionStorage.getItem("authtoken");
  var br='Bearer ';
   var securitytoken = br.concat(usertoken);
 }
@@ -42,7 +42,7 @@ else{
 
 
 
-var retrievedObject = localStorage.getItem('userinfo');
+var retrievedObject = sessionStorage.getItem('userinfo');
 var output=JSON.parse(retrievedObject);
 //Organization Id Engage2.0
 pdata.orgId=output.orgid;
@@ -72,10 +72,15 @@ $.ajax({
             type: 'POST',
             dataType: 'json',
             headers: {
-        'Authorization':securitytoken,
+        //'Authorization': securitytoken,
         'Content-Type':'application/json'
     },
-
+    xhrFields: {
+               withCredentials: true
+           },
+           xhrFields: {
+                          withCredentials: true
+                      },
             Accept: "application/json",
             data: JSON.stringify(pdata),
             beforeSend: function ()
@@ -139,10 +144,12 @@ patientfname=results.patient.firstName;
             type: 'POST',
             dataType: 'json',
             headers: {
-        'Authorization':securitytoken,
+        //'Authorization': securitytoken,
         'Content-Type':'application/json'
     },
-
+    xhrFields: {
+                   withCredentials: true
+               },
             Accept: "application/json",
             data: JSON.stringify(ppin),
             beforeSend: function ()
@@ -186,10 +193,12 @@ patientfname=results.patient.firstName;
             type: 'POST',
             dataType: 'json',
             headers: {
-        'Authorization':securitytoken,
+        //'Authorization': securitytoken,
         'Content-Type':'application/json'
     },
-
+    xhrFields: {
+                   withCredentials: true
+               },
             Accept: "application/json",
             data: JSON.stringify(eventcountinput),
             beforeSend: function ()
@@ -269,10 +278,12 @@ var phinput =results.patient.phone;
             type: 'POST',
             dataType: 'json',
             headers: {
-        'Authorization':securitytoken,
+        //'Authorization': securitytoken,
         'Content-Type':'application/json'
     },
-
+    xhrFields: {
+                   withCredentials: true
+               },
             Accept: "application/json",
             data: JSON.stringify(painp),
             beforeSend: function ()
@@ -298,10 +309,12 @@ var phinput =results.patient.phone;
             type: 'POST',
             dataType: 'json',
             headers: {
-        'Authorization':securitytoken,
+        //'Authorization': securitytoken,
         'Content-Type':'application/json'
     },
-
+    xhrFields: {
+                   withCredentials: true
+               },
             Accept: "application/json",
             data: JSON.stringify(ptin),
             success:function(response){
@@ -347,10 +360,12 @@ var phinput =results.patient.phone;
             type: 'POST',
             dataType: 'json',
             headers: {
-        'Authorization':securitytoken,
+        //'Authorization': securitytoken,
         'Content-Type':'application/json'
     },
-
+    xhrFields: {
+                   withCredentials: true
+               },
             Accept: "application/json",
             data: JSON.stringify(ppin),
             success:function(response){

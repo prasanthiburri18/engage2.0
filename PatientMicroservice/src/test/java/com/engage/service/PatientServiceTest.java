@@ -5,6 +5,7 @@ package com.engage.service;
 
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import com.engage.exception.PatientNotFoundException;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class PatientServiceTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(PatientServiceTest.class);

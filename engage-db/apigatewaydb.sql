@@ -63,7 +63,8 @@ CREATE TABLE `qc_host` (
 
 LOCK TABLES `qc_host` WRITE;
 /*!40000 ALTER TABLE `qc_host` DISABLE KEYS */;
-INSERT INTO `qc_host` VALUES (5,'192.168.0.20:8080','Y');
+INSERT INTO `qc_host` VALUES (1,'engage-staging.quantifiedcare.com','Y'),(2,'engage.quantifiedcare.com','Y'),(3,'twilio.com','Y'),(4,'192.168.0.24:8080','Y'),(5,'54.145.207.130','Y'),(6,'192.168.0.20:8080','Y');
+
 /*!40000 ALTER TABLE `qc_host` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -88,7 +89,7 @@ CREATE TABLE `qc_referer` (
 
 LOCK TABLES `qc_referer` WRITE;
 /*!40000 ALTER TABLE `qc_referer` DISABLE KEYS */;
-INSERT INTO `qc_referer` VALUES (1,'Y','engage-staging.quantifiedcare.com'),(2,'Y','engage.quantifiedcare.com'),(3,'Y','twilio.com'),(4,'Y','192.168.0.24:8080'),(5,'Y','54.145.207.130'),(5,'Y','192.168.0.20:8080');
+INSERT INTO `qc_referer` VALUES (1,'Y','engage-staging.quantifiedcare.com'),(2,'Y','engage.quantifiedcare.com'),(3,'Y','twilio.com'),(4,'Y','192.168.0.24:8080'),(5,'Y','54.145.207.130'),(6,'Y','192.168.0.20:8080');
 /*!40000 ALTER TABLE `qc_referer` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

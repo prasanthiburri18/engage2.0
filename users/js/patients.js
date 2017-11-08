@@ -7,31 +7,33 @@ var validatef;
 var orgid = 0;
 var currentdate = new Date();
 var currenttime = currentdate.getTime();
-
-$('document').ready(function ()
+/*if (sessionStorage.getItem("authtoken") != null)
 {
+    var usertoken = sessionStorage.getItem("authtoken");
+    var br = 'Bearer ';
+    var securitytoken = br.concat(usertoken);
+} else {
+    logout();
+    return;
+}*/
+var retrievedObject = sessionStorage.getItem('userinfo');
+var output = JSON.parse(retrievedObject);
+console.log(output);
+
+
     /**
      * Checking for token authentication on Page Load itself.
      * If not fouund then explicitly we are logging out
      * using logout functionality
      */
-    if (localStorage.getItem("authtoken") != null)
-    {
-        var usertoken = localStorage.getItem("authtoken");
-        var br = 'Bearer ';
-        var securitytoken = br.concat(usertoken);
-    } else {
-        logout();
-        return;
-    }
+  /*  
+*/
 
-    var retrievedObject = localStorage.getItem('userinfo');
-    var output = JSON.parse(retrievedObject);
     orgid = output.orgid;
 
     if (output.userType == 'U')
     {
-
+    	userinfo
         $("#patientaddpathwaybtn").css('display', 'none');
     }
 
@@ -68,7 +70,7 @@ $('document').ready(function ()
         $("#emailpremier").css('display', 'block');
     })
     $("#logoutbtn").click(function () {
-        localStorage.clear();
+        sessionStorage.clear();
 
         window.location.href = "index.html";
     });
@@ -158,9 +160,12 @@ $('document').ready(function ()
         type: 'POST',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+            //'Authorization': securitytoken,
             'Content-Type': 'application/json'
         },
+        xhrFields: {
+               withCredentials: true
+           },
         Accept: "application/json",
         data: JSON.stringify(pdata),
         beforeSend: function ()
@@ -170,8 +175,7 @@ $('document').ready(function ()
         },
         success: function (response)
         {
-
-
+        	
             if (response.statuscode == 200) {
 
 
@@ -227,6 +231,8 @@ $('document').ready(function ()
 
         }
     });
+    
+  
 //End of getting the pathway list here
 
     var checknames_name = "Hyper"
@@ -405,9 +411,12 @@ $('document').ready(function ()
             type: 'POST',
             dataType: 'json',
             headers: {
-                'Authorization': securitytoken,
+                //'Authorization': securitytoken,
                 'Content-Type': 'application/json'
             },
+            xhrFields: {
+               withCredentials: true
+           },
             Accept: "application/json",
             data: JSON.stringify(pdata),
             beforeSend: function ()
@@ -512,11 +521,11 @@ $('document').ready(function ()
 
 
 
-});
+
 function logout() {
 
 
-    localStorage.clear();
+    sessionStorage.clear();
 
     window.location.href = "index.html";
 

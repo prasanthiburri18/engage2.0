@@ -36,30 +36,6 @@ public class CookieAuthenticationFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		String requestUrl = httpRequest.getRequestURI();
-		
-		LOGGER.info(requestUrl);
-		Cookie[] cookies = new Cookie[]{};
-		
-		String value = "Some cookie";
-		Cookie cookie = new Cookie("AuthorizationToken", value);
-		cookie.setHttpOnly(true);
-		cookie.setSecure(true);
-		cookie.setMaxAge(1000000);
-		httpResponse.addCookie(cookie);
-		
-		LOGGER.info(httpResponse.getHeader("Cookie"));
-		if(requestUrl.contains(OAUTH2_TOKEN_URL)){
-			/*Cookie[] cookies = new Cookie[]{};
-			
-			String value = "Some cookie";
-			Cookie cookie = new Cookie("AuthorizationToken", value);
-			cookie.setHttpOnly(true);
-			cookie.setSecure(true);
-			httpResponse.addCookie(cookie);*/
-		}
 		
 		chain.doFilter(request, response);
 		

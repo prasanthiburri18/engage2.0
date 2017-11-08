@@ -67,11 +67,13 @@ public class ResponseFilter extends SendResponseFilter {
 				//authCookie.setMaxAge((int)(token.getExpiration().getTime() - System.currentTimeMillis())/1000);
 				authCookie.setPath("/ApiGateway");
 				authCookie.setVersion(1);
+			//	authCookie.setSecure(true);
 				//authCookie.setDomain(DOMAIN_NAME);
 				Cookie refreshCookie = new Cookie("refresh_token", token.getRefreshToken().getValue()+"#"+EXPIRES_IN+token.getExpiration().getTime());
 				refreshCookie.setHttpOnly(true);
 				refreshCookie.setPath("/ApiGateway");
 				refreshCookie.setVersion(1);
+			//	refreshCookie.setSecure(true);
 				//refreshCookie.setDomain(DOMAIN_NAME);
 				httpResponse.addCookie(authCookie);
 				httpResponse.addCookie(refreshCookie);

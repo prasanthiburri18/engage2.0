@@ -6,13 +6,13 @@ $('document').ready(function ()
      * If not fouund then explicitly we are logging out
      * using logout functionality
      */
-    if (localStorage.getItem("authtoken") != null)
+    if (sessionStorage.getItem("authtoken") != null)
     {
-        var usertoken = localStorage.getItem("authtoken");
+        var usertoken = sessionStorage.getItem("authtoken");
         var br = 'Bearer ';
         var securitytoken = br.concat(usertoken);
 
-        var retrievedObject = localStorage.getItem('userinfo');
+        var retrievedObject = sessionStorage.getItem('userinfo');
         output = JSON.parse(retrievedObject);
 
         $("#fullname").val(output.fullName);
@@ -84,7 +84,7 @@ $('document').ready(function ()
     {
 
 
-        var cp = localStorage.getItem("changepasswordkey");
+        var cp = sessionStorage.getItem("changepasswordkey");
 
         var changepassstr = new Object();
         changepassstr.userid = output.id;
@@ -101,9 +101,12 @@ $('document').ready(function ()
             Accept: "application/json",
             data: JSON.stringify(inputstring),
             headers: {
-                'Authorization': securitytoken,
+                //'Authorization': securitytoken,
                 'Content-Type': 'application/json'
             },
+            xhrFields: {
+               withCredentials: true
+           },
             beforeSend: function ()
             {
                 $("#error").fadeOut();
@@ -267,9 +270,12 @@ $('document').ready(function ()
             type: 'PUT',
             dataType: 'json',
             headers: {
-                'Authorization': securitytoken,
+                //'Authorization': securitytoken,
                 'Content-Type': 'application/json'
             },
+            xhrFields: {
+               withCredentials: true
+           },
             Accept: "application/json",
             data: JSON.stringify(userObj),
             beforeSend: function ()
@@ -283,7 +289,7 @@ $('document').ready(function ()
                 if (response.statuscode == 200)
                 {
                     $.LoadingOverlay("hide");
-                    localStorage.setItem("userinfo", JSON.stringify(userObj));
+                    sessionStorage.setItem("userinfo", JSON.stringify(userObj));
 
 
 

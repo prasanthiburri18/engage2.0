@@ -173,9 +173,9 @@ $('document').ready(function ()
      * If not fouund then explicitly we are logging out
      * using logout functionality
      */
-    if (localStorage.getItem("authtoken") != null)
+    if (sessionStorage.getItem("authtoken") != null)
     {
-        var usertoken = localStorage.getItem("authtoken");
+        var usertoken = sessionStorage.getItem("authtoken");
         var br = 'Bearer ';
         securitytoken = br.concat(usertoken);
 
@@ -189,7 +189,7 @@ $('document').ready(function ()
 
 
 
-    var retrievedObject = localStorage.getItem('userinfo');
+    var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
 
     if (output.userType == 'U')
@@ -230,7 +230,7 @@ $('document').ready(function ()
      * @return {JsonObject} JsonObject with status Code
      */
     $("#savepathway").click(function () {
-         var retrievedObject = localStorage.getItem('userinfo');
+         var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
 
     var priv = output.userType;
@@ -475,9 +475,12 @@ $('document').ready(function ()
         type: 'POST',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+            //'Authorization': securitytoken,
             'Content-Type': 'application/json'
         },
+        xhrFields: {
+               withCredentials: true
+           },
         Accept: "application/json",
         data: JSON.stringify(pdata),
         beforeSend: function ()
@@ -677,9 +680,12 @@ $('document').ready(function ()
             type: 'PUT',
             dataType: 'json',
             headers: {
-                'Authorization': securitytoken,
+                //'Authorization': securitytoken,
                 'Content-Type': 'application/json'
             },
+            xhrFields: {
+               withCredentials: true
+           },
             Accept: "application/json",
             data: JSON.stringify(evinputdata),
             beforeSend: function ()
@@ -740,7 +746,7 @@ $('document').ready(function ()
      *
      */
     $("#editblocsumbtn").click(function () {
-        var retrievedObject = localStorage.getItem('userinfo');
+        var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
     var priv = output.userType;
     if(priv!='A'){
@@ -754,7 +760,7 @@ $('document').ready(function ()
                     allowToastClose: false,
                     hideAfter: 5000,
                 });
-         
+
            $.LoadingOverlay("hide");
         return false;
     }
@@ -892,9 +898,12 @@ $('.fieldError').text('');
             async: false,
             dataType: 'json',
             headers: {
-                'Authorization': securitytoken,
+                //'Authorization': securitytoken,
                 'Content-Type': 'application/json'
             },
+            xhrFields: {
+               withCredentials: true
+           },
             Accept: "application/json",
             data: JSON.stringify(currenteditblock),
             beforeSend: function ()
@@ -1079,9 +1088,12 @@ $('.fieldError').text('');
             type: 'POST',
             dataType: 'json',
             headers: {
-                'Authorization': securitytoken,
+                //'Authorization': securitytoken,
                 'Content-Type': 'application/json'
             },
+            xhrFields: {
+               withCredentials: true
+           },
             Accept: "application/json",
             data: JSON.stringify(createeventobj),
             beforeSend: function ()
@@ -1431,13 +1443,13 @@ $('.fieldError').text('');
 
     $("div").on('click', '#addblocsumbtn', function (ev) {
 
- 
+
 
         $.LoadingOverlay("hide");
         ev.stopPropagation();
         $('.fieldError').text('');
 
-           var retrievedObject = localStorage.getItem('userinfo');
+           var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
     var priv = output.userType;
     if(priv!='A'){
@@ -1700,9 +1712,12 @@ $('.fieldError').text('');
                 async: false,
                 dataType: 'json',
                 headers: {
-                    'Authorization': securitytoken,
+                    //'Authorization': securitytoken,
                     'Content-Type': 'application/json'
                 },
+                xhrFields: {
+               withCredentials: true
+           },
                 Accept: "application/json",
                 data: JSON.stringify(inputBloc),
                 beforeSend: function ()
@@ -1849,9 +1864,12 @@ $('.fieldError').text('');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -1968,9 +1986,12 @@ $('.fieldError').text('');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2088,9 +2109,12 @@ $('.fieldError').text('');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2219,9 +2243,12 @@ $('.fieldError').text('');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2338,9 +2365,12 @@ $('.fieldError').text('');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2456,9 +2486,12 @@ $('.fieldError').text('');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2589,9 +2622,12 @@ $('.fieldError').text('');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2709,9 +2745,12 @@ $('.fieldError').text('');
                                 async: false,
                                 dataType: 'json',
                                 headers: {
-                                    'Authorization': securitytoken,
+                                    //'Authorization': securitytoken,
                                     'Content-Type': 'application/json'
                                 },
+                                xhrFields: {
+               withCredentials: true
+           },
                                 Accept: "application/json",
                                 data: JSON.stringify(inputBloc),
                                 beforeSend: function ()
@@ -2845,9 +2884,12 @@ $('.fieldError').text('');
                         async: false,
                         dataType: 'json',
                         headers: {
-                            'Authorization': securitytoken,
+                            //'Authorization': securitytoken,
                             'Content-Type': 'application/json'
                         },
+                        xhrFields: {
+               withCredentials: true
+           },
                         Accept: "application/json",
                         data: JSON.stringify(inputBloc),
                         beforeSend: function ()
@@ -2963,9 +3005,12 @@ $('.fieldError').text('');
                     async: false,
                     dataType: 'json',
                     headers: {
-                        'Authorization': securitytoken,
+                        //'Authorization': securitytoken,
                         'Content-Type': 'application/json'
                     },
+                    xhrFields: {
+               withCredentials: true
+           },
                     Accept: "application/json",
                     data: JSON.stringify(inputBloc),
                     beforeSend: function ()
@@ -3555,7 +3600,7 @@ function renderblock(blocks) {
 }
 function logout() {
 
-    localStorage.clear();
+    sessionStorage.clear();
 
     window.location.href = "index.html";
 
@@ -3574,9 +3619,12 @@ function updatePathwayInfo(pid, pname)
         type: 'PUT',
         dataType: 'json',
         headers: {
-            'Authorization': securitytoken,
+            //'Authorization': securitytoken,
             'Content-Type': 'application/json'
         },
+        xhrFields: {
+               withCredentials: true
+           },
         Accept: "application/json",
         data: JSON.stringify(inputdata),
         beforeSend: function ()
