@@ -1,9 +1,9 @@
 spring:
-  profiles.active: default,dev
+  profiles.active: default,local
 
 ---
 spring:
-  profiles: default,dev
+  profiles: default,local
   jmx.enabled: false
   
 example:

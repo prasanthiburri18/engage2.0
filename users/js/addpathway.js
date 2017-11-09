@@ -126,7 +126,66 @@ var $nextpage = 1;
 var eventscolsarrhederlist = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
 var pathswaysdata;
 
+
+
+$.holdReady( true );
+
+
+	var ajaxurl = userapibase+"/api/v1/userbasicinfo"
+	$.ajax({
+	    url: ajaxurl,
+	    type: 'GET',
+	    dataType: 'json',
+	    "async": true,
+	    "crossDomain": true,
+	    contentType: 'application/json; charset=UTF-8',
+	    Accept: "application/json",
+	    xhrFields: {
+	        withCredentials: true
+	    },
+	   // headers:{ 'Authorization':securitytoken},
+	    
+	    //  data: JSON.stringify(datat),
+	    beforeSend: function ()
+	    {
+
+	        $("#error").fadeOut();
+	        $.LoadingOverlay("show");
+	    },
+	    success:function(response){
+	    	if(response.data!=null){
+	    	setUser(response.data.UserBacsicInfo);
+	    	  $.LoadingOverlay("hide");
+	    	 
+	    	  $.holdReady( false );
+	    	//  setTimeout(' window.location.href = "patientslist.html"; ', 1000);
+	    	}
+	    },
+	    error: function(response, status){
+
+	    	if(response.status==412) {
+	    	$.LoadingOverlay("hide");
+	    		logout();
+	    	}
+
+	    }
+
+	});
+
+	function setUser(userdata) {
+		    sessionStorage.setItem("userinfo", JSON.stringify(userdata));
+		}
+		function getUser() {
+
+		    var userdata = sessionStorage.getItem("userinfo");
+		    return userdata;
+		}
+
+
 $(document).ready(function () {
+	
+	
+	
     if (navigator.userAgent.indexOf('Mac') > 0)
     {
         $('body').addClass('mac-os');
@@ -215,7 +274,7 @@ $(document).ready(function () {
      * If not fouund then explicitly we are logging out
      * using logout functionality
      */
-    if (sessionStorage.getItem("authtoken") != null)
+/*    if (sessionStorage.getItem("authtoken") != null)
     {
         var usertoken = sessionStorage.getItem("authtoken");
         var br = 'Bearer ';
@@ -224,7 +283,7 @@ $(document).ready(function () {
         logout();
         return;
     }
-
+*/
 
     var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
@@ -3525,4 +3584,7 @@ function updatePathwayInfo(pid, pname)
 
         }
     });
+    
+    
+
 }

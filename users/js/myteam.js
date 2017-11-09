@@ -4,13 +4,65 @@ var currentpraticename = '';
 var currentdate = new Date();
 var currenttime = currentdate.getTime();
 var currentusertype = 'A';
+$.holdReady( true );
+
+
+var ajaxurl = userapibase+"/api/v1/userbasicinfo"
+$.ajax({
+    url: ajaxurl,
+    type: 'GET',
+    dataType: 'json',
+    "async": true,
+    "crossDomain": true,
+    contentType: 'application/json; charset=UTF-8',
+    Accept: "application/json",
+    xhrFields: {
+        withCredentials: true
+    },
+   // headers:{ 'Authorization':securitytoken},
+    
+    //  data: JSON.stringify(datat),
+    beforeSend: function ()
+    {
+
+        $("#error").fadeOut();
+        $.LoadingOverlay("show");
+    },
+    success:function(response){
+    	if(response.data!=null){
+    	setUser(response.data.UserBacsicInfo);
+    	  $.LoadingOverlay("hide");
+    	 
+    	  $.holdReady( false );
+    	//  setTimeout(' window.location.href = "patientslist.html"; ', 1000);
+    	}
+    },
+    error: function(response, status){
+
+    	if(response.status==412) {
+    	$.LoadingOverlay("hide");
+    		logout();
+    	}
+
+    }
+
+});
+
+function setUser(userdata) {
+	    sessionStorage.setItem("userinfo", JSON.stringify(userdata));
+	}
+	function getUser() {
+
+	    var userdata = sessionStorage.getItem("userinfo");
+	    return userdata;
+	}
 
 $(document).ready(function () {
-    /**
+/*    *//**
      * Checking for token authentication on Page Load itself.
      * If not fouund then explicitly we are logging out
      * using logout functionality
-     */
+     *//*
     if (sessionStorage.getItem("authtoken") != null)
     {
         var usertoken = sessionStorage.getItem("authtoken");
@@ -20,7 +72,7 @@ $(document).ready(function () {
         logout();
         return;
     }
-
+*/
     var retrievedObject = sessionStorage.getItem('userinfo');
     var output = JSON.parse(retrievedObject);
     orgid = output.orgid;

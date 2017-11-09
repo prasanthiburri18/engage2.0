@@ -150,7 +150,7 @@ var securitytoken = '';
  * using logout functionality
  */
 
-if (sessionStorage.getItem("authtoken") != null)
+/*if (sessionStorage.getItem("authtoken") != null)
 {
     var usertoken = sessionStorage.getItem("authtoken");
     var br = 'Bearer ';
@@ -158,49 +158,106 @@ if (sessionStorage.getItem("authtoken") != null)
 } else {
     logout();
 
-}
+}*/
 
-var retrievedObject = sessionStorage.getItem('userinfo');
-var output = JSON.parse(retrievedObject);
-
+$.holdReady( true );
 
 
+var ajaxurl = userapibase+"/api/v1/userbasicinfo"
+$.ajax({
+    url: ajaxurl,
+    type: 'GET',
+    dataType: 'json',
+    "async": true,
+    "crossDomain": true,
+    contentType: 'application/json; charset=UTF-8',
+    Accept: "application/json",
+    xhrFields: {
+        withCredentials: true
+    },
+   // headers:{ 'Authorization':securitytoken},
+    
+    //  data: JSON.stringify(datat),
+    beforeSend: function ()
+    {
 
+        $("#error").fadeOut();
+        $.LoadingOverlay("show");
+    },
+    success:function(response){
+    	if(response.data!=null){
+    	setUser(response.data.UserBacsicInfo);
+    	  $.LoadingOverlay("hide");
+    	 
+    	  $.holdReady( false );
+    	//  setTimeout(' window.location.href = "patientslist.html"; ', 1000);
+    	}
+    },
+    error: function(response, status){
 
+    	if(response.status==412) {
+    	$.LoadingOverlay("hide");
+    		logout();
+    	}
 
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-            sURLVariables = sPageURL.split('&'),
-            sParameterName,
-            i;
-
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : sParameterName[1];
-        }
     }
-};
-var pid = getUrlParameter('pathwayid');
-var patientid = getUrlParameter('patientid');
 
-var pdata = {"id": pid,"orgId":output.orgid};
-var ptdata = {};
-ptdata.id = patientid;
-ptdata.orgId=output.orgid;
+});
+
+function setUser(userdata) {
+	    sessionStorage.setItem("userinfo", JSON.stringify(userdata));
+	}
+	function getUser() {
+
+	    var userdata = sessionStorage.getItem("userinfo");
+	    return userdata;
+	}
 
 
-var maxRowNumber = 0;
-var maxColNumber = 0;
-var accpeteddate = '';
-$blocktype = 'M';
 
-var patientpathwayinput = {"patientid": patientid, "pathwayid": pid};
-var patientacceptdate = false;
 
 $('document').ready(function ()
 {
+	var retrievedObject = sessionStorage.getItem('userinfo');
+	var output = JSON.parse(retrievedObject);
+
+
+
+
+
+
+	var getUrlParameter = function getUrlParameter(sParam) {
+	    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+	            sURLVariables = sPageURL.split('&'),
+	            sParameterName,
+	            i;
+
+	    for (i = 0; i < sURLVariables.length; i++) {
+	        sParameterName = sURLVariables[i].split('=');
+
+	        if (sParameterName[0] === sParam) {
+	            return sParameterName[1] === undefined ? true : sParameterName[1];
+	        }
+	    }
+	};
+	var pid = getUrlParameter('pathwayid');
+	var patientid = getUrlParameter('patientid');
+
+	var pdata = {"id": pid,"orgId":output.orgid};
+	var ptdata = {};
+	ptdata.id = patientid;
+	ptdata.orgId=output.orgid;
+
+
+	var maxRowNumber = 0;
+	var maxColNumber = 0;
+	var accpeteddate = '';
+	$blocktype = 'M';
+
+	var patientpathwayinput = {"patientid": patientid, "pathwayid": pid};
+	var patientacceptdate = false;
+	
+	
     if (navigator.userAgent.indexOf('Mac') > 0)
     {
         $('body').addClass('mac-os');
@@ -2099,7 +2156,7 @@ $('document').ready(function ()
 
 
 
-});
+//});
 function addemptydata(pathswaysdata, maxRowNumber)
 {
 
@@ -2831,6 +2888,8 @@ function patientChildblockdelete(id)
         }
     });
 }
+
+});
 function logout() {
 
 
