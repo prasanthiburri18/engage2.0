@@ -226,7 +226,7 @@ $('document').ready(function ()
      * If not fouund then explicitly we are logging out
      * using logout functionality
      */
-    if (sessionStorage.getItem("authtoken") != null)
+/*    if (sessionStorage.getItem("authtoken") != null)
     {
         var usertoken = sessionStorage.getItem("authtoken");
         var br = 'Bearer ';
@@ -239,7 +239,7 @@ $('document').ready(function ()
         logout();
         return;
     }
-
+*/
 
 
     var retrievedObject = sessionStorage.getItem('userinfo');
@@ -3428,7 +3428,7 @@ $('.fieldError').text('');
 
     });
 
-});
+//});
 function addemptydata(pathswaysdata, maxRowNumber)
 {
 
@@ -3720,3 +3720,4 @@ function updatePathwayInfo(pid, pname)
         }
     });
 }
+});

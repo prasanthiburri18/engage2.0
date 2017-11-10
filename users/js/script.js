@@ -73,19 +73,19 @@ $('document').ready(function ()
 
                 if (response != null) {
 
-                   // sessionStorage.setItem('userinfo', JSON.stringify(response.data.UserBacsicInfo));
+                    //sessionStorage.setItem('userinfo', JSON.stringify(response.data.UserBacsicInfo));
 
-                    //setUser(response.data.UserBacsicInfo);
-                //    setToken(response.data.token);
+                  //  setUser(response.data.UserBacsicInfo);
+                  // setToken(response.data.token);
                     //New security change
-                    setToken(response.access_token);
+                  /*  setToken(response.access_token);
                     setRefreshToken(response.refresh_token);
                     if(sessionStorage.getItem("authtoken")!=null)
                     {
                      var usertoken=sessionStorage.getItem("authtoken");
                      var br='Bearer ';
                       var securitytoken = br.concat(usertoken);
-                    }
+                    }*/
                     var ajaxurl = userapibase+"/api/v1/userbasicinfo"
                     $.ajax({
                         url: ajaxurl,
@@ -96,7 +96,7 @@ $('document').ready(function ()
                         contentType: 'application/json; charset=UTF-8',
                         Accept: "application/json",
                         xhrFields: {
-                            withCredentials: true
+                             withCredentials: true
                         },
                        // headers:{ 'Authorization':securitytoken},
                         

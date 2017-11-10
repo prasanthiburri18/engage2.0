@@ -24,9 +24,10 @@ $.ajax({
     //  data: JSON.stringify(datat),
     beforeSend: function ()
     {
-
+    	
         $("#error").fadeOut();
         $.LoadingOverlay("show");
+    
     },
     success:function(response){
     	if(response.data!=null){

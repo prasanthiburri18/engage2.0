@@ -16,6 +16,12 @@ public class Jobs {
 	@Value("${example.scheduledJob.enabled:false}")
 	private boolean scheduledJobEnabled;
 	
+	@Value("${firstDayRunUrl}")
+	private String firstDayRunUrl;
+	
+	@Value("${dayTwoRunUrl}")
+	private String dayTwoRunUrl;
+	
 	private RestTemplate restTemplate = new RestTemplate();
 	@Scheduled(fixedRate = 120000)  // 2 min every 30 seconds
 	public void pullRandomComment() {
@@ -24,7 +30,7 @@ public class Jobs {
 		Map<String,Object> data1=new HashMap<String,Object>();
 	
 //		Map<String,Object> pathway=(Map<String, Object>) restTemplate.postForObject("http://35.166.195.23:8080/ScheduleMicroservice/api/v1/blockcronrun", data1,Object.class );
-		Map<String,Object> pathway=(Map<String, Object>) restTemplate.postForObject("http://localhost:8080/ScheduleMicroservice/api/v1/firstdayblockcronrun", data1,Object.class );
+		Map<String,Object> pathway=(Map<String, Object>) restTemplate.postForObject(firstDayRunUrl, data1,Object.class );
 
 	}
 	//9 AM Cron
@@ -35,7 +41,7 @@ public class Jobs {
 	//	RestTemplate restTemplate = new RestTemplate();
 		Map<String,Object> data1=new HashMap<String,Object>();
 //		Map<String,Object> pathway=(Map<String, Object>) restTemplate.postForObject("http://35.166.195.23:8080/ScheduleMicroservice/api/v1/blockcronrun", data1,Object.class );
-		Map<String,Object> pathway=(Map<String, Object>) restTemplate.postForObject("http://localhost:8080/ScheduleMicroservice/api/v1/blockcronrun", data1,Object.class );
+		Map<String,Object> pathway=(Map<String, Object>) restTemplate.postForObject(dayTwoRunUrl, data1,Object.class );
 
 	}
 
