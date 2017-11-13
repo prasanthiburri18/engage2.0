@@ -24,7 +24,6 @@ public class ResponseFilter extends SendResponseFilter {
 
 	private static final String OAUTH2_TOKEN_URL = "/ApiGateway/users/oauth/token";
 
-	private static final String DOMAIN_NAME ="192.168.0.20:8080";
 	private static final String BEARER ="Bearer";
 	private static final String EXPIRES_IN="validitiy";
 
@@ -38,7 +37,7 @@ public class ResponseFilter extends SendResponseFilter {
 	
 		log.info("Request scheme http/https: " + request.getScheme());
 		log.info(String.format("%s request to %s", request.getMethod(), request.getRequestURL().toString()));
-
+		log.info("request domain :"+ request.getServerName());
 		String requestUrl = request.getRequestURI();
 
 		HttpServletResponse httpResponse = ctx.getResponse();
@@ -64,17 +63,19 @@ public class ResponseFilter extends SendResponseFilter {
 				ctx.setResponseDataStream(responseDataStream);
 				Cookie authCookie = new Cookie("Authorization", " Bearer"+" "+token.getValue()+"#"+EXPIRES_IN+token.getExpiration().getTime());
 				authCookie.setHttpOnly(true);
-				//authCookie.setMaxAge((int)(token.getExpiration().getTime() - System.currentTimeMillis())/1000);
+				authCookie.setMaxAge((int)(token.getExpiration().getTime() - System.currentTimeMillis())/1000);
 				authCookie.setPath("/ApiGateway");
 				authCookie.setVersion(1);
-			//	authCookie.setSecure(true);
-				//authCookie.setDomain(DOMAIN_NAME);
+				authCookie.setSecure(true);
+				
+				log.info("request domain :"+ request.getServerName());
+				authCookie.setDomain(request.getServerName());
 				Cookie refreshCookie = new Cookie("refresh_token", token.getRefreshToken().getValue()+"#"+EXPIRES_IN+token.getExpiration().getTime());
 				refreshCookie.setHttpOnly(true);
 				refreshCookie.setPath("/ApiGateway");
 				refreshCookie.setVersion(1);
-			//refreshCookie.setSecure(true);
-				//refreshCookie.setDomain(DOMAIN_NAME);
+			refreshCookie.setSecure(true);
+				refreshCookie.setDomain(request.getServerName());
 				httpResponse.addCookie(authCookie);
 				httpResponse.addCookie(refreshCookie);
 				
