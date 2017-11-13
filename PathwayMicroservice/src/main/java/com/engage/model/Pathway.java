@@ -35,7 +35,7 @@ public class Pathway {
 	@NotNull(message = "Pathway name cannot be empty.")
 	@NotBlank(message = "Pathway name cannot be empty.")
 	@Length(max = 30, message = "Pathway name exceeds {max} characters.")
-	@Pattern(regexp = "^[a-zA-z0-9\\s]*$", message = "Only alphanumeric characters are allowed.")
+	@Pattern(regexp = "^[a-zA-Z0-9\\s]*$", message = "Only alphanumeric characters are allowed.")
 	@Column(name = "pathway_name")
 	private String pathwayName;
 	

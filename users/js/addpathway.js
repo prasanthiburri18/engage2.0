@@ -492,7 +492,7 @@ $(document).ready(function () {
     $("#headerrow").on('click', 'th', function () {
         if ($(this).children().length > 0) {
 
-            var ename = $(this).children().text();
+            var ename = $(this).children().text().trim();
 
             var erw = $(this).index();
             var eveid = $("#pathwaytemplatemaincontent tr td:nth-child(" + $(this).index() + ") div").data('eventid');
@@ -750,7 +750,7 @@ $(document).ready(function () {
         var eventdat = 1;
         if ($('#eventname').val() != '')
         {
-            eventname = $('#eventname').val();
+            eventname = $('#eventname').val().trim();
         }
 
         var nexteventcol = $filledeventcols.length;
@@ -1588,7 +1588,7 @@ var retrievedObject = sessionStorage.getItem('userinfo');
         return false;
     }
 
-        var blockname = $("#blockname").val();
+        var blockname = $("#blockname").val().trim();
         var blocknameregexp = new RegExp('^[a-zA-Z0-9\\s]+$');
   if (blockname == '')
         {
@@ -3235,7 +3235,7 @@ var retrievedObject = sessionStorage.getItem('userinfo');
     $("#createpathway").click(function () {
 
 
-        patwname = $('#pathwayname').val();
+        patwname = $('#pathwayname').val().trim();
 
         if (patwname == '')
         {

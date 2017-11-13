@@ -279,7 +279,7 @@ $('document').ready(function ()
     function changepasswordsubmitForm()
     {
 
-        var cp = sessionStorage.getItem("changepasswordkey");
+        var cp = localStorage.getItem("changepasswordkey");
 
         var changepassstr = new Object();
         changepassstr.emailid = cp;

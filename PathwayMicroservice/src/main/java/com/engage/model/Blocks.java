@@ -30,7 +30,7 @@ public class Blocks {
 	@NotNull(message = "Block name cannot be empty.")
 	@NotBlank(message = "Block name cannot be empty.")
 	@Length(max = 30, message = "Block name exceeds {max} characters.")
-	@Pattern(regexp = "^[a-zA-z0-9\\s]*$", message = "Only alphanumeric characters are allowed.")
+	@Pattern(regexp = "^[a-zA-Z0-9\\s]*$", message = "Only alphanumeric characters are allowed.")
 	@Column(name = "block_name")
 	private String blockName;
 	@Column(name = "block_type")

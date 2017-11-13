@@ -28,7 +28,7 @@ import com.engage.dto.PatientDto;
  *
  */
 @RunWith(SpringRunner.class)
-@Ignore
+//@Ignore
 public class ValidatePatientDtoTest {
 	
 	/**
@@ -87,8 +87,9 @@ public class ValidatePatientDtoTest {
 	@Test
 	public void specialCharsInFirstName(){
 		PatientDto p = new PatientDto();
-		p.setFirstName("$ R");
-		Set<ConstraintViolation<PatientDto>> errors = validator.validateProperty(p,"firstName");
+		p.setFirstName("dlfdl R");
+		p.setLastName("dlfdl^ _R");
+		Set<ConstraintViolation<PatientDto>> errors = validator.validateProperty(p,"lastName");
 		logger.info(ConstraintValidationUtils.getMapOfValidations(errors).toString());
 		org.junit.Assert.assertEquals(errors.size(), 1);
 		}

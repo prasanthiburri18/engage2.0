@@ -489,8 +489,8 @@ if (output.userType == 'U')
       //Clear server side error messages before submitting
       $('.fieldError').text('');
 
-        var pfname = $("#editpatienfrmfirstname").val();
-        var plname = $("#editpatienfrmlastname").val();
+        var pfname = $("#editpatienfrmfirstname").val().trim();
+        var plname = $("#editpatienfrmlastname").val().trim();
 
         valid=1;
         var pdob = $("#editpatientdob").val();

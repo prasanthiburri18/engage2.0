@@ -344,10 +344,10 @@ $('.phone').keypress(function (event) {
      */
     function addteamsubmitForm()
     {
-        var pfname = $("#teammembername").val();
-        var temail = $("#teammemberemail").val();
+        var pfname = $("#teammembername").val().trim();
+        var temail = $("#teammemberemail").val().trim();
         var pdob = $("#teammembernamedob").val();
-        var temamemcomments = $("#membercomments").val();
+        var temamemcomments = $("#membercomments").val().trim();
 
         var phone_aval = $('#phone1').val();
         var phone_bval = $('#phone2').val();

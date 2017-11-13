@@ -426,8 +426,8 @@ console.log(output);
       $('.fieldError').text('');
 
 
-        var pfname = $("#patienfrmfirstname").val();
-        var plname = $("#patienfrmlastname").val();
+        var pfname = $("#patienfrmfirstname").val().trim();
+        var plname = $("#patienfrmlastname").val().trim();
 
         var outDate = $("#patientdob").val();
       //   var date = new Date($('#patientdob').val());

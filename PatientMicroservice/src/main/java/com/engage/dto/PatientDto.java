@@ -45,11 +45,10 @@ public class PatientDto {
 	@Length(max = 60, message = "First name exceeds {max} characters.")
 	@Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Only alphabet characters are allowed.")
 	private String firstName;
-
 	@NotNull(message = "Last name cannot be empty")
 	@NotBlank(message = "Last name cannot be empty")
 	@Length(max = 60, message = "Last name exceeds {max} characters.")
-	@Pattern(regexp = "^[a-zA-z\\s]*$", message = "Only alphabet characters are allowed.")
+	@Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Only alphabet characters are allowed.")
 	private String lastName;
 
 	/**

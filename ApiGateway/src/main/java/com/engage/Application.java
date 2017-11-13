@@ -51,6 +51,7 @@ public class Application extends SpringBootServletInitializer {
 	 * 
 	 * @return
 	 */
+	
 	@Bean
 	public FilterRegistrationBean jwtFilter() {
 		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
@@ -75,6 +76,7 @@ public class Application extends SpringBootServletInitializer {
 								"Access-Control-Allow-Credentials", "Access-Control-Allow-Headers")
 						.allowCredentials(true).maxAge(3600);
 			}
+			
 
 		};
 	}

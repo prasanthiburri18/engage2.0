@@ -34,7 +34,7 @@ public class Events {
 	@NotBlank(message = "Event name cannot be empty.")
 
 			@Length(max = 30, message = "Event name exceeds {max} characters.")
-	@Pattern(regexp = "^[a-zA-z0-9\\s]*$", message = "Only alphanumeric characters are allowed.")
+	@Pattern(regexp = "^[a-zA-Z0-9\\s]*$", message = "Only alphanumeric characters are allowed.")
 	@Column(name = "event_name")
 	private String eventName;
 

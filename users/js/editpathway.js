@@ -687,7 +687,7 @@ $('document').ready(function ()
                 {
                     $("#addeventmodal").trigger("click");
                     document.getElementById("eventname").focus();
-//                $('#eventname').focus()
+//                $('').focus()
                 }
 
             }
@@ -718,7 +718,7 @@ $('document').ready(function ()
      */
     $("#editevent").on('click', function () {
 
-        var meventname = $("#editeventname").val();
+        var meventname = $("#editeventname").val().trim();
         var evinputdata = {
             "id": $("#eventeditid").val(),
             "eventName": meventname,
@@ -1072,7 +1072,7 @@ $('.fieldError').text('');
         nexteventcol = nexteventcol + 1;
 
 
-        var eventname = $("#eventname").val();
+        var eventname = $("#eventname").val().trim();
 
         if (eventname == '')
         {
@@ -1519,7 +1519,7 @@ $('.fieldError').text('');
 
         return false;
     }
-        var blockname = $("#blockname").val();
+        var blockname = $("#blockname").val().trim();
         var blocknameregexp = new RegExp('^[a-zA-Z0-9\\s]+$');
 
         if (blockname == '')

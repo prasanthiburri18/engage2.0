@@ -298,9 +298,9 @@ $('document').ready(function ()
       //Clear server side error messages before submitting
       $('.fieldError').text('');
 
-        var fullname = $("#fullname").val();
-        var email = $("#email").val();
-        var orgname = $("#orgname").val();
+        var fullname = $("#fullname").val().trim();
+        var email = $("#email").val().trim();
+        var orgname = $("#orgname").val().trim();
 
 
         var phone_aval = $('#phone1').val();

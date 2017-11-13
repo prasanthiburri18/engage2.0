@@ -24,8 +24,10 @@ public class ResponseFilter extends SendResponseFilter {
 
 	private static final String OAUTH2_TOKEN_URL = "/ApiGateway/users/oauth/token";
 
-	private static final String BEARER ="Bearer";
-	private static final String EXPIRES_IN="validitiy";
+	private static final String LOGOUT_URL = "/ApiGateway/api/v1/logout";
+
+	private static final String BEARER = "Bearer";
+	private static final String EXPIRES_IN = "validitiy";
 
 	@Override
 	public Object run() {
@@ -34,18 +36,40 @@ public class ResponseFilter extends SendResponseFilter {
 		HttpServletRequest request = ctx.getRequest();
 		log.info("Http Version " + request.getProtocol());
 
-	
 		log.info("Request scheme http/https: " + request.getScheme());
 		log.info(String.format("%s request to %s", request.getMethod(), request.getRequestURL().toString()));
-		log.info("request domain :"+ request.getServerName());
+		log.info("request domain :" + request.getServerName());
 		String requestUrl = request.getRequestURI();
 
 		HttpServletResponse httpResponse = ctx.getResponse();
-		if(request.getCookies()!=null){
-		Cookie[] requestCookies = request.getCookies();
-		for(Cookie cookie : requestCookies){
-			log.info(cookie.getValue());
-		}}
+		if (request.getCookies() != null) {
+			Cookie[] requestCookies = request.getCookies();
+			for (Cookie cookie : requestCookies) {
+				log.info(cookie.getValue());
+			}
+		}
+		if (requestUrl.equals(LOGOUT_URL) && request.getCookies() != null && request.getCookies().length > 1) {
+
+			Cookie authCookie = new Cookie("Authorization", null);
+			authCookie.setHttpOnly(true);
+			authCookie.setMaxAge(-1);
+			authCookie.setPath("/ApiGateway");
+			authCookie.setVersion(1);
+			authCookie.setSecure(true);
+
+			log.info("request domain :" + request.getServerName());
+			authCookie.setDomain(request.getServerName());
+			Cookie refreshCookie = new Cookie("refresh_token", null);
+			refreshCookie.setHttpOnly(true);
+			refreshCookie.setPath("/ApiGateway");
+			refreshCookie.setVersion(1);
+			refreshCookie.setSecure(true);
+			refreshCookie.setMaxAge(-1);
+			refreshCookie.setDomain(request.getServerName());
+			httpResponse.addCookie(authCookie);
+			httpResponse.addCookie(refreshCookie);
+
+		}
 		if (requestUrl.contains(OAUTH2_TOKEN_URL) && ctx.getResponseStatusCode() == 200) {
 
 			ObjectMapper mapper = new ObjectMapper();
@@ -58,35 +82,35 @@ public class ResponseFilter extends SendResponseFilter {
 				OAuth2AccessToken token = mapper.readValue(ctx.getResponseDataStream(), OAuth2AccessToken.class);
 				log.info(token.getValue());
 				byte[] byteArray = mapper.writeValueAsBytes(token);
-				
+
 				InputStream responseDataStream = new ByteArrayInputStream(byteArray);
 				ctx.setResponseDataStream(responseDataStream);
-				Cookie authCookie = new Cookie("Authorization", " Bearer"+" "+token.getValue()+"#"+EXPIRES_IN+token.getExpiration().getTime());
+				Cookie authCookie = new Cookie("Authorization",
+						" Bearer" + " " + token.getValue() + "#" + EXPIRES_IN + token.getExpiration().getTime());
 				authCookie.setHttpOnly(true);
-				authCookie.setMaxAge((int)(token.getExpiration().getTime() - System.currentTimeMillis())/1000);
+				authCookie.setMaxAge((int) (token.getExpiration().getTime() - System.currentTimeMillis()) / 1000);
 				authCookie.setPath("/ApiGateway");
 				authCookie.setVersion(1);
 				authCookie.setSecure(true);
-				
-				log.info("request domain :"+ request.getServerName());
+
+				log.info("request domain :" + request.getServerName());
 				authCookie.setDomain(request.getServerName());
-				Cookie refreshCookie = new Cookie("refresh_token", token.getRefreshToken().getValue()+"#"+EXPIRES_IN+token.getExpiration().getTime());
+				Cookie refreshCookie = new Cookie("refresh_token",
+						token.getRefreshToken().getValue() + "#" + EXPIRES_IN + token.getExpiration().getTime());
 				refreshCookie.setHttpOnly(true);
 				refreshCookie.setPath("/ApiGateway");
 				refreshCookie.setVersion(1);
-			refreshCookie.setSecure(true);
+				refreshCookie.setSecure(true);
 				refreshCookie.setDomain(request.getServerName());
 				httpResponse.addCookie(authCookie);
 				httpResponse.addCookie(refreshCookie);
-				
+
 			} catch (JSONException | IOException e) {
-					log.error("Error while setting authorization cookies. Exception message: "+e.getMessage());
+				log.error("Error while setting authorization cookies. Exception message: " + e.getMessage());
 				e.printStackTrace();
 			}
 
-		
-
-		} 
+		}
 		return null;
 	}
 
