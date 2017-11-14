@@ -24,7 +24,7 @@ public class ResponseFilter extends SendResponseFilter {
 
 	private static final String OAUTH2_TOKEN_URL = "/ApiGateway/users/oauth/token";
 
-	private static final String LOGOUT_URL = "/ApiGateway/api/v1/logout";
+	private static final String LOGOUT_URL = "/ApiGateway/userlogout";
 
 	private static final String BEARER = "Bearer";
 	private static final String EXPIRES_IN = "validitiy";
@@ -55,7 +55,7 @@ public class ResponseFilter extends SendResponseFilter {
 			authCookie.setMaxAge(-1);
 			authCookie.setPath("/ApiGateway");
 			authCookie.setVersion(1);
-			authCookie.setSecure(true);
+			//authCookie.setSecure(true);
 
 			log.info("request domain :" + request.getServerName());
 			authCookie.setDomain(request.getServerName());
@@ -63,7 +63,7 @@ public class ResponseFilter extends SendResponseFilter {
 			refreshCookie.setHttpOnly(true);
 			refreshCookie.setPath("/ApiGateway");
 			refreshCookie.setVersion(1);
-			refreshCookie.setSecure(true);
+		//	refreshCookie.setSecure(true);
 			refreshCookie.setMaxAge(-1);
 			refreshCookie.setDomain(request.getServerName());
 			httpResponse.addCookie(authCookie);
@@ -100,6 +100,8 @@ public class ResponseFilter extends SendResponseFilter {
 				refreshCookie.setHttpOnly(true);
 				refreshCookie.setPath("/ApiGateway");
 				refreshCookie.setVersion(1);
+				
+				refreshCookie.setMaxAge((int) (token.getExpiration().getTime() - System.currentTimeMillis()) / 1000);
 				refreshCookie.setSecure(true);
 				refreshCookie.setDomain(request.getServerName());
 				httpResponse.addCookie(authCookie);

@@ -246,7 +246,7 @@ $(document).ready(function () {
                         },
                         error: function(response, status){
 
-                        	if(response.status==412) {
+                        	if(response.status==412 || response.status==401) {
                         	$.LoadingOverlay("hide");
                         		logout();
                         	}
@@ -518,8 +518,51 @@ function patientdelete()
     });
 }
 
+
+function logout() {
+    sessionStorage.clear();
+
+    var ajaxurl = baseurl+"/api/v1/logout";
+    $.ajax({
+        url: ajaxurl,
+        type: 'GET',
+        dataType: 'json',
+        "async": true,
+        "crossDomain": true,
+        contentType: 'application/json; charset=UTF-8',
+        Accept: "application/json",
+        xhrFields: {
+             withCredentials: true
+        },
+       // headers:{ 'Authorization':securitytoken},
+        
+        //  data: JSON.stringify(datat),
+        beforeSend: function ()
+        {
+
+            $("#error").fadeOut();
+            $.LoadingOverlay("show");
+        },
+        success:function(response){
+
+            window.location.href = "index.html";
+        },
+        error: function(response, status){
+
+
+            window.location.href = "index.html";
+        }
+
+    });
+
+    
+    window.location.href = "index.html";
+}
+
+
+/*
 function logout() {
     sessionStorage.clear();
 
     window.location.href = "index.html";
-}
+}*/

@@ -73,13 +73,14 @@ public class SimpleFilter extends ZuulFilter {
 				authHeader=str;
 					
 		}
+		if(authValidityString!=null&&!authValidityString.equals("")){
 		long authTokenValidityInSeconds = Long.parseLong(authValidityString);
 		boolean isAuthTokenValid = (authTokenValidityInSeconds - System.currentTimeMillis()/1000) > 0;
 		if(authHeader!=null && isAuthTokenValid){
 			//if authtoken still exists
 		ctx.addZuulRequestHeader("Authorization", authHeader);
 		}
-		
+		}
 		}
 		else{
 			ctx.addZuulRequestHeader("Authorization", request.getHeader("Authorization"));

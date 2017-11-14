@@ -36,20 +36,23 @@ public class ResponseInterceptor extends HandlerInterceptorAdapter {
 	private static final String BEARER ="Bearer";
 	private static final Logger LOGGER = LoggerFactory.getLogger(ResponseInterceptor.class);
 	private static final String OAUTH2_TOKEN_URL = "/ApiGateway/users/oauth/token";
-	private static final String REFRESH_TOKEN_ENDPOINT = "http://localhost:8081/oauth/token/";
-	
+	private static final String REFRESH_TOKEN_ENDPOINT = "http://localhost:8080/UserMicroService/oauth/token/";
+	private static final String LOGOUT_URL = "/ApiGateway/userlogout";
 	private RestTemplate restTemplate = new RestTemplate();
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		
+		
+		
 		HttpServletResponse httpResponse = response;
 		String requestUrl = request.getRequestURI();
 
 		Cookie[] requestCookies = request.getCookies();
 		Cookie authCookie = null;
 		Cookie refreshCookie = null;
-		if (requestCookies != null) {
+		if (requestCookies != null&&requestCookies.length>=2) {
 			for (Cookie cookie : requestCookies) {
 
 				if (cookie.getName().equals("Authorization")) {
@@ -58,9 +61,31 @@ public class ResponseInterceptor extends HandlerInterceptorAdapter {
 					refreshCookie = cookie;
 				}
 			}
+			/*if (requestUrl.equals(LOGOUT_URL) && request.getCookies() != null && request.getCookies().length > 1) {
 
-		
-		
+				authCookie = new Cookie("Authorization", null);
+				authCookie.setHttpOnly(true);
+				authCookie.setMaxAge(-1);
+				authCookie.setPath("/ApiGateway");
+				authCookie.setVersion(1);
+				authCookie.setSecure(true);
+
+				LOGGER.info("request domain :" + request.getServerName());
+				authCookie.setDomain(request.getServerName());
+				refreshCookie = new Cookie("refresh_token", null);
+				refreshCookie.setHttpOnly(true);
+				refreshCookie.setPath("/ApiGateway");
+				refreshCookie.setVersion(1);
+				refreshCookie.setSecure(true);
+				refreshCookie.setMaxAge(-1);
+				refreshCookie.setDomain(request.getServerName());
+				httpResponse.addCookie(authCookie);
+				httpResponse.addCookie(refreshCookie);
+				return false;
+			}
+*/		
+			if (!(authCookie.getValue() == null || refreshCookie.getValue() == null || authCookie.getValue() == ""
+					|| refreshCookie.getValue() == "")) {
 
 		String[] authCookieSplit = authCookie.getValue().split("#");
 		String authHeader=null;
@@ -115,6 +140,7 @@ public class ResponseInterceptor extends HandlerInterceptorAdapter {
 			}
 		}
 		
+		}
 		}
 
 		return true;

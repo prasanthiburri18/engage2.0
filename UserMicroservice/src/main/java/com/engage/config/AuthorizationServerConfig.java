@@ -122,12 +122,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		logger.info("Configuring In memory clients");
 		clients.inMemory()
 		.withClient("users")
+		
 		//don't change this password
 		.secret("ak#ANhKLLBRADHEadklj*$")
 		.authorizedGrantTypes("password", "refresh_token")
 		.scopes("client_app")
-		.accessTokenValiditySeconds(100)
-		.refreshTokenValiditySeconds(8600)
+		.accessTokenValiditySeconds(86400)
+		.refreshTokenValiditySeconds(86400)
 		.and()
 		.withClient("usermicroservice")
 		.secret("Password")

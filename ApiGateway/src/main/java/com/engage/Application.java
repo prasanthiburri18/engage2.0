@@ -65,6 +65,20 @@ public class Application extends SpringBootServletInitializer {
 		return registrationBean;
 	}
 
+	
+	@Bean
+	public FilterRegistrationBean cookieAuthenticationFilter() {
+		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+
+		registrationBean.setFilter(new CookieAuthenticationFilter());
+		registrationBean.addUrlPatterns("/users/api/v1/*");
+		registrationBean.addUrlPatterns("/patient/api/v1/*");
+		registrationBean.addUrlPatterns("/pathway/api/v1/*");
+		registrationBean.addUrlPatterns("/scheduled/api/v1/*");
+		LOGGER.info("Registering Cookie authentication filter");
+		return registrationBean;
+	}
+
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurerAdapter() {

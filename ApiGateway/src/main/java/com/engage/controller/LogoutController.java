@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,8 +23,8 @@ public class LogoutController {
 
 	private static final Logger log = org.slf4j.LoggerFactory.getLogger(LogoutController.class);
 	
-	@RequestMapping(value="/api/v1/logout", method=RequestMethod.GET)
-	public HttpServletResponse logout(HttpServletRequest request, HttpServletResponse response){
+	@RequestMapping(value="/userlogout", method=RequestMethod.GET)
+	public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response){
 		Cookie authCookie = new Cookie("Authorization", null);
 		authCookie.setHttpOnly(true);
 		authCookie.setMaxAge(-1);
@@ -42,8 +44,8 @@ public class LogoutController {
 		response.addCookie(authCookie);
 		response.addCookie(refreshCookie);
 
-		
-		return response;
+		ResponseEntity<String> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+		return responseEntity;
 	}
 	
 	
