@@ -40,9 +40,9 @@ public class Application extends SpringBootServletInitializer {
 	private boolean starttls;
 	@Value("${mail.from}")
 	private String from;
-	//@Value("${mail.username}")
+	@Value("${mail.username}")
 	private String username;
-	//@Value("${mail.password}")
+	@Value("${mail.password}")
  	private String password;
 
 	public static void main(String[] args) {

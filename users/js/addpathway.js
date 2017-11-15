@@ -2962,7 +2962,7 @@ var retrievedObject = sessionStorage.getItem('userinfo');
                     "triggerId": blocktirggerafter,
                     "triggername": triggertext,
                     "DeliveryDaysAfterTigger": triggerdays,
-                    "repeatForNoOfDays": repeatdays+occ,
+                    "repeatForNoOfDays": repeatdays,//+occ,
                     "subjectOfMessage": "hi",
                     "bodyOfMessage": blockmessage,
                     "phiSecured": phisecuredinput,

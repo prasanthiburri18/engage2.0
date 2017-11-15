@@ -1,5 +1,5 @@
 //var baseurl = 'https://engage-staging.quantifiedcare.com/ApiGateway/';
-var baseurl = 'http://192.168.0.111:8080/ApiGateway/';
+var baseurl = 'http://192.168.0.107:8080/ApiGateway/';
 var pathwaymicroservice = 'pathway';
 var pathwayapibase = baseurl + pathwaymicroservice;
 var usermicroservice = 'users';

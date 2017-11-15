@@ -573,7 +573,7 @@ $('document').ready(function ()
             theaderht += '<th class="tbheader" data-name="header1">Event 1</th>';
 
             $.each(pathswaysdata.events, function (index, pathwayeventinfo) {
-                if (index != 0)
+                if (index >= 0)
                 {
 
                     theaderht += '<th class="tbheader" data-name="header1">Event ' + (index) + '</th>'
@@ -3636,9 +3636,10 @@ function renderblock(blocks) {
                 var occ=fullnum%10;
 
                 if(occ!=0){
-                    var ocblocknameht = '<p style="font-size:10px;color:#fff;">Every ' + repeat+ ' Days | End After ' + occ + ' Occurrences</p>';
-                 }else{
-                    var ocblocknameht = '<p style="font-size:10px;color:#fff;">Last Occurance</p>';
+                  //  var ocblocknameht = '<p style="font-size:10px;color:#fff;">Every ' + repeat+ ' Days | End After ' + occ + ' Occurrences</p>';
+                    var ocblocknameht = '<p style="font-size:10px;color:#fff;">Last Occurence</p>';
+                }else{
+                    var ocblocknameht = '<p style="font-size:10px;color:#fff;">Last Occurence</p>';
                  }
             }else{
                  var ocblocknameht = '<p style="font-size:10px;color:#fff;"></p>';

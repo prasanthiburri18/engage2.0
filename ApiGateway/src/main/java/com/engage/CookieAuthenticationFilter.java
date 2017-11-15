@@ -70,6 +70,10 @@ public class CookieAuthenticationFilter extends GenericFilterBean {
 				chain.doFilter(request, response);
 			}
 		}
+		else{
+			LOGGER.info("Protected Url access without credentials: "+req.getRequestURI()+" "+req.getUserPrincipal());
+			((HttpServletResponse) response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+		}
 	
 	}
 }

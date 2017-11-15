@@ -1962,7 +1962,7 @@ $('document').ready(function ()
                         $("#editeventblockModal").modal('hide');
                     }
                 },
-                error: function () {
+                error: function (response) {
                     $.LoadingOverlay("hide");
                     $.toast({
                         heading: 'Save Pathway',
@@ -1975,6 +1975,10 @@ $('document').ready(function ()
                         hideAfter: 5000,
                     });
                     console.log('IN error @ Mode');
+                    if(response.status==412) {
+                    	$.LoadingOverlay("hide");
+                    		logout();
+                    	}
                 }
             });
         }

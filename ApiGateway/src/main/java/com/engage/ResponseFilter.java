@@ -55,7 +55,7 @@ public class ResponseFilter extends SendResponseFilter {
 			authCookie.setMaxAge(-1);
 			authCookie.setPath("/ApiGateway");
 			authCookie.setVersion(1);
-			//authCookie.setSecure(true);
+			authCookie.setSecure(true);
 
 			log.info("request domain :" + request.getServerName());
 			authCookie.setDomain(request.getServerName());
@@ -63,7 +63,7 @@ public class ResponseFilter extends SendResponseFilter {
 			refreshCookie.setHttpOnly(true);
 			refreshCookie.setPath("/ApiGateway");
 			refreshCookie.setVersion(1);
-		//	refreshCookie.setSecure(true);
+			refreshCookie.setSecure(true);
 			refreshCookie.setMaxAge(-1);
 			refreshCookie.setDomain(request.getServerName());
 			httpResponse.addCookie(authCookie);
