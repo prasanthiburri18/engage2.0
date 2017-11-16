@@ -621,8 +621,10 @@ $(document).ready(function () {
 
         var tlgth = $("table tr th").length;
         var previouspage = $currentpage;
-        $currentpage = $currentpage + 1;
-
+       // $currentpage = $currentpage + 1;
+        if($currentpage<20){
+            $currentpage = $currentpage + 1;
+           	}
         var displayrange = pagenos[($currentpage)];
 
         if (tablecols == 0)

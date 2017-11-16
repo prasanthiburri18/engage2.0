@@ -11,12 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.engage.commons.dto.PatientDto;
 import com.engage.model.User;
 import com.engage.util.JsonMessage;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore
+
 
 public class UserServiceTest {
 
@@ -24,6 +25,20 @@ public class UserServiceTest {
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * Tests the function which returns list of patients
+	 */
+	@Test
+	public void getPatientsListByDobTest(){
+		
+		List<PatientDto> patientDtoList = userService.getPatientsListByDob("2017-11-11");
+		LOGGER.info("Test passed");
+		LOGGER.info("Is list empty ? "+patientDtoList.size());
+	}
+	
+	/**
+	 * Tests the method which returns size of list
+	 */
 	@Test
 	@Ignore
 	public void getPatientByDobTest(){
@@ -33,7 +48,7 @@ public class UserServiceTest {
 	@Test
 	@Ignore
 	public void getPatientsByPhone(){
-		List<Object> patients = userService.patientidbyphone("1212121212");
+		List<Object> patients = userService.patientidbyphone("9663908949");
 		if(patients!=null)
 		for(Object o : patients){
 			LOGGER.info(o.toString());
@@ -61,7 +76,7 @@ public class UserServiceTest {
 		
 	}
 	
-	@Test
+	@Test@Ignore
 	public void getPatientPathwayBlockById(){
 		JsonMessage message = userService.getPatientpathwayblockById(479);
 		

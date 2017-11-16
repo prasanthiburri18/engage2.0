@@ -18,6 +18,13 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.zuul.context.RequestContext;
 
+/**
+ * This Zuul filter is <b>"post"</b> type. Primarly used to bind Access Token
+ * from login request to response cookies.
+ * 
+ * @author mindtechlabs
+ *
+ */
 public class ResponseFilter extends SendResponseFilter {
 
 	private static Logger log = LoggerFactory.getLogger(ResponseFilter.class);
@@ -55,7 +62,7 @@ public class ResponseFilter extends SendResponseFilter {
 			authCookie.setMaxAge(-1);
 			authCookie.setPath("/ApiGateway");
 			authCookie.setVersion(1);
-			authCookie.setSecure(true);
+		//	authCookie.setSecure(true);
 
 			log.info("request domain :" + request.getServerName());
 			authCookie.setDomain(request.getServerName());
@@ -63,7 +70,7 @@ public class ResponseFilter extends SendResponseFilter {
 			refreshCookie.setHttpOnly(true);
 			refreshCookie.setPath("/ApiGateway");
 			refreshCookie.setVersion(1);
-			refreshCookie.setSecure(true);
+		//	refreshCookie.setSecure(true);
 			refreshCookie.setMaxAge(-1);
 			refreshCookie.setDomain(request.getServerName());
 			httpResponse.addCookie(authCookie);
@@ -91,7 +98,7 @@ public class ResponseFilter extends SendResponseFilter {
 				authCookie.setMaxAge((int) (token.getExpiration().getTime() - System.currentTimeMillis()) / 1000);
 				authCookie.setPath("/ApiGateway");
 				authCookie.setVersion(1);
-				authCookie.setSecure(true);
+				//authCookie.setSecure(true);
 
 				log.info("request domain :" + request.getServerName());
 				authCookie.setDomain(request.getServerName());
@@ -100,9 +107,9 @@ public class ResponseFilter extends SendResponseFilter {
 				refreshCookie.setHttpOnly(true);
 				refreshCookie.setPath("/ApiGateway");
 				refreshCookie.setVersion(1);
-				
+
 				refreshCookie.setMaxAge((int) (token.getExpiration().getTime() - System.currentTimeMillis()) / 1000);
-				refreshCookie.setSecure(true);
+				//refreshCookie.setSecure(true);
 				refreshCookie.setDomain(request.getServerName());
 				httpResponse.addCookie(authCookie);
 				httpResponse.addCookie(refreshCookie);

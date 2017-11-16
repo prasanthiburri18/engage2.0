@@ -50,7 +50,8 @@ var pagenos = [
     {startp: 81, endp: 85},
     {startp: 86, endp: 90},
     {startp: 91, endp: 95},
-    {startp: 96, endp: 100},
+    {startp: 96, endp: 100}
+    /*,
     {startp: 101, endp: 105},
     {startp: 106, endp: 110},
     {startp: 111, endp: 115},
@@ -72,7 +73,7 @@ var pagenos = [
     {startp: 191, endp: 195},
     {startp: 196, endp: 200},
     {startp: 101, endp: 105}
-
+*/
 
 ];
 
@@ -394,8 +395,10 @@ $('document').ready(function ()
 
         var tlgth = $("table tr th").length;
         var previouspage = $currentpage;
-        $currentpage = $currentpage + 1;
-
+        //$currentpage = $currentpage + 1;
+        if($currentpage<20){
+            $currentpage = $currentpage + 1;
+           	}
         var displayrange = pagenos[($currentpage)];
 
         if (tablecols == 0)

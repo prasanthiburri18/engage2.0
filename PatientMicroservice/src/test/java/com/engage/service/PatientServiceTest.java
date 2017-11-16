@@ -3,6 +3,8 @@
  */
 package com.engage.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Ignore;
@@ -23,7 +25,7 @@ import com.engage.exception.PatientNotFoundException;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore
+
 public class PatientServiceTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(PatientServiceTest.class);
@@ -31,6 +33,7 @@ public class PatientServiceTest {
 	private PatientService patientService;
 	
 	@Test
+	@Ignore
 	public void patientListTest() throws PatientNotFoundException{
 		Long orgId = new Long(285);
 		Map<Long,PatientListDto> pld=	patientService.getPatientList(orgId);
@@ -43,6 +46,7 @@ public class PatientServiceTest {
 	}
 	
 	@Test
+	@Ignore
 	public void patientListTestSomePatientWithoutPathway() throws PatientNotFoundException{
 		Long orgId = new Long(274);
 		Map<Long,PatientListDto> pld=	patientService.getPatientList(orgId);
@@ -53,4 +57,5 @@ public class PatientServiceTest {
 		}
 		logger.info(pld.toString());
 	}
+	
 }

@@ -10,7 +10,7 @@
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
- 		<SMTP name="Mail" subject="Error Report" to="s.krishna@mindtechlabs.com" from="s.krishna@mindtechlabs.com" 
+ 		<SMTP name="Mail" subject="Error Report" to="security-alert@quantifiedcare.com" from="support@quantifiedcare.com" 
 			smtpHost="email-smtp.us-east-1.amazonaws.com" smtpPort="587" bufferSize="50" smtpUsername="${sys:awsSesSmtpUsername}" 
 			smtpPassword="${sys:awsSesSmtpPassword}"> </SMTP> 
 	 	<RollingFile name="RollingFile-Appender" fileName="${logger-path}/rollingfile.log"
@@ -28,14 +28,14 @@
 	<Loggers>
 		<Root level="info">
 			<AppenderRef ref="Console" />
-			<AppenderRef ref="RollingFile-Appender" />
+			<AppenderRef ref="RollingFile-Appender" /> 
 		</Root>
 		<Logger name="com.engage" level="info" additivity="false">
 			<AppenderRef ref="Console" />
-			<AppenderRef ref="Mail" />
+			<!-- <AppenderRef ref="Mail" /> -->
 			<AppenderRef ref="RollingFile-Appender" /> 
 		</Logger>
-
+ 		 
 		
 	</Loggers>
 </Configuration>

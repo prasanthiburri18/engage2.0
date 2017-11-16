@@ -3,6 +3,8 @@ package com.engage.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,11 +31,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.engage.commons.dto.PathwayPatientBlockDto;
+import com.engage.commons.dto.PatientDto;
+import com.engage.commons.dto.PatientPathwayBlockNotFoundException;
 import com.engage.commons.exception.ConstraintViolationException;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.OrganizationDao;
 import com.engage.dao.UserDao;
-import com.engage.dao.UserRolesDao;
 import com.engage.model.Organization;
 import com.engage.model.User;
 import com.engage.service.UserService;
@@ -43,6 +46,7 @@ import com.engage.util.JsonMessage;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 /**
@@ -74,14 +78,11 @@ public class LoginController {
 	private UserService userService;
 	@Autowired
 	private UserDao _userDao;
-	@Autowired
-	private UserRolesDao _userRolesDao;
+	
 	@Autowired
 	private OrganizationDao _organizationDao;
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
-
+	private ObjectMapper objectMapper = new ObjectMapper();
 	/**
 	 * Used for validating model objects
 	 */
@@ -200,11 +201,36 @@ public class LoginController {
 		JsonMessage response = null;
 		try {
 			Integer rid = Integer.parseInt(json.get("id").toString());
-
-			//List results = _userDao.getPatientpathwayblockById(rid);
-			 response = userService.getPatientpathwayblockById(rid);
 			
-			return response;
+			String dateOfBirth = json.get("dob");
+			//List results = _userDao.getPatientpathwayblockById(rid);
+			List<PatientDto> patientListOfdob = userService.getPatientsListByDob(dateOfBirth);
+			
+			
+			
+			 JsonMessage response1 = userService.getPatientpathwayblockById(rid);
+			
+			
+			List<LinkedHashMap<String, Object>> mapList = (List<LinkedHashMap<String, Object>>) response1.getData();
+			List<PathwayPatientBlockDto> pathwayBlockMapped = new ArrayList<>();
+		
+			mapList.forEach(p->pathwayBlockMapped.add(objectMapper.convertValue(p, PathwayPatientBlockDto.class)));
+			
+	//		pathwayPatientBlock.forEach(p->pathwayBlockMapped.add(objectMapper.convertValue(p, PathwayPatientBlockDto.class)));
+			boolean isValidDateOfBirth = false;
+			
+			if(patientListOfdob!=null&&patientListOfdob.size()>0){
+			for(PathwayPatientBlockDto ppbd : pathwayBlockMapped){
+				if(!patientListOfdob.stream().noneMatch(p->p.getId()==ppbd.getPatientId())){
+					isValidDateOfBirth=true;
+				}
+					
+			}}
+			if(!isValidDateOfBirth){
+				throw new PatientPathwayBlockNotFoundException("Not a valid block id / date of birth");
+			}
+			
+			return response1;
 
 		} catch (Exception ex) {
 			response = new JsonMessage();

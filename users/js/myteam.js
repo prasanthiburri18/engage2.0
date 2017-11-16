@@ -150,6 +150,8 @@ $(document).ready(function () {
 
     });
     $("#addTeamuser").click(function () {
+    	$('.fieldError').text('');
+        $('.error').text('');
         $('#addpatient-form')[0].reset();
         $("#addteammemModal").modal('show');
     });
@@ -388,7 +390,8 @@ $('.phone').keypress(function (event) {
             },
             success: function (response)
             {
-
+            	$('.fieldError').text('');
+                $('.error').text('');
 
                 if (response.statuscode == 200) {
                     $.LoadingOverlay("hide");

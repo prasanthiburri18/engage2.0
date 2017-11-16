@@ -14,11 +14,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.engage.dao.BlocksDao;
 import com.engage.dao.jpa.IPathwayDao;
 import com.engage.dao.jpa.IPathwayacceptDao;
 import com.engage.dto.PathwayAndEventNames;
+import com.engage.dto.PathwayPatientBlockDto;
 import com.engage.exception.PatientNotAcceptedException;
+import com.engage.exception.PatientPathwayBlockNotFoundException;
 import com.engage.model.Pathwayaccept;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author mindtech-labs
@@ -34,6 +38,8 @@ public class PathwayService {
 	private IPathwayacceptDao pathwayAcceptDao;
 	
 	@Autowired
+	private BlocksDao _blocksDao;
+	@Autowired
 	private IPathwayDao pathwayDao;
 	public List<Pathwayaccept> findIfPatientAcceptedPathway(long patientId) throws PatientNotAcceptedException{
 		List<Pathwayaccept> patientAcceptList = pathwayAcceptDao.findByPatientId(patientId);
@@ -42,6 +48,38 @@ public class PathwayService {
 		}
 		return patientAcceptList;
 	}
+	/**
+	 * Used for getting phi blocks
+	 * @param rid
+	 * @return
+	 * @throws PatientPathwayBlockNotFoundException 
+	 */
+	public List<PathwayPatientBlockDto> 	getPatientpathwayblockById(int rid) throws PatientPathwayBlockNotFoundException{
+		List<PathwayPatientBlockDto> blockDtos = null;
+		
+		List<Object> results = _blocksDao.getPatientpathwayblockById(rid);
+		
+		if(results!=null&&results.size()>0){
+			blockDtos = new ArrayList<>();
+			
+			ObjectMapper mapper = new ObjectMapper();
+			//results.stream().forEach(ob->blockDtos.add(mapper.convertValue(ob,BlocksDto.class)));
+			
+			for(Object ob:results){
+			
+				blockDtos.add(mapper.convertValue(ob,PathwayPatientBlockDto.class));
+			}
+			
+			logger.info("Size of Blocks "+(blockDtos==null?0:blockDtos.size()));
+			
+		}
+		else{
+			throw new PatientPathwayBlockNotFoundException("No block with given id exists");
+		}
+		
+		return blockDtos;
+	}
+	
 	public List<PathwayAndEventNames> getPathwayEventNamesAndAcceptedStatus(Long orgId) {
 		logger.info("Getting pathway, event names and accepted status");
 		List<PathwayAndEventNames> list = null;

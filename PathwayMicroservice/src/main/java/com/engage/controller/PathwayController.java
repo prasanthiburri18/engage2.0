@@ -41,6 +41,7 @@ import com.engage.dao.BlocksDao;
 import com.engage.dao.EventsDao;
 import com.engage.dao.PathwayDao;
 import com.engage.dto.PathwayAndEventNames;
+import com.engage.dto.PathwayPatientBlockDto;
 import com.engage.dto.WrapperPathwayAndEventNames;
 import com.engage.exception.PatientNotAcceptedException;
 import com.engage.model.Blocks;
@@ -562,9 +563,11 @@ public class PathwayController {
 		try {
 			Integer rid = Integer.parseInt(json.get("id").toString());
 
-			List resulst = _blocksDao.getPatientpathwayblockById(rid);
+			//List results = _blocksDao.getPatientpathwayblockById(rid);
+			List<PathwayPatientBlockDto> results = pathwayService.getPatientpathwayblockById(rid);
+			
 			response.setMessage("Scheduled data.");
-			response.setData(resulst);
+			response.setData(results);
 			response.setStatuscode(200);
 			return response;
 

@@ -30,7 +30,7 @@ public class LogoutController {
 		authCookie.setMaxAge(-1);
 		authCookie.setPath("/ApiGateway");
 		authCookie.setVersion(1);
-		authCookie.setSecure(true);
+		//authCookie.setSecure(true);
 
 		log.info("request domain :" + request.getServerName());
 		authCookie.setDomain(request.getServerName());
@@ -38,7 +38,7 @@ public class LogoutController {
 		refreshCookie.setHttpOnly(true);
 		refreshCookie.setPath("/ApiGateway");
 		refreshCookie.setVersion(1);
-		refreshCookie.setSecure(true);
+		//refreshCookie.setSecure(true);
 		refreshCookie.setMaxAge(-1);
 		refreshCookie.setDomain(request.getServerName());
 		response.addCookie(authCookie);

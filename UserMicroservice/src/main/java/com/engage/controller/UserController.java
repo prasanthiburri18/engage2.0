@@ -401,7 +401,7 @@ public class UserController {
 			return response;
 
 		} catch (Exception ex) {
-			response.setMessage("No profile information found.");
+			response.setMessage("No organization information found.");
 			response.setStatuscode(204);
 			return response;
 		}

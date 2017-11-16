@@ -113,7 +113,7 @@ $( "#patientdob" ).datepicker({
                  if(result >0)
                  {
 
-var binput={"id":bid};
+var binput={"id":bid,"dob":new_date};
          $.ajax({
             url: userapibase+'/getPatientpathwayblockbyId',
             type: 'POST',
@@ -130,7 +130,7 @@ var binput={"id":bid};
             {
                  $.LoadingOverlay("hide");
 
-                 if(response.data.length >0)
+                 if(response.statuscode==200)
                  {
                      $("#messwidget").css('display','block');
                      var bdata=response.data;
@@ -151,6 +151,21 @@ var binput={"id":bid};
                      }
 
                      $("#dobwidget").css('display','none');
+                 }
+                 else
+                 {
+
+            $.toast({
+    heading: 'Error',
+    text: 'Your phone number and date of birth combination does not match. Please try again',
+    textAlign: 'center',
+    position: 'top-center',
+    icon: 'error',
+    loader:false,
+    allowToastClose: false,
+    hideAfter: 5000,
+
+});
                  }
 
             },

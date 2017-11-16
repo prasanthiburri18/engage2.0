@@ -86,8 +86,8 @@ public class PatientService {
 			patientDtoList = patientList.stream().map(p -> PatientDtoToModelUtils.convertModelToDto(p))
 					.collect(Collectors.toList());
 		} else {
-			LOGGER.warn("No patients found against given phone number");
-			throw new PatientNotFoundException("No patients found against the given phone number");
+			LOGGER.warn("No patients found against given date of birth");
+			throw new PatientNotFoundException("No patients found against given date of birth");
 		}
 
 		return patientDtoList;

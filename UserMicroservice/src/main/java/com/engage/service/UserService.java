@@ -14,10 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
+import com.engage.commons.dto.PatientDto;
 import com.engage.commons.exception.DataTamperingException;
 import com.engage.commons.exception.UserNotFoundException;
 import com.engage.dao.OrganizationDao;
@@ -167,7 +171,19 @@ public class UserService {
 		return size;
 
 	}
-
+	
+	/**
+	 * Get patients list by Date of Birth
+	 * 
+	 * @param pdob
+	 * @return
+	 */
+	public List<PatientDto> getPatientsListByDob(String pdob){
+		ResponseEntity<List<PatientDto>> patientList = restTemplate.exchange(patientMicroserviceUrl + "/api/v1/patient/dob/" + pdob,HttpMethod.GET,null,
+				new ParameterizedTypeReference<List<PatientDto>>() {
+				});
+		return patientList.getBody();
+	}
 	public int verifyPatientInfo(long patientid) {
 
 		List<Object> patientPathwayInfoList = restTemplate
