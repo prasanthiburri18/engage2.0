@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
@@ -36,6 +37,8 @@ public class ResponseInterceptor extends HandlerInterceptorAdapter {
 	private static final String BEARER ="Bearer";
 	private static final Logger LOGGER = LoggerFactory.getLogger(ResponseInterceptor.class);
 	private static final String OAUTH2_TOKEN_URL = "/ApiGateway/users/oauth/token";
+	@Value("${zuul.routes.users.url}")
+	private  String userMicroserviceUrl;
 	private static final String REFRESH_TOKEN_ENDPOINT = "http://localhost:8080/UserMicroService/oauth/token/";
 	private static final String LOGOUT_URL = "/ApiGateway/userlogout";
 	private RestTemplate restTemplate = new RestTemplate();
@@ -165,7 +168,7 @@ public class ResponseInterceptor extends HandlerInterceptorAdapter {
 		//String basicAuthHeader = Base64.encode(clientNameClientPassword.getBytes());
 		//basicAuth.set("Authorization", "Basic " + basicAuthHeader);
 		
-		URI refreshTokenUri = new URI(REFRESH_TOKEN_ENDPOINT);
+		URI refreshTokenUri = new URI(userMicroserviceUrl+"/oauth/token/");
 		RequestEntity<Map<String, String>> request = new RequestEntity<Map<String, String>>(refreshData, basicAuth,
 				HttpMethod.POST, refreshTokenUri);
 	

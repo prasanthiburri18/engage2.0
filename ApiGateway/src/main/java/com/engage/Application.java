@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -65,6 +66,10 @@ public class Application extends SpringBootServletInitializer {
 		return registrationBean;
 	}
 
+	@Bean
+	public RestTemplate restTemplate(){
+	return	new RestTemplate();
+	}
 	
 	@Bean
 	public FilterRegistrationBean cookieAuthenticationFilter() {
