@@ -102,7 +102,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.userDetailsService(userDetailsService)	
 				.tokenStore(tokenStore())
 				.tokenEnhancer(tokenEnhancerChain)
-				.setClientDetailsService(clientDetailsService);;
+				.reuseRefreshTokens(false)
+				.setClientDetailsService(clientDetailsService)
+				;;
 	}
 /**
  * Security on token endpoints

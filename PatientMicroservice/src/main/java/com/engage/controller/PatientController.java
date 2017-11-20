@@ -141,8 +141,13 @@ public class PatientController {
 			long id = _patientDao.save(user);
 
 			if (user.getPathwayId() != 0) {
-				ArrayList outs = (ArrayList) _patientDao
+				/*ArrayList outs = (ArrayList) _patientDao
 						.getPathwayFirstMessageforpatient(user.getPathwayId());
+				*/
+				ArrayList outs = (ArrayList) patientService
+						.getPathwayFirstMessageforpatient(user.getPathwayId());
+				
+				
 				String mm = outs.get(0).toString();
 				orgmessage = mm.replaceAll("#FN", user.getFirstName());
 				for (int i = 0; i < user.getEvents().length; i++) {
@@ -269,9 +274,11 @@ public class PatientController {
 				if (newpathway.equals("yes")) {
 					// RestTemplate restTemplate = new RestTemplate();
 					if (user.getPathwayId() != 0) {
-						ArrayList outs = (ArrayList) _patientDao
-								.getPathwayFirstMessageforpatient(user
-										.getPathwayId());
+						/*ArrayList outs = (ArrayList) _patientDao
+						.getPathwayFirstMessageforpatient(user.getPathwayId());
+				*/
+				ArrayList outs = (ArrayList) patientService
+						.getPathwayFirstMessageforpatient(user.getPathwayId());
 						String mm = outs.get(0).toString();
 						orgmessage = mm.replaceAll("#FN", user.getFirstName());
 						Map<String, Object> data1 = new HashMap<String, Object>();
@@ -807,6 +814,14 @@ public class PatientController {
 
 	}
 
+	@PreAuthorize("#oauth2.hasScope('schedulemicroservice')")
+	@RequestMapping(value = "/patient", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<PatientDto> getPatientById(@RequestParam(value="id")Long patientId) throws PatientNotFoundException{
+		
+		PatientDto patientDto = patientService.getPatientById(patientId);
+		
+		return new ResponseEntity<PatientDto>(patientDto, HttpStatus.OK);
+	}
 	@RequestMapping(value = "/patients", method = RequestMethod.GET)
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	public @ResponseBody ResponseEntity<List<PatientListDto>> getPatientsList(

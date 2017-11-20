@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.engage.commons.exception.ConstraintViolationException;
 import com.engage.commons.exception.DataTamperingException;
 import com.engage.commons.exception.InvalidAccessException;
+import com.engage.commons.exception.MessageUpdateFailedException;
+import com.engage.commons.exception.PathwayNotFoundException;
 import com.engage.commons.util.HtmlEscapeUtil;
 import com.engage.commons.validators.utils.ConstraintValidationUtils;
 import com.engage.dao.BlocksDao;
@@ -883,6 +885,47 @@ public class PathwayController {
 		
 	}
 	
+	@PreAuthorize("#oauth2.hasScope('schedulemicroservice')")
+	@RequestMapping(value="patientpathwayblock/message", method=RequestMethod.PUT)
+	public ResponseEntity<Object> updatePatientPathwayMessageStatus(@RequestParam("id")Integer messageId) throws MessageUpdateFailedException{
+		int status = pathwayService.updatePatientPathwayMessageStatus(messageId);
+		if(status<=0){
+			throw new MessageUpdateFailedException("Cannot update status of given message");
+		}
+		return new ResponseEntity<Object>(HttpStatus.ACCEPTED);
+		
+	}
+	
+	@PreAuthorize("#oauth2.hasScope('schedulemicroservice')")
+	@RequestMapping(value="/scheduledmessages", method=RequestMethod.GET)
+	public ResponseEntity<List<Object>> getAllMessagesForDailyCron(){
+		
+List<Object> cronMessages = pathwayService.getBlockcrondataexecute();
+		return new ResponseEntity<List<Object>>(cronMessages, HttpStatus.OK);
+		
+	}
+	@PreAuthorize("#oauth2.hasScope('schedulemicroservice')")
+	@RequestMapping(value="/firstdaymessages", method=RequestMethod.GET)
+	public ResponseEntity<List<Object>> getAllFirstDayMessages(){
+		
+List<Object> cronMessages = pathwayService.getFirstdayBlockcrondataexecute();
+		return new ResponseEntity<List<Object>>(cronMessages, HttpStatus.OK);
+		
+	}
+	
+	@PreAuthorize("#oauth2.hasScope('patientmicroservice')")
+	@RequestMapping(value="/pathway/welcomemessage", method=RequestMethod.GET)
+	public ResponseEntity<List<Object>> getPathwayFirstMessageforpatient(@RequestParam("pathwayId")int pathwayId) throws PathwayNotFoundException{
+		
+List<Object> firstMessageOfPathway = pathwayService.getPathwayFirstMessageforpatient(pathwayId);
+	if(firstMessageOfPathway.size()==1){
+
+return new ResponseEntity<List<Object>>(firstMessageOfPathway, HttpStatus.OK);
+		
+	}
+	else
+		throw new PathwayNotFoundException("There's no pathway against given pathway id");
+	}
 	
 	private Blocks desanitizeMessagesOfBlock(Blocks pathwayBlock)
 			throws JsonParseException, JsonMappingException, IOException {

@@ -84,7 +84,7 @@ public class ScheduledQueueDao {
 	    getSession().update(scheduledQueues);
 	    return;
 	  }
-	  
+/*	  
  public String patientinfobyPhone(Integer id) {
 		  
 		  try
@@ -105,7 +105,7 @@ public class ScheduledQueueDao {
 			 }
 		  }
  
- public int updatePatientmessagestatus(int id) {
+*/ /*public int updatePatientmessagestatus(int id) {
 	 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 	 Long ctime=timestamp.getTime();
 	  String sql = "UPDATE pathwaydb.qc_pathway_patient_blocks SET message_status=:message_status,msenttime=:msenttime WHERE id=:id";
@@ -115,9 +115,9 @@ public class ScheduledQueueDao {
 	        query.setLong("id", id);
 	        int statuscode = query.executeUpdate();
 			  return statuscode;
-	  }
+	  }*/
  
-	  @SuppressWarnings({ "unchecked", "null" })
+	 /* @SuppressWarnings({ "unchecked", "null" })
 	  public List<Object>  getBlockcrondataexecute() {
 		  List<Object> scheduledData=new ArrayList<Object>();
 		  try{
@@ -167,7 +167,7 @@ public class ScheduledQueueDao {
 		  }
 		  }
 	  
-	    
+	*/    /*
 	  @SuppressWarnings({ "unchecked", "null" })
 	  public List<Object>  getFirstdayBlockcrondataexecute() {
 		  List<Object> scheduledData=new ArrayList<Object>();
@@ -218,5 +218,5 @@ public class ScheduledQueueDao {
 			  return scheduledData;
 		  }
 		  }
-	  
+*/	  
 }

@@ -1,6 +1,7 @@
 package com.engage.dao;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -163,7 +164,17 @@ public class PathwayDao {
 	 	  }
 	 	  }
 
-	
+	  public int updatePatientmessagestatus(int id) {
+			 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			 Long ctime=timestamp.getTime();
+			  String sql = "UPDATE pathwaydb.qc_pathway_patient_blocks SET message_status=:message_status,msenttime=:msenttime WHERE id=:id";
+			  SQLQuery query=getSession().createSQLQuery(sql);
+				  query.setParameter("message_status", "sent");
+				  query.setLong("msenttime", ctime);
+			        query.setLong("id", id);
+			        int statuscode = query.executeUpdate();
+					  return statuscode;
+	  }
 
 	  //End of getting the OrganizationId by Pathway Name
 	  

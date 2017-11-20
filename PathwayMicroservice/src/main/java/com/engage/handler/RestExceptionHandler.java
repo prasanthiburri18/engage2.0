@@ -13,6 +13,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.engage.commons.exception.DataTamperingException;
+import com.engage.commons.exception.MessageUpdateFailedException;
+import com.engage.commons.exception.PathwayNotFoundException;
 import com.engage.exception.PatientNotAcceptedException;
 
 @ControllerAdvice
@@ -104,4 +106,26 @@ private static Logger LOGGER = LoggerFactory.getLogger(RestExceptionHandler.clas
 				HttpStatus.NO_CONTENT, request);
 	}
 
+	@ExceptionHandler(PathwayNotFoundException.class)
+	public ResponseEntity<Object> handlePathwayNotFoundException(
+			PathwayNotFoundException ex, WebRequest request) {
+		
+		
+		LOGGER.info("Handling "+ex.getClass().getName());
+		
+		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
+				HttpStatus.NO_CONTENT, request);
+	}
+	
+	
+	@ExceptionHandler(MessageUpdateFailedException.class)
+	public ResponseEntity<Object> handleMessageUpdateFailedException(
+			MessageUpdateFailedException ex, WebRequest request) {
+		
+		
+		LOGGER.info("Handling "+ex.getClass().getName());
+		
+		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
+				HttpStatus.NO_CONTENT, request);
+	}
 }

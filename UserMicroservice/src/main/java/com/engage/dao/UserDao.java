@@ -122,7 +122,7 @@ public List<User> getByOrgids(long orgid) {
 	  }
     
   }
-
+/*
 public ArrayList patientidbyphone(String  ph) {
 	  try
 	  {
@@ -242,7 +242,7 @@ public List<Object>  getPatientpathwayblockById(int id) {
 	  
 }
 
-  
+*/  
   public User getById(String email) {
 	  User user=null;
 	  try

@@ -228,7 +228,7 @@ public String checkforpatientpathway(Integer patienid, Integer pathwayId) {
 	  }
 	  }
  
-	  @SuppressWarnings({ "unchecked", "null" })
+	 /* @SuppressWarnings({ "unchecked", "null" })
 	  public List<Object>  getBlockcrondataexecute() {
 		  List<Object> scheduledData=new ArrayList<Object>();
 		  try{
@@ -275,7 +275,150 @@ public String checkforpatientpathway(Integer patienid, Integer pathwayId) {
 			  return scheduledData;
 		  }
 		  }
-	  @SuppressWarnings({ "unchecked", "null" })
+		  
+*/	  
+ /**
+  * This will be returned to Patient Microservice
+  * @param pathwayid
+  * @return
+  */
+ @SuppressWarnings({ "unchecked", "null" })
+ public List<Object>  getPathwayFirstMessageforpatient(int pathwayid) {
+	  List<Object> output=new ArrayList<Object>();
+	  try{
+			
+	 String sql = "Select pathwaydb.qc_pathway_block.* from pathwaydb.qc_pathway_block WHERE pathwaydb.qc_pathway_block.pathway_id ="+pathwayid+" and pathwaydb.qc_pathway_block.block_name='Sign Up'";				
+	  SQLQuery query=getSession().createSQLQuery(sql);
+	  List<Object[]> results = query.list();
+  ArrayList blockresinner = new ArrayList();
+  Object[] obj = new Object[] {};
+	  ArrayList<Object> newObj = new ArrayList<Object>(Arrays.asList(obj));
+  for(Object[] row : results){
+	  ArrayList blockres = new ArrayList();
+		  Map<String, String> assoc = new HashMap<String, String>();
+		  blockresinner.add(row[12].toString());
+		}
+	    return blockresinner;
+	    
+	    
+	  }catch(Exception ex)
+	  {
+		  System.out.println(ex.getMessage());
+		  
+		  return output;
+	  }
+	  }
+
+ /**
+  * This will sent to SchedulerMicroservice
+  * @return
+  */
+ @SuppressWarnings({ "unchecked", "null" })
+ public List<Object>  getBlockcrondataexecute() {
+	  List<Object> scheduledData=new ArrayList<Object>();
+	  try{
+			
+	 String sql = "Select pathwaydb.qc_pathway_patient_blocks.* from pathwaydb.qc_pathway_patient_blocks WHERE pathwaydb.qc_pathway_patient_blocks.message_send_at = CURDATE();";				
+	  SQLQuery query=getSession().createSQLQuery(sql);
+	  List<Object[]> results = query.list();
+	  ArrayList blockresinner = new ArrayList();
+	  Object[] obj = new Object[] {};
+	  ArrayList<Object> newObj = new ArrayList<Object>(Arrays.asList(obj));
+	  for(Object[] row : results){
+		  ScheduleJson scheduleJson = new ScheduleJson();
+		  ArrayList blockres = new ArrayList();
+	  Map<String, String> assoc = new HashMap<String, String>();
+		  blockres.add(row[0].toString());
+		  blockres.add(row[1].toString());
+		  blockres.add(row[2].toString());
+		  blockres.add(row[3].toString());
+		  blockres.add(row[4].toString());
+		  blockres.add(row[5].toString());
+		  blockres.add(row[6].toString());
+		  blockres.add(row[7].toString());
+		  blockres.add(row[8].toString());
+		  blockres.add(row[9].toString());
+		  blockres.add(row[10].toString());
+		  blockres.add(row[11].toString());
+		  blockres.add(row[12].toString());
+		  blockres.add(row[13].toString());
+		  blockres.add(row[14].toString());
+		  blockres.add(row[15].toString());
+		  blockres.add(row[16].toString());
+		  blockres.add(row[17].toString());
+		  blockres.add(row[18].toString());
+		  blockres.add(row[19].toString());
+		  blockres.add(row[20].toString());
+		  blockres.add(row[21].toString());
+		  blockres.add(row[22].toString());
+		  blockres.add(row[23].toString());
+		  blockresinner.add(blockres);
+		}
+	    return blockresinner;
+	       
+	  }catch(Exception ex)
+	  {
+		 
+		  return scheduledData;
+	  }
+	  }
+ /**
+  * Returned to SchedulerMicroservice
+  * @return
+  */
+ @SuppressWarnings({ "unchecked", "null" })
+ public List<Object>  getFirstdayBlockcrondataexecute() {
+	  List<Object> scheduledData=new ArrayList<Object>();
+	  try{
+			
+	 String sql = "Select pathwaydb.qc_pathway_patient_blocks.* from pathwaydb.qc_pathway_patient_blocks WHERE pathwaydb.qc_pathway_patient_blocks.block_pos_row=1 and pathwaydb.qc_pathway_patient_blocks.message_send_at = CURDATE();";				
+	 SQLQuery query=getSession().createSQLQuery(sql);
+	  List<Object[]> results = query.list();
+	  ArrayList blockresinner = new ArrayList();
+	  Object[] obj = new Object[] {};
+	  ArrayList<Object> newObj = new ArrayList<Object>(Arrays.asList(obj));
+	 for(Object[] row : results){
+		  ScheduleJson scheduleJson = new ScheduleJson();
+		  ArrayList blockres = new ArrayList();
+		  Map<String, String> assoc = new HashMap<String, String>();
+		  blockres.add(row[0].toString());
+		  blockres.add(row[1].toString());
+		  blockres.add(row[2].toString());
+		  blockres.add(row[3].toString());
+		  blockres.add(row[4].toString());
+		  blockres.add(row[5].toString());
+		  blockres.add(row[6].toString());
+		  blockres.add(row[7].toString());
+		  blockres.add(row[8].toString());
+		  blockres.add(row[9].toString());
+		  blockres.add(row[10].toString());
+		  blockres.add(row[11].toString());
+		  blockres.add(row[12].toString());
+		  blockres.add(row[13].toString());
+		  blockres.add(row[14].toString());
+		  blockres.add(row[15].toString());
+		  blockres.add(row[16].toString());
+		  blockres.add(row[17].toString());
+		  blockres.add(row[18].toString());
+		  blockres.add(row[19].toString());
+		  blockres.add(row[20].toString());
+		  blockres.add(row[21].toString());
+		  blockres.add(row[22].toString());
+		  blockres.add(row[23].toString());
+		  blockresinner.add(blockres);
+		}
+	    return blockresinner;
+	      
+	  }catch(Exception ex)
+	  {
+		  System.out.println(ex.getMessage());
+		  
+		  return scheduledData;
+	  }
+	  }
+
+ 
+ @SuppressWarnings({ "unchecked", "null" })
 	  public List<Object>  getBlockcrondata() {
 		  List<Object> scheduledData=new ArrayList<Object>();
 		  try{

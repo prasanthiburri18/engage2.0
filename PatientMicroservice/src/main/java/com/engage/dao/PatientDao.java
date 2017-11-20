@@ -84,7 +84,7 @@ public class PatientDao {
 	  
 	//Get Patient First data
 	  
-	  @SuppressWarnings({ "unchecked", "null" })
+	/*  @SuppressWarnings({ "unchecked", "null" })
 	  public List<Object>  getPathwayFirstMessageforpatient(int pathwayid) {
 	 	  List<Object> output=new ArrayList<Object>();
 	 	  try{
@@ -111,7 +111,7 @@ public class PatientDao {
 	 	  }
 	 	  }
 
-	  public Patient getByPhone(String id) {
+*/	  public Patient getByPhone(String id) {
 		  List<Patient> patient=null;
 		  Patient p=new Patient();
 		  Criteria crit = getSession().createCriteria(Patient.class);

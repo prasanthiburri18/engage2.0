@@ -294,15 +294,16 @@ public class LoginController {
 				// String ph=fromuser.substring(3);//for India/
 				String ph = fromuser.substring(2);// for US/
 
-				ArrayList patients = _userDao.patientidbyphone(ph);
-
+				//ArrayList patients = _userDao.patientidbyphone(ph);
+				ArrayList patients = userService.patientidbyphone(ph);
 				Iterator itr = patients.iterator();
 
 				while (itr.hasNext()) {
 					Object element = itr.next();
 
-					if (_userDao.verifyPatientInfo(Long.parseLong(element.toString())) > 0) {
-						pexist = "yes";
+					//if (_userDao.verifyPatientInfo(Long.parseLong(element.toString())) > 0) {
+					if (userService.verifyPatientInfo(Long.parseLong(element.toString())) > 0) {
+					pexist = "yes";
 
 					} else {
 

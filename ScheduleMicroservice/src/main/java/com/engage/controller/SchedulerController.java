@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import com.engage.dao.ScheduledQueueDao;
 import com.engage.model.ScheduleJson;
 import com.engage.model.Sms;
+import com.engage.service.SchedulerService;
 import com.engage.util.JsonMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twilio.sdk.TwilioRestClient;
@@ -63,7 +64,9 @@ public class SchedulerController {
 	private static Logger log = LoggerFactory.getLogger(SchedulerController.class);
 	@Autowired
 	private ScheduledQueueDao _scheduledQueueDao;
-
+	
+	@Autowired
+	private SchedulerService schedulerService;
 	@RequestMapping(value = "/checksendSms", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage checksendSms(@RequestBody final Sms sms) {
 		JsonMessage response = new JsonMessage();
@@ -207,13 +210,15 @@ public class SchedulerController {
 
 		try {
 
-			Res = _scheduledQueueDao.getBlockcrondataexecute();
+		//	Res = _scheduledQueueDao.getBlockcrondataexecute();
+			Res = schedulerService.getBlockcrondataexecute();
 			for (int i = 0; i < Res.size(); i++) {
 				ArrayList records = (ArrayList) Res.get(i);
 				Integer recordid = Integer.parseInt(records.get(0).toString());
 				Integer pathwayid = Integer.parseInt(records.get(1).toString());
 				Integer patientid = Integer.parseInt(records.get(2).toString());
-				String pph = _scheduledQueueDao.patientinfobyPhone(patientid);
+				//String pph = _scheduledQueueDao.patientinfobyPhone(patientid);
+				String pph = schedulerService.patientPhoneById(patientid);
 				Integer blockparentid = Integer.parseInt(records.get(5).toString());
 				String blocktype = records.get(7).toString();
 				String message = "";
@@ -282,7 +287,8 @@ public class SchedulerController {
 					try {
 						messageFactory.create(messageParams);
 						response.setData("Message Sent");
-						_scheduledQueueDao.updatePatientmessagestatus(recordid);
+					//	_scheduledQueueDao.updatePatientmessagestatus(recordid);
+						schedulerService.updatePatientmessagestatus(recordid);
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
@@ -315,14 +321,15 @@ public class SchedulerController {
 
 		try {
 
-			Res = _scheduledQueueDao.getFirstdayBlockcrondataexecute();
-
+			//Res = _scheduledQueueDao.getFirstdayBlockcrondataexecute();
+			Res = schedulerService.getFirstdayBlockcrondataexecute();
 			for (int i = 0; i < Res.size(); i++) {
 				ArrayList records = (ArrayList) Res.get(i);
 				Integer recordid = Integer.parseInt(records.get(0).toString());
 				Integer pathwayid = Integer.parseInt(records.get(1).toString());
 				Integer patientid = Integer.parseInt(records.get(2).toString());
-				String pph = _scheduledQueueDao.patientinfobyPhone(patientid);
+			//	String pph = _scheduledQueueDao.patientinfobyPhone(patientid);
+				String pph = schedulerService.patientPhoneById(patientid);
 				Integer blockparentid = Integer.parseInt(records.get(5).toString());
 				String blocktype = records.get(7).toString();
 				String message = "";
@@ -374,7 +381,8 @@ public class SchedulerController {
 						messageFactory.create(messageParams);
 						response.setData("Message Sent");
 
-						_scheduledQueueDao.updatePatientmessagestatus(recordid);
+					//	_scheduledQueueDao.updatePatientmessagestatus(recordid);
+						schedulerService.updatePatientmessagestatus(recordid);
 
 					} catch (Exception e) {
 						// TODO: handle exception

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.engage.dao.BlocksDao;
+import com.engage.dao.PathwayDao;
 import com.engage.dao.jpa.IPathwayDao;
 import com.engage.dao.jpa.IPathwayacceptDao;
 import com.engage.dto.PathwayAndEventNames;
@@ -36,6 +37,9 @@ public class PathwayService {
 	private static final Logger logger = LoggerFactory.getLogger(PathwayService.class);
 	@Autowired
 	private IPathwayacceptDao pathwayAcceptDao;
+
+	@Autowired
+	private PathwayDao _pathwayDao;
 	
 	@Autowired
 	private BlocksDao _blocksDao;
@@ -119,5 +123,25 @@ public class PathwayService {
 		return pen;
 		
 	}
+	public int updatePatientPathwayMessageStatus(Integer messageId) {
+	int status=	_pathwayDao.updatePatientmessagestatus(messageId);
+		
+	return status;
+	}
+	public List<Object> getBlockcrondataexecute() {
+		
+		return _blocksDao.getBlockcrondataexecute();
+		
+	}
+	
+public List<Object> getFirstdayBlockcrondataexecute() {
+		
+		return _blocksDao.getFirstdayBlockcrondataexecute();
+		
+	}
+public List<Object> getPathwayFirstMessageforpatient(int pathwayId) {
+	
+	return _blocksDao.getPathwayFirstMessage(pathwayId);
+}
 	
 }

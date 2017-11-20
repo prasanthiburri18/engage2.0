@@ -22,6 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +72,22 @@ public class PatientService {
 		}
 		return patientDtoList;
 	}
-
+public PatientDto getPatientById(long id) throws PatientNotFoundException{
+	
+	PatientDto patientDto = null;
+	Patient patient = null;
+	patient = patientDaoJpa.findOne(id);
+	
+	if(patient!=null){
+		patientDto = PatientDtoToModelUtils.convertModelToDto(patient);
+		return patientDto;
+		
+	}
+	else{
+		throw new PatientNotFoundException("No patient found");
+	}
+	
+}
 	public List<PatientDto> getPatientByDob(String dob) throws InvalidDateOfBirthException, PatientNotFoundException {
 		List<PatientDto> patientDtoList = null;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -210,4 +228,12 @@ public class PatientService {
 			 * }
 			 */
 		}return patientListDtos;
-}}
+}
+	public ArrayList getPathwayFirstMessageforpatient(int pathwayId) {
+		ResponseEntity<List<Object>> firstMessage = (ResponseEntity<List<Object>>) restTemplate.exchange(
+				pathwayMicroserviceBaseUrl + "/api/v1/pathway/welcomemessage?pathwayId="+pathwayId, HttpMethod.GET, null,
+				new ParameterizedTypeReference<List<Object>>() {
+				});
+		
+		return (ArrayList) firstMessage.getBody();
+	}}

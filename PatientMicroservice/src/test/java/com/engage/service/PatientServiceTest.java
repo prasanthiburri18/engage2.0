@@ -58,4 +58,11 @@ public class PatientServiceTest {
 		logger.info(pld.toString());
 	}
 	
+	@Test
+	public void getFirstMessageOfPathwayTest(){
+		ArrayList messageList = patientService.getPathwayFirstMessageforpatient(1);
+		logger.info("Size: "+messageList.size());
+		
+	}
+	
 }

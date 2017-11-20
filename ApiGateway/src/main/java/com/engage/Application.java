@@ -4,11 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
@@ -17,13 +17,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
+import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -33,6 +37,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan
 @EnableAutoConfiguration
 @EnableWebMvc
+@EnableOAuth2Client
 /**
  * API Gateway Operations Applying JWT Filters (Json Web Token Process
  * Implementation)
@@ -121,6 +126,35 @@ public class Application extends SpringBootServletInitializer {
 
 		return new PropertySourcesPlaceholderConfigurer();
 	}
+	
+	/**
+	 * Client details. Here, MailMicroservice
+	 * 
+	 * @return
+	 */
+	@Bean
+	@ConfigurationProperties(prefix = "security.oauth2.client")
+	public OAuth2ProtectedResourceDetails clientCredentialsResourceDetails() {
+		return new ClientCredentialsResourceDetails();
+	}
+
+	/**
+	 * Oauth2RestTemplate with Client Context and Details
+	 * 
+	 * @param ccrd
+	 * @return
+	 */
+	@Bean(name = "oauth2RestTemplate")
+	public OAuth2RestTemplate getOAuth2RestTemplate(OAuth2ClientContext context, OAuth2ProtectedResourceDetails ccrd) {
+
+		logger.debug("Checking loading of security.oauth2.client properties------");
+		logger.info("Initializing oauth2RestTemplate, client Id:" + ccrd.getClientId());
+		logger.debug("Finished Checking loading of security.oauth2.client properties");
+
+		return new OAuth2RestTemplate(ccrd, context);
+	}
+
+
 }
 
 @RestController
