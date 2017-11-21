@@ -139,7 +139,7 @@ public class PatientDao {
 			  int statuscode=query.executeUpdate();
 		  return statuscode;
 			  
-		  }
+		  }/*
 	  public int updatePatientInfo(long patient_id,int pathway_id,String status,Date accepteddate,String accept) {
 		
 		  String sql = "INSERT INTO pathwaydb.qc_patient_pathway_info (patient_id, pathway_id, status, accepteddate, accept) VALUES ("+patient_id+","+pathway_id+",'Y','"+accepteddate+"','"+accept+"')";
@@ -147,7 +147,8 @@ public class PatientDao {
 			  int statuscode=query.executeUpdate();
 			  return statuscode;
 			  
-		  }
+		  }*/
+	  
 	  public int verifyPatientInfo(long patientid) {
 		  String sql = "SELECT  pathwaydb.qc_patient_pathway_info.patient_id FROM pathwaydb.qc_patient_pathway_info where pathwaydb.qc_patient_pathway_info.patient_id="+patientid+"";
 			  SQLQuery query=getSession().createSQLQuery(sql);
@@ -186,14 +187,14 @@ public class PatientDao {
 					return ex.getMessage(); 
 			 }
 		  }
-	  
+	 /* 
 	  public int updatePatientAccept(long patientid) {
 		  String sql = "UPDATE pathwaydb.qc_patient_pathway_info SET accepteddate='"+new Date()+"' WHERE patient_id="+patientid+"";
 		  SQLQuery query=getSession().createSQLQuery(sql);
 			  int statuscode= (int) (long)query.uniqueResult();
 			  return statuscode;
 		  }
-	  
+	*/  
 	  
 
 }

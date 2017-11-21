@@ -146,7 +146,7 @@ $('document').ready(function ()
     function SignupsubmitForm()
     {
 
-
+        $(".fieldError").text('');
         var practicename = $("#praname").val();
         var username = $("#username").val();
         var useremail = $("#useremail").val();
@@ -180,6 +180,7 @@ $('document').ready(function ()
             success: function (response)
             {
                 $.LoadingOverlay("hide");
+                
 
                 if (response.statuscode == 200)
                 {
