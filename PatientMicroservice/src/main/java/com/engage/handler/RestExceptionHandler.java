@@ -29,10 +29,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	 * @return
 	 */
 	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<Object> handleEntityNotFoundException(
+	public ResponseEntity<Object> handleAccessDeniedException(
 			AccessDeniedException ex, WebRequest request) {
-		
 		WebRequest req =  request;
+	
 		LOGGER.info("Handling "+ex.getClass().getName());
 		if(req.getUserPrincipal()!=null){
 			
@@ -42,10 +42,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		else{
 			LOGGER.error("Invalid access of "+req.getContextPath());
 		}
-		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
+		
+		return handleExceptionInternal(ex, "Unauthorized access", new HttpHeaders(),
 				HttpStatus.PRECONDITION_FAILED, request);
 	}
-
+	
 	/**
 	 * This is exclusive for Data Tampering
 	 * @param ex
@@ -67,9 +68,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			LOGGER.error("Invalid access of "+req.getContextPath());
 		}
 		
-		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
+		return handleExceptionInternal(ex, "Illegal access of resource", new HttpHeaders(),
 				HttpStatus.PRECONDITION_FAILED, request);
 	}
+
 	
 	@Override
 	//@ExceptionHandler(HttpMessageNotReadableException.class)
@@ -88,11 +90,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			LOGGER.error("Invalid access of "+req.getContextPath());
 		}
 		
-		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
+		return handleExceptionInternal(ex, "Invalid Request Format", new HttpHeaders(),
 				HttpStatus.PRECONDITION_FAILED, request);
 	}
-	
-	
 	
 	/**
 	 * This is exclusive for Data Tampering

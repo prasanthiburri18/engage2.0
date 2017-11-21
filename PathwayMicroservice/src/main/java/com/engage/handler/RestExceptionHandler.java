@@ -29,71 +29,71 @@ private static Logger LOGGER = LoggerFactory.getLogger(RestExceptionHandler.clas
 	 * @param ex
 	 * @param request
 	 * @return
-	 */
-	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<Object> handleEntityNotFoundException(
-			AccessDeniedException ex, WebRequest request) {
+	 */@ExceptionHandler(AccessDeniedException.class)
+		public ResponseEntity<Object> handleAccessDeniedException(
+				AccessDeniedException ex, WebRequest request) {
+			WebRequest req =  request;
 		
-		WebRequest req =  request;
-		LOGGER.info("Handling "+ex.getClass().getName());
-		if(req.getUserPrincipal()!=null){
+			LOGGER.info("Handling "+ex.getClass().getName());
+			if(req.getUserPrincipal()!=null){
+				
+				LOGGER.info("Invalid access by "+req.getUserPrincipal().getName() );
+				LOGGER.error("Invalid access by "+req.getUserPrincipal().getName()+" on "+req.getContextPath());
+			}
+			else{
+				LOGGER.error("Invalid access of "+req.getContextPath());
+			}
 			
-			LOGGER.info("Invalid access by "+req.getUserPrincipal().getName() );
-			LOGGER.error("Invalid access by "+req.getUserPrincipal().getName()+" on "+req.getContextPath());
+			return handleExceptionInternal(ex, "Unauthorized access", new HttpHeaders(),
+					HttpStatus.PRECONDITION_FAILED, request);
 		}
-		else{
-			LOGGER.error("Invalid access of "+req.getContextPath());
+		
+		/**
+		 * This is exclusive for Data Tampering
+		 * @param ex
+		 * @param request
+		 * @return
+		 */
+		@ExceptionHandler(DataTamperingException.class)
+		public ResponseEntity<Object> handleDataTamperingException(
+				DataTamperingException ex, WebRequest request) {
+			WebRequest req =  request;
+		
+			LOGGER.info("Handling "+ex.getClass().getName());
+			if(req.getUserPrincipal()!=null){
+				
+				LOGGER.info("Invalid access by "+req.getUserPrincipal().getName() );
+				LOGGER.error("Invalid access by "+req.getUserPrincipal().getName()+" on "+req.getContextPath());
+			}
+			else{
+				LOGGER.error("Invalid access of "+req.getContextPath());
+			}
+			
+			return handleExceptionInternal(ex, "Illegal access of resource", new HttpHeaders(),
+					HttpStatus.PRECONDITION_FAILED, request);
 		}
-		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
-				HttpStatus.PRECONDITION_FAILED, request);
-	}
 
-	/**
-	 * This is exclusive for Data Tampering
-	 * @param ex
-	 * @param request
-	 * @return
-	 */
-	@ExceptionHandler(DataTamperingException.class)
-	public ResponseEntity<Object> handleDataTamperingException(
-			DataTamperingException ex, WebRequest request) {
-		WebRequest req =  request;
-	
-		LOGGER.info("Handling "+ex.getClass().getName());
-		if(req.getUserPrincipal()!=null){
-			
-			LOGGER.info("Invalid access by "+req.getUserPrincipal().getName() );
-			LOGGER.error("Invalid access by "+req.getUserPrincipal().getName()+" on "+req.getContextPath());
-		}
-		else{
-			LOGGER.error("Invalid access of "+req.getContextPath());
-		}
 		
-		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
-				HttpStatus.PRECONDITION_FAILED, request);
-	}
-	
-	@Override
-	//@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<Object>  handleHttpMessageNotReadable(
-			HttpMessageNotReadableException ex,
-			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		WebRequest req =  request;
-	
-		LOGGER.info("Handling "+ex.getClass().getName()+ " "+ex.getMessage());
-		if(req.getUserPrincipal()!=null){
-			
-			LOGGER.info("Invalid access by "+req.getUserPrincipal().getName() );
-			LOGGER.error("Invalid access by "+req.getUserPrincipal().getName()+" on "+req.getContextPath());
-		}
-		else{
-			LOGGER.error("Invalid access of "+req.getContextPath());
-		}
+		@Override
+		//@ExceptionHandler(HttpMessageNotReadableException.class)
+		public ResponseEntity<Object>  handleHttpMessageNotReadable(
+				HttpMessageNotReadableException ex,
+				HttpHeaders headers, HttpStatus status, WebRequest request) {
+			WebRequest req =  request;
 		
-		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
-				HttpStatus.PRECONDITION_FAILED, request);
-	}
-	
+			LOGGER.info("Handling "+ex.getClass().getName());
+			if(req.getUserPrincipal()!=null){
+				
+				LOGGER.info("Invalid access by "+req.getUserPrincipal().getName() );
+				LOGGER.error("Invalid access by "+req.getUserPrincipal().getName()+" on "+req.getContextPath());
+			}
+			else{
+				LOGGER.error("Invalid access of "+req.getContextPath());
+			}
+			
+			return handleExceptionInternal(ex, "Invalid Request Format", new HttpHeaders(),
+					HttpStatus.PRECONDITION_FAILED, request);
+		}
 	
 	@ExceptionHandler(PatientNotAcceptedException.class)
 	public ResponseEntity<Object> handlePatientNotAcceptedException(

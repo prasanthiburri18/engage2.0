@@ -43,7 +43,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			LOGGER.error("Invalid access of "+req.getContextPath());
 		}
 		
-		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
+		return handleExceptionInternal(ex, "Unauthorized access", new HttpHeaders(),
 				HttpStatus.PRECONDITION_FAILED, request);
 	}
 	
@@ -68,7 +68,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			LOGGER.error("Invalid access of "+req.getContextPath());
 		}
 		
-		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
+		return handleExceptionInternal(ex, "Illegal access of resource", new HttpHeaders(),
 				HttpStatus.PRECONDITION_FAILED, request);
 	}
 
@@ -90,7 +90,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			LOGGER.error("Invalid access of "+req.getContextPath());
 		}
 		
-		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
+		return handleExceptionInternal(ex, "Invalid Request Format", new HttpHeaders(),
 				HttpStatus.PRECONDITION_FAILED, request);
 	}
 }

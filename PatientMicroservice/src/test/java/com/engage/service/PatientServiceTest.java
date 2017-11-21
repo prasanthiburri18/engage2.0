@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.engage.dto.PatientDto;
 import com.engage.dto.PatientListDto;
 import com.engage.exception.PatientNotFoundException;
 
@@ -59,10 +60,16 @@ public class PatientServiceTest {
 	}
 	
 	@Test
+	@Ignore
 	public void getFirstMessageOfPathwayTest(){
 		ArrayList messageList = patientService.getPathwayFirstMessageforpatient(1);
 		logger.info("Size: "+messageList.size());
 		
+	}
+	@Test
+	public void findPatientByEncryptedPhoneNumber() throws PatientNotFoundException{
+		List <PatientDto> pdList = patientService.getPatientsByPhoneNumber("ZJoDKrtLCg2tkTTSGeahWQ==");
+	logger.info("Size: "+pdList.size());
 	}
 	
 }

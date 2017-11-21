@@ -28,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
+import com.engage.dao.PatientDao;
 import com.engage.dao.jpa.IPatientDao;
 import com.engage.dao.jpa.IPatientPathwayDao;
 import com.engage.dto.PathwayAndEventNames;
@@ -38,6 +39,7 @@ import com.engage.exception.InvalidDateOfBirthException;
 import com.engage.exception.PatientNotFoundException;
 import com.engage.model.Patient;
 import com.engage.model.PatientPathway;
+import com.engage.util.AdvancedEncryptionStandard;
 import com.engage.util.PatientDtoToModelUtils;
 
 /**
@@ -53,16 +55,43 @@ public class PatientService {
 	private IPatientDao patientDaoJpa;
 
 	@Autowired
+	private PatientDao _patientDao;
+	@Autowired
 	private IPatientPathwayDao patientPathwayDaoJpa;
 
 	@Value("${pathwayMicroserviceBaseUrl}")
 	private String pathwayMicroserviceBaseUrl;
 	@Autowired
 	private OAuth2RestTemplate restTemplate;
-
+	/**
+	 * Encrypted phone number is passed
+	 * @param phone
+	 * @return
+	 * @throws Exception 
+	 */
 	public List<PatientDto> getPatientsByPhoneNumber(String phone) throws PatientNotFoundException {
 		List<PatientDto> patientDtoList = null;
-		List<Patient> patientList = patientDaoJpa.findPatientByPhone(phone);
+		//Commented to support legacy function
+		String decryptedPhone =null;
+		try{
+		 decryptedPhone = AdvancedEncryptionStandard.decrypt(phone);
+		LOGGER.info("Decrypted phone "+decryptedPhone);
+		}
+		catch(Exception ex){
+			LOGGER.info("Cannot decrypt phone number");
+		}
+		
+		List<Patient> patientList=null;
+		try {
+			patientList = patientDaoJpa.findPatientByPhone(AdvancedEncryptionStandard.encrypt(decryptedPhone));
+		} catch (Exception e) {
+			LOGGER.info("Cannot decrypt phone number");
+		}
+		//	Patient patient = _patientDao.getByPhone(phone);
+		//	patientList = new ArrayList<>();
+		//	patientList.add(patient);
+		
+
 		if (patientList != null && patientList.size() > 0) {
 			patientDtoList = patientList.stream().map(p -> PatientDtoToModelUtils.convertModelToDto(p))
 					.collect(Collectors.toList());

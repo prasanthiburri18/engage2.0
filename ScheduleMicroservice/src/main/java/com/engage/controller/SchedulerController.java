@@ -300,6 +300,7 @@ public class SchedulerController {
 			response.setStatuscode(200);
 			return response;
 		} catch (Exception ex) {
+			log.info("Exception in daily bloc run. "+ex.getClass().getName());
 			response.setMessage(ex.getMessage());
 			response.setStatuscode(203);
 			return response;
@@ -395,6 +396,7 @@ public class SchedulerController {
 			response.setStatuscode(200);
 			return response;
 		} catch (Exception ex) {
+			log.info("Exception in first day bloc run. "+ex.getClass().getName());
 			response.setMessage(ex.getMessage());
 			response.setStatuscode(203);
 			return response;

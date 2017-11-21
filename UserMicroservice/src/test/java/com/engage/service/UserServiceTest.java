@@ -48,7 +48,7 @@ public class UserServiceTest {
 	@Test
 	@Ignore
 	public void getPatientsByPhone(){
-		List<Object> patients = userService.patientidbyphone("9663908949");
+		List<Long> patients = userService.patientidbyphone("9663908949");
 		if(patients!=null)
 		for(Object o : patients){
 			LOGGER.info(o.toString());

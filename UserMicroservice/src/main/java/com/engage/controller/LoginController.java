@@ -295,9 +295,21 @@ public class LoginController {
 				String ph = fromuser.substring(2);// for US/
 
 				//ArrayList patients = _userDao.patientidbyphone(ph);
-				ArrayList patients = userService.patientidbyphone(ph);
+				LOGGER.info("Getting patient details by phone number" + ph);
+				List<Long> patients = userService.patientidbyphone(ph);
+				LOGGER.info("Size of list: "+(patients!=null?patients.size():0));
 				Iterator itr = patients.iterator();
+				if(patients!=null&&patients.size()>0){
+					
+					for(Long l: patients){
+						if (userService.verifyPatientInfo(l) > 0) {
+							pexist = "yes";
 
+							} 
+						}
+
+					}
+/*				
 				while (itr.hasNext()) {
 					Object element = itr.next();
 
@@ -309,7 +321,7 @@ public class LoginController {
 
 					}
 
-				}
+				}*/
 				if (pexist.equals("yes")) {
 					resmessage = "Hi there! At this time we are not monitoring our mailbox and your response will not be received. For any questions or concerns contact your Transition Specialist at 1-800-981-5904";
 

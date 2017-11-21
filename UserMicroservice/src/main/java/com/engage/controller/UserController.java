@@ -125,13 +125,20 @@ public class UserController {
 
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/change_password", method = RequestMethod.PUT)
-	public @ResponseBody JsonMessage changePassword(@RequestBody Map<String, String> json) {
+	public @ResponseBody JsonMessage changePassword(@RequestBody Map<String, String> json, HttpServletRequest request) {
 		JsonMessage response = new JsonMessage();
 		try {
 			if (!(json.get("userid")).isEmpty()) {
 			
 				BigInteger uid = new BigInteger(json.get("userid"));
-				User user = _userDao.getByUserByUid(uid);
+					String userEmail = request.getUserPrincipal().getName();
+					User validateUser = userService.getUserByEmail(userEmail);
+					if(!uid.equals(validateUser.getId())){
+						LOGGER.error("Illegal password change attempt by "+userEmail);
+							throw new DataTamperingException("User credentials doesn't match. Illegal password change.");
+					}
+							User user = _userDao.getByUserByUid(uid);
+				
 				final String password = json.get("password");
 				user.setPassword(passwordEncoder.encode(password));
 				_userDao.update(user);

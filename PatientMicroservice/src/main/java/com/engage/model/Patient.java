@@ -40,6 +40,7 @@ public class Patient {
 	/**
 	 * Find whether phone gets saved in db
 	 */
+	@Column(name="phone")
 	private String phone;
 	@Column(name = "device_token")
 	private String deviceToken;

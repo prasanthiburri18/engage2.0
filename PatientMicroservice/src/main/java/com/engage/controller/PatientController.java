@@ -571,6 +571,7 @@ public class PatientController {
 			@PathVariable String phone) throws PatientNotFoundException {
 		List<PatientDto> patients = null;
 		// Passed encrypted phone
+		log.info("Encrypted phone number: "+phone);
 		patients = patientService.getPatientsByPhoneNumber(phone);
 
 		return patients;

@@ -30,7 +30,6 @@ import com.engage.dao.jpa.IOrganizationDao;
 import com.engage.dao.jpa.IUserDao;
 import com.engage.dao.jpa.IUserRolesDao;
 import com.engage.model.Organization;
-import com.engage.model.ScheduleJson;
 import com.engage.model.User;
 import com.engage.model.UserRoles;
 import com.engage.util.AdvancedEncryptionStandard;
@@ -132,13 +131,27 @@ public class UserService {
 		
 	}
 
-	public ArrayList<Object> patientidbyphone(final String phone) {
+	public List<Long> patientidbyphone(final String phone) {
+		String encryptPhone=null;
 		try {
-			String encryptPhone = AdvancedEncryptionStandard.encrypt(phone);
-			encryptPhone = encryptPhone.trim();
-
-			List<Object[]> results = restTemplate
-					.getForObject(patientMicroserviceUrl + "/api/v1/patient/phone/" + encryptPhone, List.class);
+			 encryptPhone = AdvancedEncryptionStandard.encrypt(phone);
+		
+			LOGGER.info("Encrypted phone number: "+encryptPhone);
+		}catch(Exception ex){
+			LOGGER.info("Cannot encrypt phone number.");
+		}
+			ResponseEntity<List<PatientDto>> results = restTemplate
+					.exchange(patientMicroserviceUrl + "/api/v1/patient/phone/" + encryptPhone,HttpMethod.GET,null, new ParameterizedTypeReference<List<PatientDto>>() {
+					});
+			List<Long> patientIdList = new ArrayList<>();
+			List<PatientDto> patientDtoList = results.getBody();
+			if(patientDtoList!=null&&patientDtoList.size()>0){
+			for(PatientDto p : patientDtoList){
+				patientIdList.add(p.getId());
+			}
+		}
+			return patientIdList;
+			/*
 			ArrayList<Object> blockres = new ArrayList<>();
 			Object[] obj = new Object[] {};
 			ArrayList<Object> newObj = new ArrayList<Object>(Arrays.asList(obj));
@@ -159,7 +172,7 @@ public class UserService {
 			return null;
 		}
 
-	}
+*/	}
 
 	public int verifyPatientInfobydob(String pdob) {
 		List<Object> patientList = restTemplate.getForObject(patientMicroserviceUrl + "/api/v1/patient/dob/" + pdob,
