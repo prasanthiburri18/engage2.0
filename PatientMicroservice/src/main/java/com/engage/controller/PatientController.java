@@ -103,7 +103,7 @@ public class PatientController {
 	 * @throws DataTamperingException
 	 */
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
-	@RequestMapping(value = "/addPatient", method = RequestMethod.POST)
+	@RequestMapping(value = "/patient", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage create(
 			@RequestBody final PatientDto patientDto)
 			throws DataTamperingException {
@@ -210,7 +210,7 @@ public class PatientController {
 	 * @throws DataTamperingException
 	 */
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
-	@RequestMapping(value = "/editPatient", method = RequestMethod.PUT)
+	@RequestMapping(value = "/patient", method = RequestMethod.PUT)
 	public @ResponseBody JsonMessage update(
 			@RequestBody final PatientDto patientDto)
 			throws DataTamperingException {
@@ -469,7 +469,7 @@ public class PatientController {
 	 * @throws DataTamperingException
 	 */
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
-	@RequestMapping(value = "/delete_Patient", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/patient", method = RequestMethod.DELETE)
 	public @ResponseBody JsonMessage deletePatient(
 			@RequestBody Map<String, Long> json) throws DataTamperingException {
 		JsonMessage response = new JsonMessage();

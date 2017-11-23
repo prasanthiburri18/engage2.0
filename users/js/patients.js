@@ -155,7 +155,7 @@ console.log(output);
         buttonImageOnly: true,
         changeMonth: true,
         changeYear: true,
-        yearRange: '1700:' + new Date().getFullYear(),
+        yearRange: "-100:+0",//'1917:' + new Date().getFullYear(),
         maxDate: '0',
         buttonText: "Select date",
         dateFormat: "mm/dd/yy",
@@ -258,7 +258,7 @@ console.log(output);
                     rdshtml += '<div class="radio">';
 
                     rdshtml += '<input type="radio" name="optionsRadios"  id="pathw-' + pathway.id + '" value="' + pathway.id + '" onclick="showevents(' + pathway.id + ');">';
-                    rdshtml += '<label for="optionsRadios"><span></span>' + pathway.pathwayName + '</label>';
+                    rdshtml += '<label for="optionsRadios">'+'<span></span>' +'<p class="elementWordBreak">'+ pathway.pathwayName + '</p>'+'</label>';
                     rdshtml += '</div></div>';
 
                     $(rdshtml).appendTo('#dpathways');
@@ -461,7 +461,7 @@ console.log(output);
 
 
         $.ajax({
-            url: patientapibase + '/api/v1/addPatient',
+            url: patientapibase + '/api/v1/patient',
             type: 'POST',
             dataType: 'json',
             headers: {
@@ -616,11 +616,11 @@ function showevents(pathwayid) {
         {
 
             chechtml += '<input type="checkbox" checked ="true" disabled name="eventpaths" value="' + eventval.id + '" id="optionscheck' + eventval.id + '">'
-            chechtml += '<label for="optionscheck' + eventval.id + '" > <span></span>' + eventval.eventName + '</label>';
+            chechtml += '<label for="optionscheck' + eventval.id + '" > <span></span>' + '<p class="elementWordBreak">'+eventval.eventName +'</p>'+'</label>';
         } else
         {
             chechtml += '<input type="checkbox" checked ="true" name="eventpaths" value="' + eventval.id + '" id="optionscheck' + eventval.id + '">'
-            chechtml += '<label for="optionscheck' + eventval.id + '" > <span></span>' + eventval.eventName + '</label>';
+            chechtml += '<label for="optionscheck' + eventval.id + '" > <span></span>' + '<p class="elementWordBreak">'+eventval.eventName +'</p>'+'</label>';
         }
 
 

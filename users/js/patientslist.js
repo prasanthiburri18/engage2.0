@@ -55,8 +55,32 @@ $.holdReady( true );
 		    return userdata;
 		}
 
+		 $('#searchpatientname').keypress(function (event) {
 
+
+		        var inputValue = (event.which) ? event.which : event.keyCode;
+		        //event.preventDefault();
+		        /*if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+		        	event.preventDefault();
+			    }*/
+		        if(!(inputValue >= 65 && inputValue <= 120) && (inputValue != 32 && inputValue != 0)) { 
+		            event.preventDefault(); 
+		        }
+		        
+		 });
+		
+		 $('#praname').keypress(function (e) {
+
+			 var valid = (e.which >= 48 && e.which <= 57) || (e.which >= 65 && e.which <= 90) || (e.which >= 97 && e.which <= 122 || e.which == 32|| e.which == 8);
+		        if (!valid) {
+		            e.preventDefault();
+		        }
+		      
+		        
+		 });
 $(document).ready(function () {
+	
+	
     /**
      * Checking for token authentication on Page Load itself.
      * If not fouund then explicitly we are logging out
@@ -88,7 +112,7 @@ $(document).ready(function () {
  * @return JsonObject
  *
  */
-
+/*
     $.ajax({
         url: pathwayapibase + '/api/v1/listPathway',
         type: 'POST',
@@ -155,7 +179,7 @@ $(document).ready(function () {
 
         }
     });
-/**
+*//**
  * Displaying the Patient list using organization
  * In this section we are calculating the patient pathway start days by
  * patient accepted date for particular Pathway
@@ -178,15 +202,16 @@ $(document).ready(function () {
         "columnDefs": [
             {
                 "render": function (data, type, row) {
-                    var pname = row.patient.firstName + " " + row.patient.lastName;
-                    var plink = '<a href="viewpatient.html?patientid=' + row.patient.id + '" style="color:#ec843e;">' + pname + '</a>';
+                    var pname = row.firstName + " " + row.lastName;
+                    var plink = '<p class="elementWordBreak2"><a href="viewpatient.html?patientid=' + row.id + '" style="color:#ec843e;">' + pname + '</a></p>';
                     return plink;
                 },
                 "targets": 0
             },
             {
                 "render": function (data, type, row, meta) {
-                    var date1 = new Date();
+                	return row.daysSinceStart;
+                  /*  var date1 = new Date();
                     if (row.pathwayInfo.data == null)
                     {
                         return '0';
@@ -253,23 +278,23 @@ $(document).ready(function () {
 
                         }
                     });
+*/
 
 
-
-                    return '0';
+                   // return '0';
                 },
                 "targets": 1
             },
             {
                 "render": function (data, type, row) {
-                    if (row.pathwayInfo.data != null)
+                    if (row.pathwayName!= null||row.pathwayName!='')
                     {
 
 
-                        var pathname = row.pathwayInfo.data.pathwayInfo.name;
+                        var pathname = row.pathwayName;
 
-                        var pthid = row.pathwayInfo.data.pathwayInfo.id;
-                        var pathlink = '<a href="patientpathway.html?pathwayid=' + pthid + '&patientid=' + row.patient.id + '" target="_blank" style="color:#ec843e;">' + pathname + '</a>';
+                        var pthid = row.pathwayId;
+                        var pathlink = '<a href="patientpathway.html?pathwayid=' + pthid + '&patientid=' + row.id + '" target="_blank" style="color:#ec843e;">' + pathname + '</a>';
                     } else
                     {
                         // var pathname = 'No Pathway';
@@ -284,13 +309,16 @@ $(document).ready(function () {
             {
                 "render": function (data, type, row) {
                     var ens = '';
-                    if (row.pathwayInfo.data != null)
+                    if (row.eventNames!= null)
                     {
-                        var evetns = row.pathwayInfo.data.eventInfo;
-                        $.each(evetns, function (evenindex, eninfo) {
+                        var events = row.eventNames;
+/*                        $.each(evetns, function (evenindex, eninfo) {
 
                             ens += eninfo.eventName + ', ';
 
+                        });*/
+                        $.each(events,function(index, val){
+                        	ens+= val+', ';
                         });
 
                     } else
@@ -305,7 +333,7 @@ $(document).ready(function () {
             {
                 "render": function (data, type, row) {
 
-                    var actiondata = parseInt(row.patient.updateDate) / 1000;
+                    var actiondata = parseInt(row.updateDate) / 1000;
                     var formatted = moment.unix(actiondata).tz('America/New_York').format('LLL');
 
                     return formatted;
@@ -314,8 +342,8 @@ $(document).ready(function () {
             },
             {
                 "render": function (data, type, row) {
-                    var pedit = '<button class="btn btn-primary btn-xs" data-title="Edit"  onClick="patientEdit(\'' + row.patient.id + '\')" ><span class="glyphicon glyphicon-pencil"></span></button>';
-                    var pdelete = '<button class="btn btn-danger btn-xs" data-title="Delete" onclick="patientDelete(\'' + row.patient.id + '\')";  ><span class="glyphicon glyphicon-trash"></span></button>';
+                    var pedit = '<button class="btn btn-primary btn-xs" data-title="Edit"  onClick="patientEdit(\'' + row.id + '\')" ><span class="glyphicon glyphicon-pencil"></span></button>';
+                    var pdelete = '<button class="btn btn-danger btn-xs" data-title="Delete" onclick="patientDelete(\'' + row.id + '\')";  ><span class="glyphicon glyphicon-trash"></span></button>';
                     var actiondata = pedit + ' ' + pdelete;
                     return actiondata;
                 },
@@ -365,7 +393,7 @@ $(document).ready(function () {
  * @return JsonObject
  *
  */
-    $.ajax({
+/*   $.ajax({
         url: patientapibase + '/api/v1/list_Patient',
         type: 'POST',
         dataType: 'json',
@@ -426,13 +454,76 @@ $(document).ready(function () {
 
         }
     });
+*/
 
 
+var orgid = output.orgid;
+
+    $.ajax({
+        url: patientapibase + '/api/v1/patients?orgId='+orgid,
+        type: 'GET',
+        //dataType: 'json',
+        headers: {
+         //   'Authorization': securitytoken,
+            'Content-Type': 'application/json'
+        },
+        xhrFields: {
+            withCredentials: true
+        },
+        Accept: "application/json",
+
+        beforeSend: function ()
+        {
+            $("#error").fadeOut();
+            $.LoadingOverlay("show");
+
+        },
+        success: function (response,status)
+        {
+        	 $.LoadingOverlay("hide");
+
+            if (status=="success"||status=="nocontent") {
+
+                $.LoadingOverlay("hide");
+             
+                dataSet = response;
+                if (dataSet==undefined || dataSet.length == 0)
+                {
+                    $(".helpblock").css('display', 'block');
+                    $(".dashboardbox").css('display', 'none');
+                    return;
+
+                }
+                dataSet.sort(function (a, b) {
+                    return (b.id > a.id) ? 1 : ((a.id > b.id) ? -1 : 0);
+                });
+
+                var myTable = $('#example').DataTable();
+                myTable.clear().rows.add(dataSet).draw();
 
 
+            } else {
+
+                $.LoadingOverlay("hide");
+                $("#error").fadeIn(500, function () {
+                    $("#error").html('<div class="alert alert-danger"> <span class="glyphicon glyphicon-info-sign"></span> &nbsp; ' + response.message + ' !</div>');
+
+                });
+	
+            }
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
+
+        }
+    });
 
 
-
+    
 
 });
 
@@ -471,7 +562,7 @@ function patientdelete()
     var data = {"id": pdid};
 
     $.ajax({
-        url: patientapibase + '/api/v1/delete_Patient',
+        url: patientapibase + '/api/v1/patient',
         type: 'DELETE',
         dataType: 'json',
         headers: {

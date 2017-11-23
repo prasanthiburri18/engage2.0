@@ -90,7 +90,7 @@ public class PathwayController {
 	 */
 
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
-	@RequestMapping(value = "/addPathway", method = RequestMethod.POST)
+	@RequestMapping(value = "/pathway", method = RequestMethod.POST)
 	public @ResponseBody JsonMessage addPathway(@RequestBody final Pathway pathway) throws DataTamperingException {
 		JsonMessage response = new JsonMessage();
 
@@ -147,7 +147,7 @@ public class PathwayController {
 	 */
 
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAuthority('A')")
-	@RequestMapping(value = "/deletePathway", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/pathway", method = RequestMethod.DELETE)
 	public @ResponseBody JsonMessage deletePathway(@RequestBody Map<String, String> json, HttpServletRequest req)
 			throws DataTamperingException {
 		JsonMessage response = new JsonMessage();

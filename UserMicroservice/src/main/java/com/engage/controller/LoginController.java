@@ -126,51 +126,9 @@ public class LoginController {
 				response.setStatuscode(208);
 				return response;
 			} else {
-
+				LOGGER.info("Registering users");
 				userService.register(user);
-/*				// final String simpleMailUrl = emailMicroserviceURL +
-				// "/email/send";
-				// restTemplate.postForObject(simpleMailUrl, data1,
-				// String.class);
-				LOGGER.info("Saving Organization..");
-				Organization org = new Organization();
-				org.setName(user.getPracticeName());
 
-				Integer orgid = _organizationDao.save(org);
-				user.setOrgid(orgid);
-
-				user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-				user.setCreateDate(timestamp);
-				user.setUpdateDate(timestamp);
-				LOGGER.info("Registering new user");
-				BigInteger id = _userDao.save(user);
-
-				UserRoles userRoles = new UserRoles();
-				userRoles.setUserId(id);
-				userRoles.setRoleId(1);
-				LOGGER.info("Before saving Roles");
-				_userRolesDao.save(userRoles);
-				
-				LOGGER.info("Checking whether user stored into database..");
-				
-				
-				Map<String, Object> data1 = new HashMap<String, Object>();
-				data1.put("from", "EngageApp<support@quantifiedcare.com>");
-				data1.put("to", user.getEmail());
-				data1.put("subject", "Account Confirmation");
-				data1.put("text",
-						"Hi <b>" + user.getFullName()
-								+ ",</b><br><br>Congratulations! Your account has been created. Please click on the link to verify your email address and start using Engage.<br><br><a href='"
-								+ portalURL + "/userconfirmation.html?keyconfirm="
-								+ AdvancedEncryptionStandard.encrypt(user.getEmail())
-								+ "'>Verify</a><br><br>Thank You,<br>Team Engage at Quantified Care");
-				data1.put("status", true);
-
-				userService.sendEmail(data1);
-				*/
 				response.setMessage("User registered successfully");
 				response.setStatuscode(200);
 				return response;
@@ -484,22 +442,24 @@ public class LoginController {
 	 * @return JsonObject
 	 */
 
-	@RequestMapping(value = "/getAllPracticeNames", method = RequestMethod.GET)
-	public @ResponseBody JsonMessage getAllPraticeNames() {// (@RequestBody
+	@RequestMapping(value = "/practicenames", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<List<String>> getAllPraticeNames() {// (@RequestBody
 															// Map<String,
 															// String> json) {
-		JsonMessage response = new JsonMessage();
+		ResponseEntity<List<String>> response =null;
 		try {
-			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("praticenames", _userDao.getallPraticeNames());
-			response.setMessage("List of Praticenames.");
-			response.setData(data);
-			response.setStatuscode(200);
+			
+			LOGGER.info("Get all practice names");
+			List<String> practicenames = _userDao.getallPraticeNames();
+			response = new ResponseEntity<List<String>>(practicenames, HttpStatus.OK);
 			return response;
 
 		} catch (Exception e) {
-			response.setMessage(e.getMessage());
+			/*response.setMessage(e.getMessage());
 			response.setStatuscode(203);
+			*/
+			LOGGER.info("Failed : Fetch practice names");
+			response = new ResponseEntity<List<String>>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
 			return response;
 		}
 	}
@@ -517,9 +477,9 @@ public class LoginController {
 		try {
 			if ((_userDao.getByEmail(json.get("emailid")).size() > 0)) {
 				User user = _userDao.getById(json.get("emailid"));
+				LOGGER.info("Forgot Password : a valid email Id is passed");
 				response.setMessage("Password sent to your email.");
 				response.setStatuscode(200);
-				// RestTemplate restTemplate = new RestTemplate();
 				Map<String, Object> data = new HashMap<String, Object>();
 				data.put("from", "EngageApp<bhanu735@gmail.com>");
 				data.put("to", user.getEmail());
@@ -531,21 +491,18 @@ public class LoginController {
 								+ AdvancedEncryptionStandard.encrypt(user.getEmail())
 								+ "'>Reset Your Password</a><br><br>Regards,<br>Team Engage.");
 				data.put("status", true);
-				// restTemplate.postForObject("http://35.166.195.23:8080/EmailMicroservice/email/send",
-				// data,String.class );
 				userService.sendEmail(data);
-				// restTemplate.postForObject(emailMicroserviceURL +
-				// "/email/send", data, String.class);
-				// restTemplate.postForObject("http://localhost:8080/email/send",
-				// data,String.class );
+
 
 				return response;
 			} else {
+				LOGGER.warn("Forgot Password: Email was not registered");
 				response.setMessage("Email not registered.");
 				response.setStatuscode(204);
 				return response;
 			}
 		} catch (Exception e) {
+			LOGGER.warn("Forgot Password: Reset password link request failed.");
 			response.setMessage(e.getMessage());
 			response.setStatuscode(204);
 			return response;

@@ -130,10 +130,10 @@
                             <div class="col-lg-12 Filter-Title">Search Patient</div>
                             <div class="col-lg-4 col-md-4">
 
-                                <input type="text"   name="searchpatientname" placeholder="Name" id="searchpatientname"/>
+                                <input type="text"  pattern="[a-zA-Z]" name="searchpatientname" placeholder="Name" id="searchpatientname"/>
                             </div>
                             <div class="col-lg-4 col-md-4">
-                                <input type="text" id="praname" placeholder="Pathway Name" name="practicename" class="string optional typeahead tt-query" autocomplete="off" spellcheck="false">
+                                <input type="text" id="praname" pattern="[a-zA-Z0-9]" placeholder="Pathway Name" name="practicename" class="string optional typeahead tt-query" autocomplete="off" spellcheck="false" >
                                
                             </div>
                             <div class="col-lg-2 col-md-2">

@@ -269,7 +269,7 @@ if (output.userType == 'U')
                     rdshtml += '<div class="radio">';
 
                     rdshtml += '<input type="radio"  disabled name="optionsRadios"  id="pathw-' + pathway.id + '" value="' + pathway.id + '" onclick="showevents(' + pathway.id + ');">';
-                    rdshtml += '<label for="optionsRadios"><span></span>' + pathway.pathwayName + '</label>';
+                    rdshtml += '<label for="optionsRadios"><span></span>' + '<p class="elementWordBreak">'+pathway.pathwayName +'</p>'+ '</label>';
                     rdshtml += '</div></div>';
 
                     $(rdshtml).appendTo('#dpathways');
@@ -532,7 +532,7 @@ if (output.userType == 'U')
 
 
         $.ajax({
-            url: patientapibase + '/api/v1/editPatient',
+            url: patientapibase + '/api/v1/patient',
             type: 'PUT',
             dataType: 'json',
             headers: {
@@ -861,7 +861,7 @@ function showevents(pathwayid) {
 
 
 
-        chechtml += '<label for="optionscheck' + eventval.id + '"> <span></span>' + eventval.eventName + '</label>';
+        chechtml += '<label for="optionscheck' + eventval.id + '"> <span></span>' + '<p class="elementWordBreak">'+eventval.eventName +'</p>'+'</label>';
         chechtml += '</div>';
         chechtml += '</div>';
 

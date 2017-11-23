@@ -53,6 +53,16 @@ function setUser(userdata) {
 	    return userdata;
 	}
 
+
+	 $('#searchpathwayname').keypress(function (e) {
+
+		 var valid = (e.which >= 48 && e.which <= 57) || (e.which >= 65 && e.which <= 90) || (e.which >= 97 && e.which <= 122 || e.which == 32|| e.which == 8);
+	        if (!valid) {
+	            e.preventDefault();
+	        }
+	      
+	        
+	 });
 $(document).ready(function () {
 
     var dataSet = [];

@@ -810,15 +810,15 @@ table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd
 .patient-list.settingspage table.dataTable thead th:last-child
 {
     background: url(../images/dropdown-icon.png) right center no-repeat;
-    background-position-x: 90%;
-    height: 8px;
+    background-position-x: 95%;
+    background-size: 11px;
 }
 .patient-list table.dataTable thead th.sorting_asc,
 .patient-list.settingspage table.dataTable thead th.sorting_asc:last-child
 {
     background: url(../images/dropup-icon.png) right center no-repeat;
-    background-position-x: 90%;
-    height: 8px;
+    background-position-x: 95%;
+    background-size: 11px;
 }
 .patient-list table.dataTable thead th:last-child
 {
@@ -1777,10 +1777,10 @@ body.Pathwaysblock
     position: absolute;
     top: 0px;
     bottom: -2px;
-    left: 5px;
-    right: 5px;
-    border-left: 1px solid #426635;
-    border-right: 1px solid #426635;
+    left: 0;
+    right: 0;
+    /*border-left: 1px solid #426635;
+    border-right: 1px solid #426635;*/
     padding: 5px;
 }
 .addblock.topblock
@@ -1829,7 +1829,7 @@ body.Pathwaysblock
 .newcreateblock h3
 {
     font-size: 13px;
-    margin-top: 26px;
+    margin-top: 15%;
 }
 .addblock.color1
 {
@@ -2394,7 +2394,7 @@ body.Pathwaysblock
     .patient-list table.dataTable tbody td,
     .contact-details a
     {
-        font-size: 15px;
+        font-size: 13px;
     }
     .patient-list .btn-primary .glyphicon-pencil,
     .patient-list .btn-danger .glyphicon-trash
@@ -2726,4 +2726,19 @@ th.tbheader
   overflow: inherit !important;
 }*/
 
+p.elementWordBreak{
+	overflow-wrap: break-word;
+	/*word-break:break-all;*/
+	display:inline;
+}
 
+p.elementWordBreak2{
+	 overflow-wrap: break-word;
+	/*   word-break:break-all; */
+  	display:inline;
+}
+
+/* table.tableForWrap{
+	table-layout: fixed;
+}
+ */

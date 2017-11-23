@@ -35,7 +35,7 @@ $('document').ready(function ()
 
 
     $.ajax({
-        url: userapibase + '/getAllPracticeNames',
+        url: userapibase + '/practicenames',
         type: 'GET',
         dataType: 'json',
      //   contentType: "application/json",
@@ -49,9 +49,8 @@ $('document').ready(function ()
         success: function (response)
         {
 
-
-            if (response.data != null) {
-                var practicenames = response.data.praticenames;
+            if (response != null) {
+                var practicenames = response;
 
 
                 var practicenames = new Bloodhound({
@@ -73,6 +72,29 @@ $('document').ready(function ()
 
                 $.LoadingOverlay("hide");
 
+/*            if (response.data != null) {
+                var practicenames = response.data.praticenames;
+
+
+                var practicenames = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.whitespace,
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    local: practicenames
+                });
+
+
+                $('.typeahead').typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+                        {
+                            name: 'practicenames',
+                            source: practicenames
+                        });
+
+                $.LoadingOverlay("hide");
+*/
             } else {
 
                 $.LoadingOverlay("hide");
@@ -81,7 +103,7 @@ $('document').ready(function ()
             }
         },
         error: function(response, status){
-
+        	$.LoadingOverlay("hide");
         	if(response.status==412) {
         	$.LoadingOverlay("hide");
         		logout();

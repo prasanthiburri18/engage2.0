@@ -3264,7 +3264,7 @@ var retrievedObject = sessionStorage.getItem('userinfo');
             var inputdata = {"pathwayName": patwname, "orgId": orgid, "teamId": 1, "createDate": currenttime, "updateDate": currenttime};
 
             $.ajax({
-                url: pathwayapibase + '/api/v1/addPathway',
+                url: pathwayapibase + '/api/v1/pathway',
                 type: 'POST',
                 dataType: 'json',
                 headers: {

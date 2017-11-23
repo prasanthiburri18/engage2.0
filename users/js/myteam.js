@@ -113,6 +113,19 @@ $(document).ready(function () {
 
                 ],
         "columnDefs": [
+{
+    "render": function (data, type, row) {
+        var fullname = row.fullName;
+
+
+
+
+
+
+        return '<p class="elementWordBreak2">'+fullname+'</p>'
+    },
+    "targets": 0
+},
             {
                 "render": function (data, type, row) {
                     var uph = row.phone;
