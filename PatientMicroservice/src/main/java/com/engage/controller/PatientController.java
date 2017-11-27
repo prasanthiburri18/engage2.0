@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.engage.commons.dto.PathwayPatientCountDto;
 import com.engage.commons.exception.ConstraintViolationException;
 import com.engage.commons.exception.DataTamperingException;
 import com.engage.commons.exception.InvalidAccessException;
@@ -840,6 +841,21 @@ public class PatientController {
 
 		//return new ResponseEntity<Map<Long,PatientListDto>>(list, HttpStatus.OK);
 		return new ResponseEntity<List<PatientListDto>>(listOfPatients, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/pathway/patients", method = RequestMethod.GET)
+	@PreAuthorize("#oauth2.hasScope('pathwaymicroservice')")
+	public @ResponseBody ResponseEntity<List<PathwayPatientCountDto>> getPatientsListForPathwayCount(
+			@RequestParam("orgId") Long orgId) throws DataTamperingException, PatientNotFoundException {
+		List<PathwayPatientCountDto> list = null;
+
+			list = patientService.getPathwayCount(orgId);
+			
+			
+		
+
+		//return new ResponseEntity<Map<Long,PatientListDto>>(list, HttpStatus.OK);
+		return new ResponseEntity<List<PathwayPatientCountDto>>(list, HttpStatus.OK);
 	}
 
 	/**

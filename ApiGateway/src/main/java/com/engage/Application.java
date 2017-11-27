@@ -31,6 +31,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.netflix.zuul.ZuulFilter;
+
 @EnableZuulProxy
 @SpringBootApplication
 @Configuration
@@ -39,8 +41,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableWebMvc
 @EnableOAuth2Client
 /**
- * API Gateway Operations Applying JWT Filters (Json Web Token Process
- * Implementation)
+ * <h2>API Gateway Operations Applying JWT Filters (Json Web Token Process
+ * Implementation)</h2>
  * 
  * @author StartUP Labs
  * @version 1.0
@@ -48,16 +50,20 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 public class Application extends SpringBootServletInitializer {
 
-	// Logger implementation
+	/**
+	 * Class Logger Implementation
+	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
 	/**
 	 * All the urls with /api/v1/ should have auth header, which is validated in
 	 * JWT filter
 	 * 
+	 * <h2>This is deprecated, {@link CookieAuthenticationFilter} uses replaces the logic used by this bean.
+	 *  Logic for getting claims from JWT is removed.</h2>
+	 * <code>Reason: Spring security Oauth2 with JWT implementation.</code>
 	 * @return
 	 */
-	
 	@Bean
 	public FilterRegistrationBean jwtFilter() {
 		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
@@ -70,12 +76,20 @@ public class Application extends SpringBootServletInitializer {
 		LOGGER.info("Registering JWT filter");
 		return registrationBean;
 	}
-
+	/**
+	 * <p>RestTemplate is autowired in any class where there is Microservice-Microservice communication.</p>
+	 * @return
+	 */
 	@Bean
 	public RestTemplate restTemplate(){
 	return	new RestTemplate();
 	}
 	
+	/**
+	 * This filter validates all the request with <b>/api/v1/</b> as request prefix in request url.
+	 * Registering {@link CookieAuthenticationFilter} as a bean.  
+	 * @return
+	 */
 	@Bean
 	public FilterRegistrationBean cookieAuthenticationFilter() {
 		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
@@ -89,6 +103,10 @@ public class Application extends SpringBootServletInitializer {
 		return registrationBean;
 	}
 
+	/**
+	 * Cors Configuration
+	 * @return
+	 */
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurerAdapter() {
@@ -106,21 +124,34 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 	public static void main(String[] args) {
+		LOGGER.info("Starting ApiGateway...");
 		SpringApplication.run(Application.class, args);
 	}
-
+	/**
+	 * This registers Pre {@link ZuulFilter}
+	 * @return
+	 */
 	@Bean
 	public SimpleFilter simpleFilter() {
 		LOGGER.info("Creating Simple Filter Bean");
 		return new SimpleFilter();
 	}
-
+	
+	/**
+	 * This registers Post {@link ZuulFilter}
+	 * @return
+	 */
 	@Bean
 	public ResponseFilter responseFilter() {
-		LOGGER.info("Creating response Filter Bean");
+		LOGGER.info("Creating Response Filter Bean");
 		return new ResponseFilter();
 	}
-
+	/**
+	 * <p>This static bean loads before configuration is loaded.
+	 * Used to load, any property files (other than application.properties) 
+	 * before creating any beans</p> 
+	 * @return
+	 */
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer getPropertySourcesPlaceholderConfigurer() {
 
@@ -128,13 +159,14 @@ public class Application extends SpringBootServletInitializer {
 	}
 	
 	/**
-	 * Client details. Here, MailMicroservice
+	 * Client details configuration {@link ClientCredentialsResourceDetails} for {@link OAuth2RestTemplate}.
 	 * 
 	 * @return
 	 */
 	@Bean
 	@ConfigurationProperties(prefix = "security.oauth2.client")
 	public OAuth2ProtectedResourceDetails clientCredentialsResourceDetails() {
+		LOGGER.info("Loading Client Credentials of ApiGateway");
 		return new ClientCredentialsResourceDetails();
 	}
 
@@ -155,31 +187,4 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 
-}
-
-@RestController
-class GreetingController {
-	private static Logger LOGGER = LoggerFactory.getLogger(GreetingController.class);
-
-	@RequestMapping("/api/v1/{name}")
-	String hello(@PathVariable String name, HttpServletRequest req, HttpServletRequest res) {
-		LOGGER.info("**" + req.getContextPath() + "**");
-		LOGGER.info("this is in greeting controller :" + name);
-		// LOGGER.error("this is in greeting controller :" + name);
-		// LOGGER.info(req.getUserPrincipal().toString());
-		String headers = "";
-
-		return "Hello, ";// + req.getUserPrincipal().toString() + "!"+"
-							// "+res.getHeaderNames().toString();
-	}
-
-	@RequestMapping("/api/v1/initToken")
-	public ResponseEntity<String> getInitToken(HttpServletRequest req) {
-		LOGGER.info("**" + req.getContextPath() + "**");
-		LOGGER.info("this is in greeting controller :");
-
-		// LOGGER.error("this is in greeting controller :" + name);
-
-		return new ResponseEntity<String>("_csrf token", HttpStatus.OK);
-	}
 }

@@ -3,6 +3,7 @@
  */
 package com.engage.service;
 
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
+import com.engage.commons.dto.PathwayPatientCountDto;
 import com.engage.dao.PatientDao;
 import com.engage.dao.jpa.IPatientDao;
 import com.engage.dao.jpa.IPatientPathwayDao;
@@ -54,6 +56,7 @@ public class PatientService {
 	@Autowired
 	private IPatientDao patientDaoJpa;
 
+
 	@Autowired
 	private PatientDao _patientDao;
 	@Autowired
@@ -72,18 +75,12 @@ public class PatientService {
 	public List<PatientDto> getPatientsByPhoneNumber(String phone) throws PatientNotFoundException {
 		List<PatientDto> patientDtoList = null;
 		//Commented to support legacy function
-		String decryptedPhone =null;
-		try{
-		 decryptedPhone = AdvancedEncryptionStandard.decrypt(phone);
-		LOGGER.info("Decrypted phone "+decryptedPhone);
-		}
-		catch(Exception ex){
-			LOGGER.info("Cannot decrypt phone number");
-		}
+		LOGGER.info("Phone number passed: "+phone);
+		
 		
 		List<Patient> patientList=null;
 		try {
-			patientList = patientDaoJpa.findPatientByPhone(AdvancedEncryptionStandard.encrypt(decryptedPhone));
+			patientList = patientDaoJpa.findPatientByPhone(AdvancedEncryptionStandard.encrypt(phone));
 		} catch (Exception e) {
 			LOGGER.info("Cannot decrypt phone number");
 		}
@@ -265,4 +262,22 @@ public PatientDto getPatientById(long id) throws PatientNotFoundException{
 				});
 		
 		return (ArrayList) firstMessage.getBody();
-	}}
+	}
+	public List<PathwayPatientCountDto> getPathwayCount(Long orgId) {
+		List<PathwayPatientCountDto> listWithCountDto=null;
+		List<Object[]> listWithCount = patientPathwayDaoJpa.getPathwayCount(orgId);
+		if(listWithCount!=null){
+			listWithCountDto = new ArrayList<>();
+		for(Object[] o : listWithCount){
+			PathwayPatientCountDto ppcd = new PathwayPatientCountDto();
+			BigInteger pathwayIdBigInt = (BigInteger) o[0];
+			ppcd.setPathwayId(pathwayIdBigInt.longValue());
+			BigInteger pathwayCountBigInt = (BigInteger) o[1];
+			ppcd.setPathwayCount(pathwayCountBigInt.longValue()) ;
+			listWithCountDto.add(ppcd);
+		}
+		}
+		return listWithCountDto;
+	}
+	
+}

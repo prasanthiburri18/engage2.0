@@ -1,5 +1,10 @@
 package com.engage.commons.dto;
-
+/**
+ * This is used when {@link PathwayPatientBlockDto} is null,
+ * or List of {@link PathwayPatientBlockDto} returns empty List
+ * @author mindtechlabs
+ *
+ */
 public class PatientPathwayBlockNotFoundException extends Exception {
 
 	/**

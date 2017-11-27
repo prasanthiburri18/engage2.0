@@ -2038,8 +2038,9 @@ $('document').ready(function ()
 
         $("#ebblockupload").toggle();
     });
-
-    $(document).on('click', 'td .newcreateblock', function () {
+    var ua = navigator.userAgent,
+    event = (ua.match(/iPad/i)) ? "touchstart" : "click"
+    $(document).on(event, 'td .newcreateblock', function () {
 
         if ($(this).data('blockid'))
         {

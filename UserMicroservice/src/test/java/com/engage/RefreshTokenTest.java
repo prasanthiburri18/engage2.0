@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class RefreshTokenTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RefreshTokenTest.class);

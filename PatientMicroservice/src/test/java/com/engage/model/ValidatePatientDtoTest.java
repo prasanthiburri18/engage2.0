@@ -28,7 +28,7 @@ import com.engage.dto.PatientDto;
  *
  */
 @RunWith(SpringRunner.class)
-//@Ignore
+@Ignore
 public class ValidatePatientDtoTest {
 	
 	/**

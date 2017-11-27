@@ -403,13 +403,13 @@ $('document').ready(function ()
 
         if (tablecols == 0)
             tablecols = 5;
-
+        //alert(displayrange.endp);
         if (tlgth < parseInt(displayrange.endp))
         {
 
             var renderupto = (parseInt($currentpage) * 5) + 1;
 
-            for (var emptr = (tlgth); emptr < renderupto; emptr++)
+            for (var emptr = (tlgth); emptr <renderupto; emptr++)
             {
                 $('table').find('tr').each(function (trindex, trvals) {
 
@@ -421,6 +421,7 @@ $('document').ready(function ()
 
 
                 tablecols = tablecols + 1;
+                console.log(tablecols);
             }
             tlgth = parseInt(displayrange.endp);
             otblethlength = tlgth;

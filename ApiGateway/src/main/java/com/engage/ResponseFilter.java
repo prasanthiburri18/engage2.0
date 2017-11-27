@@ -26,9 +26,14 @@ import com.netflix.zuul.context.RequestContext;
  *
  */
 public class ResponseFilter extends SendResponseFilter {
-
+	/**
+	 * Logger Implementation
+	 */
 	private static Logger log = LoggerFactory.getLogger(ResponseFilter.class);
-
+	
+	/**
+	 * OAuth Token Endpoint
+	 */
 	private static final String OAUTH2_TOKEN_URL = "/ApiGateway/users/oauth/token";
 
 	private static final String LOGOUT_URL = "/ApiGateway/userlogout";
@@ -62,7 +67,7 @@ public class ResponseFilter extends SendResponseFilter {
 			authCookie.setMaxAge(-1);
 			authCookie.setPath("/ApiGateway");
 			authCookie.setVersion(1);
-		//	authCookie.setSecure(true);
+			authCookie.setSecure(true);
 
 			log.info("request domain :" + request.getServerName());
 			authCookie.setDomain(request.getServerName());
@@ -70,7 +75,7 @@ public class ResponseFilter extends SendResponseFilter {
 			refreshCookie.setHttpOnly(true);
 			refreshCookie.setPath("/ApiGateway");
 			refreshCookie.setVersion(1);
-		//	refreshCookie.setSecure(true);
+			refreshCookie.setSecure(true);
 			refreshCookie.setMaxAge(-1);
 			refreshCookie.setDomain(request.getServerName());
 			httpResponse.addCookie(authCookie);
@@ -98,7 +103,7 @@ public class ResponseFilter extends SendResponseFilter {
 				authCookie.setMaxAge((int) (token.getExpiration().getTime() - System.currentTimeMillis()) / 1000);
 				authCookie.setPath("/ApiGateway");
 				authCookie.setVersion(1);
-				//authCookie.setSecure(true);
+				authCookie.setSecure(true);
 
 				log.info("request domain :" + request.getServerName());
 				authCookie.setDomain(request.getServerName());
@@ -109,12 +114,13 @@ public class ResponseFilter extends SendResponseFilter {
 				refreshCookie.setVersion(1);
 
 				refreshCookie.setMaxAge((int) (token.getExpiration().getTime() - System.currentTimeMillis()) / 1000);
-				//refreshCookie.setSecure(true);
+				refreshCookie.setSecure(true);
 				refreshCookie.setDomain(request.getServerName());
 				httpResponse.addCookie(authCookie);
 				httpResponse.addCookie(refreshCookie);
 
 			} catch (JSONException | IOException e) {
+				log.info("Error while setting authorization cookies.");
 				log.error("Error while setting authorization cookies. Exception message: " + e.getMessage());
 				e.printStackTrace();
 			}

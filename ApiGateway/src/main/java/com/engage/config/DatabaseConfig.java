@@ -18,7 +18,12 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
+/**
+ * <p>DataBase Configuration of dev, staging and prod environment.</p>
+ * <i>Username and Password for database are stored a system properties.
+ * @author mindtechlabs
+ *
+ */
 @Configuration
 @EnableTransactionManagement
 @Profile(value = { "dev", "staging", "prod" })
@@ -48,7 +53,10 @@ public class DatabaseConfig {
 
 	@Value("${entitymanager.packagesToScan}")
 	private String ENTITYMANAGER_PACKAGES_TO_SCAN;
-
+	/**
+	 * {@link DataSource} configuration for this application.
+	 * @return
+	 */
 	@Bean
 	public DataSource dataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -62,7 +70,10 @@ public class DatabaseConfig {
 	}
 
 	
-	
+	/**
+	 * This bean is created to support Spring Data JPA
+	 * @return {@link LocalContainerEntityManagerFactoryBean} instance
+	 */
 
 	@Bean
 	@Autowired

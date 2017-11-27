@@ -22,7 +22,8 @@ import com.engage.dao.IHostDao;
 import com.engage.model.Host;
 
 /**
- * 
+ * <h2>{@link HostFilter} filters host header present in request.</h2>
+ * Predefined list of valid hosts are stored in database.
  * @author mindtech-labs
  *
  */
@@ -36,15 +37,14 @@ public class HostFilter extends GenericFilterBean {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(HostFilter.class);
 
-	private static final String OAUTH2_TOKEN_URL = "/ApiGateway/users/oauth/token";
+	/**
+	 * <h3>Autowired instance of {@link IHostDao}.</h3>
+	 * <p>This is used to load list of valid hosts from database.</p>
+	 */
 	@Autowired
 	private IHostDao hostDao;
 
-	/**
-	 * Spring container wires valid.hosts from host.properties file
-	 */
 
-	private String[] allowedHosts;
 
 	/*
 	 * (non-Javadoc)
@@ -68,7 +68,7 @@ public class HostFilter extends GenericFilterBean {
 			return;
 		}
 */
-		
+		//Load list of valid hosts
 		List<Host> hosts = hostDao.findAll();
 		
 		if(host==null||hosts.stream().noneMatch(h->h.getHost().contains(host))){

@@ -15,7 +15,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.engage.commons.validators.annotations.ValidPhoneNumber;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -233,4 +232,17 @@ public class PatientDto {
 		this.orgId = orgId;
 	}
 
+	public PatientDto(PatientDto patientDto) {
+		this.email = patientDto.email;
+		this.firstName = patientDto.firstName;
+		this.lastName = patientDto.lastName;
+		this.phone = patientDto.phone;
+		this.deviceToken = patientDto.deviceToken;
+		this.status = patientDto.status;
+		this.createDate = patientDto.createDate;
+		this.updateDate = patientDto.updateDate;
+		this.dob = patientDto.dob;
+		this.clinicianId = patientDto.clinicianId;
+		this.orgId = patientDto.orgId;
+	}
 }

@@ -112,7 +112,7 @@ $(document).ready(function () {
  * @return JsonObject
  *
  */
-/*
+
     $.ajax({
         url: pathwayapibase + '/api/v1/listPathway',
         type: 'POST',
@@ -179,7 +179,7 @@ $(document).ready(function () {
 
         }
     });
-*//**
+/**
  * Displaying the Patient list using organization
  * In this section we are calculating the patient pathway start days by
  * patient accepted date for particular Pathway

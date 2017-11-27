@@ -18,7 +18,6 @@ import com.engage.util.JsonMessage;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 
-
 public class UserServiceTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceTest.class);
@@ -29,6 +28,7 @@ public class UserServiceTest {
 	 * Tests the function which returns list of patients
 	 */
 	@Test
+	@Ignore
 	public void getPatientsListByDobTest(){
 		
 		List<PatientDto> patientDtoList = userService.getPatientsListByDob("2017-11-11");
@@ -46,7 +46,7 @@ public class UserServiceTest {
 		LOGGER.info("Test passed");
 	}
 	@Test
-	@Ignore
+@Ignore
 	public void getPatientsByPhone(){
 		List<Long> patients = userService.patientidbyphone("9663908949");
 		if(patients!=null)

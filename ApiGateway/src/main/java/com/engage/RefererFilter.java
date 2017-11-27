@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
@@ -22,13 +21,12 @@ import com.engage.dao.IRefererDao;
 import com.engage.model.Referer;
 
 /**
- * 
+ * <h2>{@link RefererFilter} filters referer header present in request.</h2>
+ * Predefined list of valid referers are stored in database. 
  * @author mindtech-labs
  *
  */
 @Component
-@PropertySource("classpath:referer.properties")
-// @ConfigurationProperties(prefix="valid")
 @Order(value = 4)
 public class RefererFilter extends GenericFilterBean {
 	/**
@@ -37,14 +35,14 @@ public class RefererFilter extends GenericFilterBean {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(RefererFilter.class);
 
+	private static final String USER_REPLY_URI="/ApiGateway/users/userreply";
+	/**
+	 * Autowired instance of {@link IRefererDao}
+	 */
 	@Autowired
 	private IRefererDao refererDao;
 
-	/**
-	 * Spring container wires valid.referers from referer.properties file
-	 */
 
-	private String[] allowedReferers;
 
 	/*
 	 * (non-Javadoc)
@@ -56,6 +54,7 @@ public class RefererFilter extends GenericFilterBean {
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
+		String requestUri = req.getRequestURI();
 		final String referer = req.getHeader("Referer");
 		/*
 		 * try{ final FileInputStream blackListFile = new FileInputStream(
@@ -92,9 +91,9 @@ public class RefererFilter extends GenericFilterBean {
 		List<Referer> referers = refererDao.findAll();
 
 		
-		if (referer == null
+		if ((referer == null
 				|| referers.stream().noneMatch(
-						r -> referer.contains(r.getReferer()))) {
+						r -> referer.contains(r.getReferer())))&&!requestUri.equalsIgnoreCase(USER_REPLY_URI)) {
 			((HttpServletResponse) response)
 					.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
 			LOGGER.info("Invalid referer header passed to access "

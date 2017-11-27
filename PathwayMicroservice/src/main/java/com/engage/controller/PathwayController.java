@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.engage.commons.dto.PathwayListDto;
 import com.engage.commons.exception.ConstraintViolationException;
 import com.engage.commons.exception.DataTamperingException;
 import com.engage.commons.exception.InvalidAccessException;
@@ -295,6 +296,31 @@ public class PathwayController {
 		}
 	}
 
+	/**
+	 * List Pathway Method
+	 * 
+	 * @Inputparam JsonObject
+	 * @return JsonObject
+	 * @throws DataTamperingException
+	 * @throws PathwayNotFoundException 
+	 */
+	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
+	@RequestMapping(value = "/pathways", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<List<PathwayListDto>> getPathways(@RequestParam(value="orgId")Long orgId, HttpServletRequest req)
+			throws DataTamperingException, PathwayNotFoundException {
+		
+		List<PathwayListDto> pathwayListDto = null;
+		if (!checkOrganizationIdFromAuthentication(Long.toString(orgId))) {
+			throw new DataTamperingException("Organization Id doesn't match " + req.getPathInfo());
+		}
+		pathwayListDto = pathwayService.getPathwayList(orgId);
+		List<Pathway> pathways = _pathwayDao.getAll(orgId);
+			
+
+return new ResponseEntity<List<PathwayListDto>>(pathwayListDto, HttpStatus.OK);
+	}
+
+	
 	/**
 	 * View Pathway Method
 	 * 

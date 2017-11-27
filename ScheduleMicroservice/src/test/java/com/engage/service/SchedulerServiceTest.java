@@ -22,6 +22,7 @@ import com.engage.commons.exception.MessageUpdateFailedException;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class SchedulerServiceTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerServiceTest.class);

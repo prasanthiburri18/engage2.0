@@ -51,10 +51,8 @@ import com.engage.util.JsonMessage;
 public class UserController {
 	private static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 	
-	@Autowired
-	private OAuth2RestTemplate restTemplate;
 	
-//	private RestTemplate restTemplate = new RestTemplate();
+
 	@Autowired
 	private UserDao _userDao;
 	@Autowired
@@ -80,40 +78,7 @@ public class UserController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	/**
-	 * Not used any more
-	 * Load user Profile Method
-	 * 
-	 * @Inputparam JsonObject
-	 * @return JsonObject
-	 *//*
-	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
-	@RequestMapping(value = "/profile", method = RequestMethod.POST)
-	public @ResponseBody JsonMessage getProfile(@RequestBody Map<String, String> json) {
-		JsonMessage response = new JsonMessage();
-		try {
-			Map<String, Object> data = new HashMap<String, Object>();
 
-			if (!(_userDao.getByEmail(json.get("emailid"))).isEmpty()) {
-				//List<User> user = _userDao.getByEmail(json.get("emailid"));
-				User user = userService.getUserByEmail(json.get("emailid"));
-				data.put("userData", user);
-				response.setMessage("User profile");
-				response.setStatuscode(200);
-				response.setData(data);
-				return response;
-			} else {
-				response.setMessage("No profile information found.");
-				response.setStatuscode(204);
-				return response;
-			}
-		} catch (Exception ex) {
-			response.setMessage("No profile information found.");
-			response.setStatuscode(204);
-			return response;
-		}
-	}
-*/
 	/**
 	 * Change Password Method
 	 * 
@@ -262,7 +227,7 @@ public class UserController {
 			data1.put("subject", "Welcome Email");
 			data1.put("text",
 					"Hi <b>" + username
-							+ ",</b><br><br>Congratulations! Your have been added as team member. Please login with your email: "
+							+ ",</b><br><br>Congratulations! You have been added as team member. Please login with your email: "
 							+ useremail + " and password is  " + userpp + " <br> For Login <a href='" + portalURL
 							+ "'>Click Here</a><br>Thank You,<br>Team Engage at Quantified Care");
 			data1.put("status", true);

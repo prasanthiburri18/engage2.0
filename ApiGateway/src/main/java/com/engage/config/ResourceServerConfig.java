@@ -17,11 +17,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 /**
- * This is a special case. Since we had already configured token store and
- * access token converter in {@link AuthorizationServerConfig}. We are
- * autowiring those beans here in ResourceServerConfig. All other microservices
- * except this(UserMicroservice) must have tokenstore and AccesstokenConverter
- * beans.
+ * ApiGateway acts as Resource Server.
+ * In order to check the claims in JWT when needed
  * 
  * @author mindtech-labs
  *

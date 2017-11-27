@@ -23,6 +23,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
  
 @Configuration
 @ComponentScan
@@ -42,8 +44,15 @@ public class Application extends SpringBootServletInitializer{
 	  void started() {
 	    TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"));
 	  }
-	
-	
+	/**
+	 * Singleton instance of {@link ObjectMapper}.
+	 * This is used to convert map / entity to Dto.
+	 * @return
+	 */
+	@Bean
+	public ObjectMapper objectMapper(){
+		return new ObjectMapper();
+	}
 	
 	@Bean
     public WebMvcConfigurer corsConfigurer() {

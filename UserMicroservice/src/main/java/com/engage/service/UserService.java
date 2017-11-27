@@ -132,16 +132,10 @@ public class UserService {
 	}
 
 	public List<Long> patientidbyphone(final String phone) {
-		String encryptPhone=null;
-		try {
-			 encryptPhone = AdvancedEncryptionStandard.encrypt(phone);
+
 		
-			LOGGER.info("Encrypted phone number: "+encryptPhone);
-		}catch(Exception ex){
-			LOGGER.info("Cannot encrypt phone number.");
-		}
 			ResponseEntity<List<PatientDto>> results = restTemplate
-					.exchange(patientMicroserviceUrl + "/api/v1/patient/phone/" + encryptPhone,HttpMethod.GET,null, new ParameterizedTypeReference<List<PatientDto>>() {
+					.exchange(patientMicroserviceUrl + "/api/v1/patient/phone/" + phone,HttpMethod.GET,null, new ParameterizedTypeReference<List<PatientDto>>() {
 					});
 			List<Long> patientIdList = new ArrayList<>();
 			List<PatientDto> patientDtoList = results.getBody();

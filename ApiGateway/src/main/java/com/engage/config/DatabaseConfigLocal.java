@@ -17,10 +17,14 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
+/**
+ * This is specific to local environment used by 
+ * developers to test in their IDE.
+ * @author mindtechlabs
+ *
+ */
 @Configuration
 @EnableTransactionManagement
 @Profile("local")
@@ -65,7 +69,10 @@ public class DatabaseConfigLocal {
   }
   
 
-
+/**
+ * This beans is created to support Spring Data JPA Interfaces
+ * @return
+ */
   @Bean
 	@Autowired
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {

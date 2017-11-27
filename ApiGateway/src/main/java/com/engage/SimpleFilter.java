@@ -26,6 +26,13 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
+/**
+ * This Zuul filter is <b>"pre"</b> type. Strips Auth & Refresh Token from Cookie and adds a ZuulRequestHeader Authorization
+ * from login request to response cookies.
+ * 
+ * @author mindtechlabs
+ *
+ */
 @Component
 public class SimpleFilter extends ZuulFilter {
 
@@ -35,8 +42,6 @@ public class SimpleFilter extends ZuulFilter {
 	private static final String EXPIRES_IN="validitiy";
 	private static final String BEARER ="Bearer";
 	
-	
-	private static final String REFRESH_TOKEN_ENDPOINT = "http://192.168.0.113:8081/oauth/token/";
 	private static final String LOGOUT_URL = "/ApiGateway/userlogout";
 	@Value("${zuul.routes.users.url}")
 	private String userMicroserviceUrl;
@@ -80,13 +85,15 @@ public class SimpleFilter extends ZuulFilter {
 		for(Cookie cookie : requestCookies){
 			
 			if(cookie.getName().equals("Authorization")){
+				LOGGER.info("Loading Auth Cookie");
 				authCookie=cookie;
 			}
 			else if(cookie.getName().equals("refresh_token")){
+				LOGGER.info("Loading Refresh Token Cookie");
 				refreshCookie=cookie;
 			}
 		}
-		
+		//Work around to validate expiry of authCookie. As cookies are not persisted on server side.
 		String[] authCookieSplit = authCookie.getValue().split("#");
 		String authHeader=null;
 		String authValidityString=null;
@@ -118,7 +125,12 @@ public class SimpleFilter extends ZuulFilter {
 		return null;
 	}
 
-
+/**
+ * <p>Method to verify Authorization Token Expiry.</p>
+ * @param req
+ * @param response
+ * @throws URISyntaxException
+ */
 	private void checkForAuthTokenExpiry(HttpServletRequest req, HttpServletResponse response) throws URISyntaxException {
 		
 		HttpServletRequest request = (HttpServletRequest) req;
@@ -211,6 +223,7 @@ public class SimpleFilter extends ZuulFilter {
 		   }};
 		}
 	private OAuth2AccessToken requestNewToken(String value) throws URISyntaxException {
+		final String REFRESH_TOKEN_ENDPOINT = userMicroserviceUrl + "oauth/token?grant_type=refresh_token";
 		String grant_type = "refresh_token";
 		Map<String, String> refreshData = new HashMap<>();
 		refreshData.put("grant_type", grant_type);

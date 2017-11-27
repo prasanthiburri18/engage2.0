@@ -252,6 +252,7 @@ patientfname=results.patient.firstName;
             url: pathwayapibase+'/api/v1/getPatientpathwayblockbyevent',
             type: 'POST',
             dataType: 'json',
+            async: false,
             headers: {
         //'Authorization': securitytoken,
         'Content-Type':'application/json'
@@ -337,6 +338,7 @@ var phinput =results.patient.phone;
             url: pathwayapibase+'/api/v1/getPatientpathway',
             type: 'POST',
             dataType: 'json',
+            async:false,
             headers: {
         //'Authorization': securitytoken,
         'Content-Type':'application/json'
@@ -345,6 +347,7 @@ var phinput =results.patient.phone;
                    withCredentials: true
                },
             Accept: "application/json",
+            async:false,
             data: JSON.stringify(painp),
             beforeSend: function ()
             {
@@ -372,6 +375,7 @@ var phinput =results.patient.phone;
         //'Authorization': securitytoken,
         'Content-Type':'application/json'
     },
+    async:false,
     xhrFields: {
                    withCredentials: true
                },
@@ -419,6 +423,7 @@ var phinput =results.patient.phone;
             url:pathwayapibase+'/api/v1/listEvents',
             type: 'POST',
             dataType: 'json',
+            async:false,
             headers: {
         //'Authorization': securitytoken,
         'Content-Type':'application/json'
