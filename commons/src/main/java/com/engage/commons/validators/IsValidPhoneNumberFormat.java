@@ -5,10 +5,12 @@ package com.engage.commons.validators;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.constraints.Pattern;
 
 import com.engage.commons.validators.annotations.ValidPhoneNumber;
 
 /**
+ *This is deprecated. Javax {@link Pattern} is used instead.
  * If field is null, then default or appended message is returned
  * @author mindtech-labs
  *

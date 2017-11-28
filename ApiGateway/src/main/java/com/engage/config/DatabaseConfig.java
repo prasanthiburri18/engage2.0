@@ -20,7 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 /**
  * <p>DataBase Configuration of dev, staging and prod environment.</p>
- * <i>Username and Password for database are stored a system properties.
+ * <i>Username and Password for database are stored a system properties.</i>
  * @author mindtechlabs
  *
  */

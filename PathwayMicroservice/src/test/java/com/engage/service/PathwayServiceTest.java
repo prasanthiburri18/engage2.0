@@ -2,6 +2,7 @@ package com.engage.service;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import com.engage.commons.dto.PathwayListDto;
 import com.engage.commons.exception.PathwayNotFoundException;
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class PathwayServiceTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientServiceTest.class);
 	@Autowired

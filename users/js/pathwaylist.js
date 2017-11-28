@@ -165,7 +165,7 @@ $(document).ready(function () {
         "columnDefs": [
             {
                 "render": function (data, type, row) {
-                    var pname = row.pathwayName;
+                    var pname = row.pathwayDto.pathwayName;
                    /* if (usertype == "U")
                     {
                         var plink = pname;
@@ -174,7 +174,7 @@ $(document).ready(function () {
                     {
                         var plink = '<a href="editpathway.html?pathwayid=' + row.id + '" target="_blank" style="color:#ec843e;">' + pname + '</a>';
                     }*/
-                     var plink = '<a href="editpathway.html?pathwayid=' + row.id + '" target="_blank" style="color:#ec843e;">' + pname + '</a>';
+                     var plink = '<a href="editpathway.html?pathwayid=' + row.pathwayDto.id + '" target="_blank" style="color:#ec843e;">' + pname + '</a>';
 
                     return plink;
                 },
@@ -182,7 +182,7 @@ $(document).ready(function () {
             },
             {
                 "render": function (data, type, row) {
-                    var eventslistpaths = row.events;
+                    var eventslistpaths = row.pathwayDto.events;
 
                     eventslistpaths.sort(function (a, b) {
                         return a.id - b.id;
@@ -208,59 +208,22 @@ $(document).ready(function () {
             {
                 "render": function (data, type, row, meta) {
 
+                    var noOfPatients = row.patientsCount;
+                    if(noOfPatients==undefined||noOfPatients==null){
+                    	patientCountHtml = '<span>' + '0' + '</span>';}
+                    else{
+                    var patientCountHtml = '<span>' + noOfPatients + '</span>';
+                    }
+                    
 
-
-                    var pinfo = {"pathwayId": row.id};
-
-                    var num = 0;
-                    var currentCell = $("#example").DataTable().cells({"row": meta.row, "column": meta.col}).nodes(0);
-                    $.ajax({
-                        url: patientapibase + '/api/v1/getPatientsCountByPathwayId',
-                        type: 'POST',
-                        dataType: 'json',
-                        headers: {
-                            //'Authorization': securitytoken,
-                            'Content-Type': 'application/json'
-                        },
-                        xhrFields: {
-               withCredentials: true
-           },
-                        Accept: "application/json",
-                        data: JSON.stringify(pinfo),
-                        beforeSend: function (request)
-                        {
-                            $("#error").fadeOut();
-                            $.LoadingOverlay("show");
-
-
-                        },
-                        success: function (response)
-                        {
-
-                            if (response.statuscode == 200) {
-                                $.LoadingOverlay("hide");
-
-                                num = response.data;
-                                $(currentCell).html(num);
-                            }
-                        },
-                        error: function(response, status){
-
-                        	if(response.status==412) {
-                        	$.LoadingOverlay("hide");
-                        		logout();
-                        	}
-
-                        }
-                    });
-                    return 'Not Started';
+                    return patientCountHtml;
                 },
                 "targets": 2
             },
             {type: 'formatted-num', targets: 2},
             {
                 "render": function (data, type, row) {
-                    var formatted = moment(row.updateDate).tz('America/New_York').format('LLL');
+                    var formatted = moment(row.pathwayDto.updateDate).tz('America/New_York').format('LLL');
                     return formatted;
                 },
                 "targets": 3
@@ -271,13 +234,13 @@ $(document).ready(function () {
                     //In both cases edit icon enabled to view pathway
                     if (usertype == "U")
                     {
-                        var pedit = '<button class="btn btn-primary btn-xs" data-title="Edit"   onClick="pathwaytEdit(\'' + row.id + '\')" ><span class="glyphicon glyphicon-pencil"></span></button>';
+                        var pedit = '<button class="btn btn-primary btn-xs" data-title="Edit"   onClick="pathwaytEdit(\'' + row.pathwayDto.id + '\')" ><span class="glyphicon glyphicon-pencil"></span></button>';
                         //var pdelete = '<button class="btn btn-danger btn-xs" data-title="Delete" disabled onclick="pathwayDelete(\'' + row.id + '\')";  ><span class="glyphicon glyphicon-trash"></span></button>';
                     }
                     if (usertype == "A")
                     {
 
-                        var pedit = '<button class="btn btn-primary btn-xs" data-title="Edit"   onClick="pathwaytEdit(\'' + row.id + '\')" ><span class="glyphicon glyphicon-pencil"></span></button>';
+                        var pedit = '<button class="btn btn-primary btn-xs" data-title="Edit"   onClick="pathwaytEdit(\'' + row.pathwayDto.id + '\')" ><span class="glyphicon glyphicon-pencil"></span></button>';
                         //var pdelete = '<button class="btn btn-danger btn-xs" data-title="Delete"  onclick="pathwayDelete(\'' + row.id + '\')";  ><span class="glyphicon glyphicon-trash"></span></button>';
                     }
 
@@ -330,7 +293,7 @@ $(document).ready(function () {
     });
 
 
-    $.ajax({
+    /*$.ajax({
         url: pathwayapibase + '/api/v1/listPathway',
         type: 'POST',
         dataType: 'json',
@@ -391,7 +354,61 @@ $(document).ready(function () {
 
         }
     });
+*/    var orgid = output.orgid;
 
+    $.ajax({
+        url: pathwayapibase + '/api/v1/pathways?orgId='+orgid,
+        type: 'GET',
+        dataType: 'json',
+        headers: {
+            //'Authorization': securitytoken,
+            'Content-Type': 'application/json'
+        },
+        xhrFields: {
+               withCredentials: true
+           },
+        Accept: "application/json",
+        beforeSend: function (request)
+        {
+            $("#error").fadeOut();
+            $.LoadingOverlay("show");
+        },
+        success: function (response, status)
+        {
+
+
+            if (status == "success"||"nocontent") {
+
+
+                $.LoadingOverlay("hide");
+
+                dataSet = response;
+                console.log(response);
+                if (status=="nocontent"||dataSet.length == 0)
+                {
+                    $(".helpblock").css('display', 'block');
+                    $(".dashboardbox").css('display', 'none');
+                    return;
+                }
+
+                dataSet = dataSet.reverse();
+
+
+                var myTable = $('#example').DataTable();
+                myTable.clear().rows.add(dataSet).draw();
+
+            }
+
+        },
+        error: function(response, status){
+
+          if(response.status==412) {
+          $.LoadingOverlay("hide");
+            logout();
+          }
+
+        }
+    });
 
 
 

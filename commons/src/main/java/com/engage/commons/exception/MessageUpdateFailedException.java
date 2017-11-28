@@ -16,17 +16,17 @@ public class MessageUpdateFailedException extends Exception{
 
 	public MessageUpdateFailedException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public MessageUpdateFailedException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	public MessageUpdateFailedException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	

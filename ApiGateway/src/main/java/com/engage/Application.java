@@ -1,7 +1,5 @@
 package com.engage;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -15,16 +13,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -41,8 +34,8 @@ import com.netflix.zuul.ZuulFilter;
 @EnableWebMvc
 @EnableOAuth2Client
 /**
- * <h2>API Gateway Operations Applying JWT Filters (Json Web Token Process
- * Implementation)</h2>
+ * <p>API Gateway Operations Applying JWT Filters (Json Web Token Process
+ * Implementation)</p>
  * 
  * @author StartUP Labs
  * @version 1.0
@@ -51,7 +44,7 @@ import com.netflix.zuul.ZuulFilter;
 public class Application extends SpringBootServletInitializer {
 
 	/**
-	 * Class Logger Implementation
+	 * <p>Class Logger Implementation</p>
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
@@ -59,8 +52,8 @@ public class Application extends SpringBootServletInitializer {
 	 * All the urls with /api/v1/ should have auth header, which is validated in
 	 * JWT filter
 	 * 
-	 * <h2>This is deprecated, {@link CookieAuthenticationFilter} uses replaces the logic used by this bean.
-	 *  Logic for getting claims from JWT is removed.</h2>
+	 * <p>This is deprecated, {@link CookieAuthenticationFilter} uses replaces the logic used by this bean.
+	 *  Logic for getting claims from JWT is removed.</p>
 	 * <code>Reason: Spring security Oauth2 with JWT implementation.</code>
 	 * @return
 	 */

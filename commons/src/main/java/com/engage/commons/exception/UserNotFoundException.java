@@ -3,10 +3,7 @@
  */
 package com.engage.commons.exception;
 
-/**
- * @author mindtech-labs
- *
- */
+
 public class UserNotFoundException extends Exception {
 
 	/**

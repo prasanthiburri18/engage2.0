@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.engage.model.Host;
 
 /**
+ * <p>Spring Data JPA respository for {@link Host} entity </p>
  * @author ai
  *
  */

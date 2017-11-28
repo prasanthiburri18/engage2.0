@@ -30,104 +30,120 @@ import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 
-@Profile(value={"staging", "prod"})
+/**
+ * This controller is specific to staging and prod environment. Here, aws ses
+ * username and password are stored as system variables. AWS SDK Api is made
+ * used to send out mails.
+ * 
+ * @author mindtechlabs
+ *
+ */
+@Profile(value = { "staging", "prod" })
 @RestController
 @RequestMapping("/email")
 public class EmailRestController {
-
+	/**
+	 * Logger implementation
+	 */
 	private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(EmailRestController.class);
-    @Value("${mail.from}")
-    public String from;
+	/**
+	 * Loaded from mail.properties
+	 */
+	@Value("${mail.from}")
+	public String from;
 
-    public String username=System.getProperty("awsSesUsername");
+	public String username = System.getProperty("awsSesUsername");
 
-    public String password=System.getProperty("awsSesPassword");;
+	public String password = System.getProperty("awsSesPassword");;
 
-    @Autowired
-    private VelocityEngine velocityEngine;
+	@Autowired
+	private VelocityEngine velocityEngine;
 
-    private AmazonSimpleEmailService client;
+	private AmazonSimpleEmailService client;
 
-    @PostConstruct
-    public void init() {
-        this.client = AmazonSimpleEmailServiceClient.builder()
-                .withRegion(Regions.US_EAST_1)
-                .withCredentials(new AWSStaticCredentialsProvider(new AWSCredentials() {
-                    @Override
-                    public String getAWSAccessKeyId() {
-                        return username;
-                    }
+	/**
+	 * Initializing {@link AmazonSimpleEmailService} when this controller bean
+	 * is initialized.
+	 */
+	@PostConstruct
+	public void init() {
+		this.client = AmazonSimpleEmailServiceClient.builder().withRegion(Regions.US_EAST_1)
+				.withCredentials(new AWSStaticCredentialsProvider(new AWSCredentials() {
+					@Override
+					public String getAWSAccessKeyId() {
+						return username;
+					}
 
-                    @Override
-                    public String getAWSSecretKey() {
-                        return password;
-                    }
-                }))
-                .build();
-    }
+					@Override
+					public String getAWSSecretKey() {
+						return password;
+					}
+				})).build();
+	}
 
-    @RequestMapping("version")
-    @ResponseStatus(HttpStatus.OK)
-    public String version() {
-    	LOGGER.error("mail test" );
-    	return "[OK] Welcome to withdraw Restful version 1.0";
-    }
+	@RequestMapping("version")
+	@ResponseStatus(HttpStatus.OK)
+	public String version() {
+		LOGGER.error("mail test");
+		return "[OK] Welcome to withdraw Restful version 1.0";
+	}
 
-    @RequestMapping(value = "send", method = RequestMethod.POST, produces = {"application/xml", "application/json"})
-    public ResponseEntity<Email> sendSimpleMail(@RequestBody Email email) throws Exception {
-        Message message = new Message()
-                .withSubject(new Content(email.getSubject()))
-                .withBody(new Body().withHtml(new Content().withData("<html><body>" + email.getText() + "</body></html>")));
+	/**
+	 * This is called by other microservices.
+	 * 
+	 * @param email
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "send", method = RequestMethod.POST, produces = { "application/xml", "application/json" })
+	public ResponseEntity<Email> sendSimpleMail(@RequestBody Email email) throws Exception {
+		Message message = new Message().withSubject(new Content(email.getSubject())).withBody(
+				new Body().withHtml(new Content().withData("<html><body>" + email.getText() + "</body></html>")));
 
-        SendEmailRequest request = new SendEmailRequest()
-                .withSource(from)
-                .withDestination(new Destination().withToAddresses(email.getTo()))
-                .withMessage(message);
+		SendEmailRequest request = new SendEmailRequest().withSource(from)
+				.withDestination(new Destination().withToAddresses(email.getTo())).withMessage(message);
 
-        client.sendEmail(request);
+		client.sendEmail(request);
 
-        email.setStatus(true);
+		email.setStatus(true);
 
-        return new ResponseEntity<>(email, HttpStatus.OK);
-    }
+		return new ResponseEntity<>(email, HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "attachments", method = RequestMethod.POST, produces = {"application/xml", "application/json"})
-    public ResponseEntity<Email> attachments(@RequestBody Email email) throws Exception {
-        Message message = new Message()
-                .withSubject(new Content(email.getSubject()))
-                .withBody(new Body().withHtml(new Content().withData("<html><body>" + email.getText() + "</body></html>")));
+	@RequestMapping(value = "attachments", method = RequestMethod.POST, produces = { "application/xml",
+			"application/json" })
+	public ResponseEntity<Email> attachments(@RequestBody Email email) throws Exception {
+		Message message = new Message().withSubject(new Content(email.getSubject())).withBody(
+				new Body().withHtml(new Content().withData("<html><body>" + email.getText() + "</body></html>")));
 
-        SendEmailRequest request = new SendEmailRequest()
-                .withSource(from)
-                .withDestination(new Destination().withToAddresses(email.getTo()))
-                .withMessage(message);
+		SendEmailRequest request = new SendEmailRequest().withSource(from)
+				.withDestination(new Destination().withToAddresses(email.getTo())).withMessage(message);
 
-        client.sendEmail(request);
+		client.sendEmail(request);
 
-        email.setStatus(true);
+		email.setStatus(true);
 
-        return new ResponseEntity<>(email, HttpStatus.OK);
-    }
+		return new ResponseEntity<>(email, HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "template", method = RequestMethod.POST, produces = {"application/xml", "application/json"})
-    public ResponseEntity<Email> template(@RequestBody Email email) throws Exception {
-        Map<String, Object> model = new HashMap<>();
-        model.put("title", email.getSubject());
-        model.put("body", email.getText());
+	@RequestMapping(value = "template", method = RequestMethod.POST, produces = { "application/xml",
+			"application/json" })
+	public ResponseEntity<Email> template(@RequestBody Email email) throws Exception {
+		Map<String, Object> model = new HashMap<>();
+		model.put("title", email.getSubject());
+		model.put("body", email.getText());
 
-        Message message = new Message()
-                .withSubject(new Content(email.getSubject()))
-                .withBody(new Body().withHtml(new Content().withData(VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "email.vm", "UTF-8", model))));
+		Message message = new Message().withSubject(new Content(email.getSubject()))
+				.withBody(new Body().withHtml(new Content().withData(
+						VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "email.vm", "UTF-8", model))));
 
-        SendEmailRequest request = new SendEmailRequest()
-                .withSource(from)
-                .withDestination(new Destination().withToAddresses(email.getTo()))
-                .withMessage(message);
+		SendEmailRequest request = new SendEmailRequest().withSource(from)
+				.withDestination(new Destination().withToAddresses(email.getTo())).withMessage(message);
 
-        client.sendEmail(request);
+		client.sendEmail(request);
 
-        email.setStatus(true);
+		email.setStatus(true);
 
-        return new ResponseEntity<>(email, HttpStatus.OK);
-    }
+		return new ResponseEntity<>(email, HttpStatus.OK);
+	}
 }

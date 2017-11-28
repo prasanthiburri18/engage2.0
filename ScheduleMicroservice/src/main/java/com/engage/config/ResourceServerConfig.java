@@ -17,6 +17,13 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 /**
+ * <p>
+ * Resource Server configuration for Patient Microservice
+ * </p>
+ * <p>
+ * Client Details are configured in AuthorizationServerConfig in User
+ * microservice
+ * </p>
  * 
  * @author mindtech-labs
  *
@@ -26,17 +33,19 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 
-	
 	/**
-	 * Has more preference than {@link SecurityConfig}
+	 * Symmetric signing key constant
 	 */
-
+	private static final String SIGNING_KEY = "secretkey";
+	/**
+	 * <p> {@link HttpSecurity} configuration </p>
+	 * <p>This overrides {@link HttpSecurity} configured by {@link SecurityConfig}.</p>
+	 */
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http// .authenticationProvider(getAuthenticationProvider())
+		http
 		.authorizeRequests()
 		.antMatchers("/api/v1/**").permitAll()
-		//.authenticated()
 		.anyRequest().permitAll()
 		.and().csrf().disable().formLogin().disable().httpBasic()
 				.disable();
@@ -54,7 +63,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 		resources.tokenServices(tokenServices());
 	}
-
+	/**
+	 * <p>JwT token store</p>
+	 * @return
+	 */
 	@Bean
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
@@ -68,7 +80,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-		converter.setSigningKey("secretkey");
+		converter.setSigningKey(SIGNING_KEY);
 		return converter;
 	}
 

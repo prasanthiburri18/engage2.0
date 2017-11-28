@@ -16,34 +16,38 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 
+import com.engage.Application;
+/**
+ * <b>Security Configuration for ApiGateway</b>
+ * <p>Order is kept maximum, in order {@link ResourceServerConfig} to override {@link HttpSecurity}</p>
+ * @author mindtechlabs
+ *
+ */
 @Configuration
-//@EnableWebSecurity
+// @EnableWebSecurity
 @EnableOAuth2Client
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
-	
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
 
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		logger.info("Overriding spring security.");
 
-		http// .authenticationProvider(getAuthenticationProvider())
-				
-		.authorizeRequests()
-		//.antMatchers("/api/v1/**").authenticated()
-		.anyRequest().permitAll()
-				
-				.and().csrf().disable().formLogin().disable().httpBasic()
-				.disable();
+		http
+
+				.authorizeRequests()
+
+				.anyRequest().permitAll()
+
+				.and().csrf().disable().formLogin().disable().httpBasic().disable();
 		;
 	}
 
@@ -54,9 +58,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	/**
-	 * Oauth2RestTemplate with Client Context and Details
-	 * 
-	 * @param ccrd
+	 * <p>Oauth2RestTemplate with Client Context and Details. A default {@link OAuth2ClientContext} is created 
+	 * when {@link EnableOAuth2Client} annotation is used in {@link Application}.
+	 * </p>
+	 * @param OAuth2ClientContext and OAuth2ProtectedResourceDetails
 	 * @return
 	 */
 	@Bean(name = "oauth2RestTemplate")
@@ -68,7 +73,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		return new OAuth2RestTemplate(ccrd, context);
 	}
-
-
 
 }

@@ -1,5 +1,10 @@
 package com.engage.commons.exception;
-
+/**
+ * This exception should be thrown when there is no pathway(s) found against given valid input
+ * Eg: Used user tries to fetch PathwayList but no pathway(s) are created yet.
+ * @author mindtechlabs
+ *
+ */
 public class PathwayNotFoundException extends Exception {
 
 	/**
@@ -9,17 +14,17 @@ public class PathwayNotFoundException extends Exception {
 
 	public PathwayNotFoundException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public PathwayNotFoundException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public PathwayNotFoundException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 }

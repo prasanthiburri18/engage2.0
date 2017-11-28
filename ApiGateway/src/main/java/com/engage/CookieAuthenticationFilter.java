@@ -111,9 +111,9 @@ public class CookieAuthenticationFilter extends GenericFilterBean {
 
 	}
 /**
- * This function checks Auth and Refresh Token expiry,
+ * <p>This function checks Auth and Refresh Token expiry,
  * If expired, a {@link HttpServletResponse.SC_PRECONDITION_FAILED} is thrown.
- * 
+ * </p>
  * @param req
  * @param response
  * @throws URISyntaxException
@@ -227,33 +227,12 @@ public class CookieAuthenticationFilter extends GenericFilterBean {
 		refreshData.put("refresh_token", value);
 		HttpHeaders basicAuth = createHeaders("users", "ak#ANhKLLBRADHEadklj*$");
 		basicAuth.setContentType(MediaType.APPLICATION_JSON);
-		// String clientNameClientPassword = "users" + ":" +
-		// "ak#ANhKLLBRADHEadklj*$";
-		// String basicAuthHeader =
-		// Base64.encode(clientNameClientPassword.getBytes());
-		// basicAuth.set("Authorization", "Basic " + basicAuthHeader);
-
-		// URI refreshTokenUri = new URI(userMicroserviceUrl+"/oauth/token/");
 		URI refreshTokenUri = new URI(REFRESH_TOKEN_ENDPOINT);
-		/*
-		 * Authentication authentication =
-		 * SecurityContextHolder.getContext().getAuthentication(); LOGGER.info(
-		 * " Authentication "+authentication.toString() );
-		 */ RequestEntity<Map<String, String>> request = new RequestEntity<Map<String, String>>(refreshData, basicAuth,
+		RequestEntity<Map<String, String>> request = new RequestEntity<Map<String, String>>(refreshData, basicAuth,
 				HttpMethod.POST, refreshTokenUri);
-		// HttpEntity<Map<String, String>> request = new
-		// HttpEntity<Map<String,String>>(refreshData, basicAuth);
-		// ResponseEntity<OAuth2AccessToken> accessTokenEntity1=
-		// restTemplate.exchange(refreshTokenUri, HttpMethod.POST, request,
-		// OAuth2AccessToken.class);
-		// ResponseEntity<OAuth2AccessToken> accessTokenEntity1=
-		// restTemplate.postForEntity(REFRESH_TOKEN_ENDPOINT, request,
-		// OAuth2AccessToken.class);
-		// restTemplate.exchange(request, OAuth2AccessToken.class);
+		
 		ResponseEntity<OAuth2AccessToken> accessTokenEntity1 = restTemplate.exchange(request, OAuth2AccessToken.class);
-		// OAuth2AccessToken accessToken =
-		// restTemplate.postForObject(REFRESH_TOKEN_ENDPOINT, refreshData,
-		// OAuth2AccessToken.class);
+		;
 		OAuth2AccessToken accessToken = accessTokenEntity1.getBody();
 
 		return accessToken;

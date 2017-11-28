@@ -191,12 +191,16 @@ public List<PathwayListDto> getPathwayList(Long orgId) throws PathwayNotFoundExc
 	});
 	List<PathwayPatientCountDto> patientDtoList = patientListResponse.getBody();
 
-	if(patientDtoList!=null&&patientDtoList.isEmpty()){
+	logger.info("Size of patientDtoList "+(patientDtoList==null?"null":patientDtoList.size()));
+
+	if(patientDtoList!=null&&!patientDtoList.isEmpty()){
+		logger.info("List of patients assigned with pathways is not empty. Size: "+patientDtoList.size());
 		for(PathwayListDto pld :pathwayListDto){
 			Long pathwayId = pld.getPathwayDto().getId();
 			Long count = new Long(0);
 			for(PathwayPatientCountDto ppcd : patientDtoList){
 				if(ppcd.getPathwayId().longValue()==pathwayId.longValue()){
+					logger.info("Assigning pathway count to pathwayDto");
 					count = ppcd.getPathwayCount().longValue();
 				}
 			}

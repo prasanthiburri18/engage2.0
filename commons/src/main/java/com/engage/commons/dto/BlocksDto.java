@@ -2,6 +2,12 @@ package com.engage.commons.dto;
 
 import java.sql.Date;
 
+/**
+ * 
+ * Data Transfer Object of Blocks Entity of Pathway Microservice.
+ * @author mindtechlabs
+ *
+ */
 public class BlocksDto {
 	private long id;
 

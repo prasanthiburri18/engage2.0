@@ -6,6 +6,7 @@ package com.engage.commons.dto;
 import java.sql.Date;
 
 /**
+ * Data Transfer Object used while fetching patientlist 
  * @author mindtech-labs
  *
  */

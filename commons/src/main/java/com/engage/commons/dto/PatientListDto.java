@@ -7,13 +7,14 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
+ * <p>This class extends PatientDto.</p> 
+ * It wraps events names of patient-pathway fetched from pathway microservice
  * @author ai
  *
  */
 public class PatientListDto extends PatientDto{
 
-//private Long pathwayId;
-//private String pathwayName;
+
 /**
  * These are set from {@link PatientPathway}
  */
@@ -40,23 +41,7 @@ public PatientListDto(PatientDto patientDto){
 			
 	
 }
-//pathway id is already present but as int
-/*public Long getPathwayId() {
-	return pathwayId;
-}
-public void setPathwayId(Long pathwayId) {
-	this.pathwayId = pathwayId;
-}
-*/
-//Pathway Name is already present in PatientDto
-/*
-public String getPathwayName() {
-	return pathwayName;
-}
-public void setPathwayName(String pathwayName) {
-	this.pathwayName = pathwayName;
-}
-*/public Set<String> getEventNames() {
+public Set<String> getEventNames() {
 	return eventNames;
 }
 public void setEventNames(Set<String> eventNames) {

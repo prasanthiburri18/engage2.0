@@ -20,7 +20,12 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
+/**
+ * <p>DataBase Configuration of dev, staging and prod environment.</p>
+ * <i>Username and Password for database are stored a system properties.</i>
+ * @author mindtechlabs
+ *
+ */
 @Configuration
 @EnableTransactionManagement
 @Profile(value = { "dev", "staging", "prod" })

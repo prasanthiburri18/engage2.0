@@ -1,4 +1,5 @@
 package com.engage;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,18 +25,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Profile(value={"dev","local"})
+/**
+ * This controller is specific to dev and local environment. Here, aws ses
+ * username and password are stored as system variables for dev but for local
+ * environment they are loaded from mail.properties file. Java Mail Sender calls
+ * AWS Smtp interface to send emails.
+ * 
+ * @author mindtechlabs
+ *
+ */
+@Profile(value = { "dev", "local" })
 @RestController
 @RequestMapping("/email")
 @PropertySource("classpath:mail.properties")
-public class EmailRestControllerDev{
-	
+public class EmailRestControllerDev {
+
 	private static Logger LOGGER = LoggerFactory.getLogger(EmailRestControllerDev.class);
-	@Value("${mail.from}")	
-public String fromEmail;
+	@Value("${mail.from}")
+	public String fromEmail;
 	@Autowired
 	private JavaMailSender javaMailSender;
-
 
 	@Autowired
 	private VelocityEngine velocityEngine;
@@ -47,9 +56,16 @@ public String fromEmail;
 		return "[OK] Welcome to withdraw Restful version 1.0";
 	}
 
+	/**
+	 * This is called by other microservices.
+	 * 
+	 * @param email
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "send", method = RequestMethod.POST, produces = { "application/xml", "application/json" })
-	public ResponseEntity<Email> sendSimpleMail(@RequestBody Email email)throws Exception {
-		
+	public ResponseEntity<Email> sendSimpleMail(@RequestBody Email email) throws Exception {
+
 		LOGGER.info("Sending email using system properties");
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
@@ -59,18 +75,20 @@ public String fromEmail;
 		mimeMessageHelper.setSubject(email.getSubject());
 		mimeMessageHelper.setText("<html><body>" + email.getText() + "</body></html>", true);
 		LOGGER.info("Before sending email");
-		LOGGER.info("username,from email and password" +System.getProperty("awsSesUsername")+" "+fromEmail+" "+System.getProperty("awsSesPassword"));
-		LOGGER.info("username,from email and password" +javaMailSender.toString());
-		
+		LOGGER.info("username,from email and password" + System.getProperty("awsSesUsername") + " " + fromEmail + " "
+				+ System.getProperty("awsSesPassword"));
+		LOGGER.info("username,from email and password" + javaMailSender.toString());
+
 		javaMailSender.send(mimeMessage);
 		LOGGER.info("Mail sent successfully");
 		email.setStatus(true);
 		return new ResponseEntity<Email>(email, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "attachments", method = RequestMethod.POST, produces = { "application/xml", "application/json" })
+	@RequestMapping(value = "attachments", method = RequestMethod.POST, produces = { "application/xml",
+			"application/json" })
 	public ResponseEntity<Email> attachments(@RequestBody Email email) throws Exception {
-		
+
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
 		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -91,18 +109,19 @@ public String fromEmail;
 		return new ResponseEntity<Email>(email, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "template", method = RequestMethod.POST, produces = { "application/xml", "application/json" })
+	@RequestMapping(value = "template", method = RequestMethod.POST, produces = { "application/xml",
+			"application/json" })
 	public ResponseEntity<Email> template(@RequestBody Email email) throws Exception {
 
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("title", email.getSubject());
 		model.put("body", email.getText());
 		String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "email.vm", "UTF-8", model);
-		
+
 		System.out.println(text);
 
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		
+
 		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 		mimeMessageHelper.setFrom(fromEmail);
 		mimeMessageHelper.setTo(email.getTo());
@@ -110,11 +129,10 @@ public String fromEmail;
 		mimeMessageHelper.setText(text, true);
 
 		javaMailSender.send(mimeMessage);
-		
+
 		email.setStatus(true);
 
 		return new ResponseEntity<Email>(email, HttpStatus.OK);
 	}
-	
-	
+
 }

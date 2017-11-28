@@ -18,6 +18,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * <p>This is used for removing predefined blacklisted words and also for
+ * converting htmlChars to htmlCode ( both back and forth). </p>
+ * <i>Note: Project where
+ * this class is used, must contain a sanitation.json and blacklist.properties
+ * files in resources folder.
+ * </i>
+ * @author mindtechlabs
+ *
+ */
 public class HtmlEscapeUtil {
 
 	private static Map<String, String> whitelist;
@@ -45,9 +55,8 @@ public class HtmlEscapeUtil {
 		if (!(htmlString == null || htmlString.equals(""))) {
 			Set<String> htmlChars = getWhitelist().keySet();
 			logger.debug("Is set size empty" + htmlChars.isEmpty());
-			
-			
-			//Remove blacklisted words
+
+			// Remove blacklisted words
 			htmlString = removeBlacklistedWords(htmlString);
 			for (String str : htmlChars) {
 				htmlString = htmlString.replaceAll(str, whitelist.get(str));
@@ -92,7 +101,13 @@ public class HtmlEscapeUtil {
 		}
 		return htmlString;
 	}
-
+/**
+ * <p>Gets whitelist from json file to whitelist map object</p>
+ * @return
+ * @throws JsonParseException
+ * @throws JsonMappingException
+ * @throws IOException
+ */
 	private static synchronized Map<String, String> getWhitelist()
 			throws JsonParseException, JsonMappingException, IOException {
 		if (whitelist == null) {
@@ -105,7 +120,12 @@ public class HtmlEscapeUtil {
 		}
 		return whitelist;
 	}
-
+	/**
+	 * <p>Loads blacklisted words and removes those words from a test string passed to this function</p>
+	 * @param evilString
+	 * @return
+	 * @throws IOException
+	 */
 	public static synchronized String removeBlacklistedWords(String evilString) throws IOException {
 		if (!(evilString == null || evilString.equals(""))) {
 			if (blacklist == null) {

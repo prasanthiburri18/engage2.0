@@ -17,22 +17,27 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 /**
- * ApiGateway acts as Resource Server.
+ * <p>ApiGateway acts as Resource Server.
  * In order to check the claims in JWT when needed
- * 
+ * </p>
  * @author mindtech-labs
  *
  */
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
-
-	
-	
+	/**
+	 * Symmetric signing key constant
+	 */
+	private static final String SIGNING_KEY = "secretkey";
+	/**
+	 * <p> {@link HttpSecurity} configuration </p>
+	 * <p>This overrides {@link HttpSecurity} configured by {@link SecurityConfig}.</p>
+	 */
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 
-		http// .authenticationProvider(getAuthenticationProvider())
+		http
 		.authorizeRequests()
 		.antMatchers("/api/v1/**").permitAll()
 		.anyRequest().permitAll()
@@ -41,25 +46,39 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		;
 	}
 
+	/**
+	 * <p> Resource Server configuration </p>
+	 */
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources)
 			throws Exception {
 
 		resources.tokenServices(tokenServices());
 	}
-
+	/**
+	 * <p>JwT token store</p>
+	 * @return
+	 */
 	@Bean
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
 	}
-
+	
+	/**
+	 * <p>Access Token converter. Helps in creating or parsing a JWT</p>
+	 * @return
+	 */
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-		converter.setSigningKey("secretkey");
+		converter.setSigningKey(SIGNING_KEY);
 		return converter;
 	}
 
+	/**
+	 * <p>Token Services. Token store is configured</p>
+	 * @return
+	 */
 	@Bean
 	@Primary
 	public ResourceServerTokenServices tokenServices() {

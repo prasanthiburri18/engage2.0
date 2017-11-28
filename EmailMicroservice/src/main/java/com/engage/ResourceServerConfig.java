@@ -17,11 +17,13 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 /**
- * This is a special case. Since we had already configured token store and
- * access token converter in {@link AuthorizationServerConfig}. We are
- * autowiring those beans here in ResourceServerConfig. All other microservices
- * except this(UserMicroservice) must have tokenstore and AccesstokenConverter
- * beans.
+ * <p>
+ * Resource Server configuration for Email Microservice
+ * </p>
+ * <p>
+ * Client Details are configured in AuthorizationServerConfig in User
+ * microservice
+ * </p>
  * 
  * @author mindtech-labs
  *
@@ -29,27 +31,45 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+	/**
+	 * Symmetric signing key constant
+	 */
+	private static final String SIGNING_KEY = "secretkey";
 
-
+	/**
+	 * <p>
+	 * {@link HttpSecurity} configuration
+	 * </p>
+	 * <p>
+	 * This overrides {@link HttpSecurity} configured by {@link SecurityConfig}.
+	 * </p>
+	 */
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http// .authenticationProvider(getAuthenticationProvider())
-		.authorizeRequests()
-		.antMatchers("/api/v1/**").permitAll()
-		//.authenticated()
-		.anyRequest().permitAll()
-		.and().csrf().disable().formLogin().disable().httpBasic()
-				.disable();
+		http.authorizeRequests().antMatchers("/api/v1/**").permitAll()
+
+				.anyRequest().permitAll().and().csrf().disable().formLogin().disable().httpBasic().disable();
 		;
 	}
 
+	/**
+	 * <p>
+	 * Resource Server configuration
+	 * </p>
+	 */
 	@Override
-	public void configure(ResourceServerSecurityConfigurer resources)
-			throws Exception {
+	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
 
 		resources.tokenServices(tokenServices());
 	}
 
+	/**
+	 * <p>
+	 * JwT token store
+	 * </p>
+	 * 
+	 * @return
+	 */
 	@Bean
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
@@ -58,16 +78,23 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-		converter.setSigningKey("secretkey");
+		converter.setSigningKey(SIGNING_KEY);
 		return converter;
 	}
 
+	/**
+	 * <p>
+	 * Token Services. Token store is configured
+	 * </p>
+	 * 
+	 * @return
+	 */
 	@Bean
 	@Primary
 	public ResourceServerTokenServices tokenServices() {
 		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
 		defaultTokenServices.setTokenStore(tokenStore());
-	
+
 		return defaultTokenServices;
 	}
 

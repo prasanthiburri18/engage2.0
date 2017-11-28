@@ -3,7 +3,11 @@ package com.engage.commons.exception;
 import java.util.Map;
 
 import org.json.JSONObject;
-
+/**
+ * Common exception used across the application to check server side validation.
+ * @author mindtechlabs
+ *
+ */
 public class ConstraintViolationException extends Exception{
 
 	/**

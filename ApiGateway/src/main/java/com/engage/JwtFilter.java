@@ -13,8 +13,8 @@ import org.springframework.web.filter.GenericFilterBean;
  * All the urls with /api/v1/ should have auth header, which is validated in
  * JWT filter
  * 
- * <h2>This is deprecated, {@link CookieAuthenticationFilter} uses replaces the logic used by this bean.
- *  Logic for getting claims from JWT is removed.</h2>
+ * <p>This is deprecated, {@link CookieAuthenticationFilter} uses replaces the logic used by this bean.
+ *  Logic for getting claims from JWT is removed.</p>
  * <code>Reason: Spring security Oauth2 with JWT implementation.</code>
  * @author mindtechlabs
  *
@@ -29,12 +29,7 @@ public class JwtFilter extends GenericFilterBean {
 
         final String authHeader = request.getHeader("Authorization");
    
-        //Write logic in interceptor
-  /*      if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new ServletException("Missing or invalid Authorization header.");
-        }
-  */
-      
+    
         chain.doFilter(req, res);
     }
 

@@ -18,6 +18,15 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+/**
+ * <p>
+ * Email Microservice Spring Boot Application. Loading mail properties from
+ * mail.properties.
+ * </p>
+ * 
+ * @author mindtechlabs
+ *
+ */
 @SpringBootApplication
 @Configuration
 @ComponentScan
@@ -27,7 +36,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @PropertySource("classpath:mail.properties")
 public class Application extends SpringBootServletInitializer {
 	private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Application.class);
-	
+
 	@Value("${mail.protocol}")
 	private String protocol;
 	@Value("${mail.host}")
@@ -40,10 +49,12 @@ public class Application extends SpringBootServletInitializer {
 	private boolean starttls;
 	@Value("${mail.from}")
 	private String from;
-	@Value("${mail.username}")
+	// Comment @Value annotation when deployed to other environment except local
+	// @Value("${mail.username}")
 	private String username;
-	@Value("${mail.password}")
- 	private String password;
+	// Comment @Value annotation when deployed to other environment except local
+	// @Value("${mail.password}")
+	private String password;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -54,8 +65,8 @@ public class Application extends SpringBootServletInitializer {
 	public JavaMailSender javaMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		Properties mailProperties = new Properties();
-	//	mailProperties.put("mail.smtp.auth", auth);
-	//	mailProperties.put("mail.smtp.starttls.enable", starttls);
+		// mailProperties.put("mail.smtp.auth", auth);
+		// mailProperties.put("mail.smtp.starttls.enable", starttls);
 		mailSender.setJavaMailProperties(mailProperties);
 		mailSender.setHost(host);
 		mailSender.setPort(port);
@@ -67,7 +78,7 @@ public class Application extends SpringBootServletInitializer {
 		 */
 		this.username = System.getProperty("awsSesUsername");
 		this.password = System.getProperty("awsSesPassword");
-		LOGGER.info("Username and Password " + username+"  "+password);
+		LOGGER.info("Username and Password " + username + "  " + password);
 		if (username == null || password == null || username == "" || password == "") {
 			throw new BeanCreationException("Ses username/password is not configured as system properties");
 		}
@@ -76,14 +87,19 @@ public class Application extends SpringBootServletInitializer {
 		mailSender.setPassword(password);
 		return mailSender;
 	}
-	
+
+	/**
+	 * Java Mail sender bean for local profile
+	 * 
+	 * @return
+	 */
 	@Bean
 	@Profile("local")
 	public JavaMailSender javaMailSender2() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		Properties mailProperties = new Properties();
-	//	mailProperties.put("mail.smtp.auth", auth);
-	//	mailProperties.put("mail.smtp.starttls.enable", starttls);
+		// mailProperties.put("mail.smtp.auth", auth);
+		// mailProperties.put("mail.smtp.starttls.enable", starttls);
 		mailSender.setJavaMailProperties(mailProperties);
 		mailSender.setHost(host);
 		mailSender.setPort(port);
@@ -93,7 +109,7 @@ public class Application extends SpringBootServletInitializer {
 		 * tomcat uncomment @Value annotation and edit mail properties of
 		 * username and password for local(eclipse) setup
 		 */
-		
+
 		mailSender.setUsername(username);
 		mailSender.setPassword(password);
 		return mailSender;

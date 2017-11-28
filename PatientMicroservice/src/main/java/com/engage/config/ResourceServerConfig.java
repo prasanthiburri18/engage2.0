@@ -16,12 +16,15 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+
 /**
- * This is a special case. Since we had already configured token store and
- * access token converter in {@link AuthorizationServerConfig}. We are
- * autowiring those beans here in ResourceServerConfig. All other microservices
- * except this(UserMicroservice) must have tokenstore and AccesstokenConverter
- * beans.
+ * <p>
+ * Resource Server configuration for Patient Microservice
+ * </p>
+ * <p>
+ * Client Details are configured in AuthorizationServerConfig in User
+ * microservice
+ * </p>
  * 
  * @author mindtech-labs
  *
@@ -31,11 +34,18 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 	
-	
+	/**
+	 * Symmetric signing key constant
+	 */
+	private static final String SIGNING_KEY = "secretkey";
+	/**
+	 * <p> {@link HttpSecurity} configuration </p>
+	 * <p>This overrides {@link HttpSecurity} configured by {@link SecurityConfig}.</p>
+	 */
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 
-		http// .authenticationProvider(getAuthenticationProvider())
+		http
 		.authorizeRequests()
 		.antMatchers("/api/v1/**").permitAll()
 		.anyRequest().permitAll()
@@ -43,23 +53,33 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 				.disable();
 		;
 	}
-
+	/**
+	 * TokenServices configured with JwtTokenStore and JwtAccessTokenConverter
+	 * is leveraged here.
+	 */
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources)
 			throws Exception {
 
 		resources.tokenServices(tokenServices());
 	}
-
+	/**
+	 * <p>JwT token store</p>
+	 * @return
+	 */
 	@Bean
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
 	}
-
+	/**
+	 * Symmetric key is used here
+	 * 
+	 * @return
+	 */
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-		converter.setSigningKey("secretkey");
+		converter.setSigningKey(SIGNING_KEY);
 		return converter;
 	}
 

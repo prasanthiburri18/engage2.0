@@ -32,14 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootApplication
 @EnableWebMvc
 public class Application extends SpringBootServletInitializer{
-//	@Bean
-//    public FilterRegistrationBean jwtFilter() {
-//        final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-//        registrationBean.setFilter(new JwtFilter());
-//        registrationBean.addUrlPatterns("/api/*");
-//
-//        return registrationBean;
-//    }
+
 	@PostConstruct
 	  void started() {
 	    TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"));

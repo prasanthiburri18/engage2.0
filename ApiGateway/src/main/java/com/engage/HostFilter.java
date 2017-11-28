@@ -22,13 +22,12 @@ import com.engage.dao.IHostDao;
 import com.engage.model.Host;
 
 /**
- * <h2>{@link HostFilter} filters host header present in request.</h2>
- * Predefined list of valid hosts are stored in database.
+ * <p>{@link HostFilter} filters host header present in request.
+ * Predefined list of valid hosts are stored in database.</p>
  * @author mindtech-labs
  *
  */
 @Component
-@PropertySource("classpath:host.properties")
 @Order(value = 5)
 public class HostFilter extends GenericFilterBean {
 	/**
@@ -59,16 +58,8 @@ public class HostFilter extends GenericFilterBean {
 		final String host = req.getHeader("Host");
 		final String customHeader = req.getHeader("X-Requested-With");
 		LOGGER.info("custom header " + customHeader);
-/*		if ((customHeader == null
-				|| !customHeader.equalsIgnoreCase("XMLHttpRequest")) &&
-				!req.getRequestURI().equals(OAUTH2_TOKEN_URL)) {
-			LOGGER.error("Not an ajax call");
-			((HttpServletResponse) response)
-					.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
-			return;
-		}
-*/
-		//Load list of valid hosts
+		
+		LOGGER.info("Loading valid hosts");
 		List<Host> hosts = hostDao.findAll();
 		
 		if(host==null||hosts.stream().noneMatch(h->h.getHost().contains(host))){

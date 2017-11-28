@@ -20,7 +20,13 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
+/**
+ * <p>This is specific to local environment used by 
+ * developers to test in their IDE.</p>
+ * Note: Here database password and username should be specified in application-local.properties
+ * @author mindtechlabs
+ *
+ */
 @Configuration
 @EnableTransactionManagement
 @Profile("local")

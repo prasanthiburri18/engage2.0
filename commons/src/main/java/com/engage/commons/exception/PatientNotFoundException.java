@@ -4,24 +4,31 @@
 package com.engage.commons.exception;
 
 /**
- * @author mindtech-labs
+ * This exception should be thrown when there is no patient(s) found against given valid input
+ * Eg: Used user tries to fetch PatientList but no patient(s) are created yet.
+ * @author mindtechlabs
  *
  */
 public class PatientNotFoundException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1649776731429218165L;
+
 	public PatientNotFoundException(String arg0, Throwable arg1) {
 		super(arg0, arg1);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public PatientNotFoundException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public PatientNotFoundException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 }

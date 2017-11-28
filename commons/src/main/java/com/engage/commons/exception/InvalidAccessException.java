@@ -1,5 +1,12 @@
 package com.engage.commons.exception;
 
+/**
+ * This is thrown when a user who doesn't have the privilege(admin role here),
+ * yet attempts to access a admin only resource
+ * 
+ * @author mindtechlabs
+ *
+ */
 public class InvalidAccessException extends Exception {
 
 	/**

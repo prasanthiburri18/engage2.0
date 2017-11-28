@@ -1858,7 +1858,7 @@ $('.fieldError').text('');
             {
                 caseex = 'greaterthan7';
             }
-            if (blockexecuteday < 7)
+            if (blockexecuteday <= 7)
             {
                 caseex = 'lessthan7';
             }

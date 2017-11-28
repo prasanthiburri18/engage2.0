@@ -1,5 +1,11 @@
 package com.engage.commons.dto;
-
+/**
+ * <p>
+ * Data Transfer Object wraps each record of pathwaylist.
+ * Contains both pathway details and patient count in that pathway</p>
+ * @author mindtechlabs
+ *
+ */
 public class PathwayListDto {
 
 private PathwayDto pathwayDto;

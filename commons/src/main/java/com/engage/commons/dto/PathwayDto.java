@@ -2,7 +2,11 @@ package com.engage.commons.dto;
 
 import java.sql.Timestamp;
 import java.util.Set;
-
+/**
+ * Data Transfer Object of PathwayDto Entity of Pathway Microservice.
+ * @author mindtechlabs
+ *
+ */
 public class PathwayDto {
 	private long id;
 

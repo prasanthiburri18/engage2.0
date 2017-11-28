@@ -2,7 +2,11 @@ package com.engage.commons.dto;
 
 import java.sql.Date;
 import java.util.Set;
-
+/**
+ * Data Transfer Object of Events Entity of Pathway Microservice.
+ * @author mindtechlabs
+ *
+ */
 public class EventsDto {
 	
 	private long id;

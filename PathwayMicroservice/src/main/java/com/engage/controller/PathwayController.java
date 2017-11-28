@@ -307,13 +307,18 @@ public class PathwayController {
 	@PreAuthorize("#oauth2.hasScope('client_app') and hasAnyAuthority('A','U')")
 	@RequestMapping(value = "/pathways", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<List<PathwayListDto>> getPathways(@RequestParam(value="orgId")Long orgId, HttpServletRequest req)
-			throws DataTamperingException, PathwayNotFoundException {
+			throws DataTamperingException{
 		
 		List<PathwayListDto> pathwayListDto = null;
 		if (!checkOrganizationIdFromAuthentication(Long.toString(orgId))) {
 			throw new DataTamperingException("Organization Id doesn't match " + req.getPathInfo());
 		}
-		pathwayListDto = pathwayService.getPathwayList(orgId);
+		try {
+			pathwayListDto = pathwayService.getPathwayList(orgId);
+		} catch (PathwayNotFoundException e) {
+			log.info("No pathways created yet.");
+			return new ResponseEntity<List<PathwayListDto>>(pathwayListDto, HttpStatus.NO_CONTENT);
+		}
 		List<Pathway> pathways = _pathwayDao.getAll(orgId);
 			
 

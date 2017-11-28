@@ -21,7 +21,7 @@ import com.engage.dao.IRefererDao;
 import com.engage.model.Referer;
 
 /**
- * <h2>{@link RefererFilter} filters referer header present in request.</h2>
+ * <p>{@link RefererFilter} filters referer header present in request.</p>
  * Predefined list of valid referers are stored in database. 
  * @author mindtech-labs
  *
@@ -30,7 +30,7 @@ import com.engage.model.Referer;
 @Order(value = 4)
 public class RefererFilter extends GenericFilterBean {
 	/**
-	 * Logger implemetation
+	 * Logger implementation
 	 */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(RefererFilter.class);
@@ -56,36 +56,6 @@ public class RefererFilter extends GenericFilterBean {
 		HttpServletRequest req = (HttpServletRequest) request;
 		String requestUri = req.getRequestURI();
 		final String referer = req.getHeader("Referer");
-		/*
-		 * try{ final FileInputStream blackListFile = new FileInputStream(
-		 * RefererFilter
-		 * .class.getClassLoader().getResource("referer.properties").getFile());
-		 * final Properties props = new Properties(); props.load(blackListFile);
-		 * allowedReferers = props.getProperty("valid.referers").split(",");
-		 * if(allowedReferers==null||allowedReferers.length<1){
-		 * LOGGER.info("No allowed referers are present"); throw new
-		 * PropertyLoadingException
-		 * ("Referer properties not configured properly"); } }catch(Exception
-		 * ex){
-		 * 
-		 * LOGGER.error("Please configure referer properties");
-		 * ((HttpServletResponse
-		 * )response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
-		 * 
-		 * }
-		 * 
-		 * final List<String> listReferer = Arrays.asList(allowedReferers);
-		 * 
-		 * if (referer == null || listReferer.stream().noneMatch(s ->
-		 * referer.contains(s))) {
-		 * 
-		 * ((HttpServletResponse)response).sendError(HttpServletResponse.
-		 * SC_PRECONDITION_FAILED);
-		 * LOGGER.info("Invalid referer passed to access "+req.getRequestURI());
-		 * LOGGER.error("Invalid referer: " + referer); } else {
-		 * LOGGER.info("Referer "+referer+" is valid"); chain.doFilter(request,
-		 * response); }
-		 */
 		
 		
 		List<Referer> referers = refererDao.findAll();

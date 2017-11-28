@@ -17,6 +17,8 @@ import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
+ * <h3>Written to validate Referer header in request urls <h3>
+ * <p> Soft Delete is used</p>
  * @author ai
  *
  */
@@ -39,29 +41,49 @@ public class Referer {
 	@Column(name="is_active")
 	private Character isActive;
 
+	/**
+	 * @return the id
+	 */
 	public Long getId() {
 		return id;
 	}
 
+	/**
+	 * @param id the id to set
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return the referer
+	 */
 	public String getReferer() {
 		return referer;
 	}
 
+	/**
+	 * @param referer the referer to set
+	 */
 	public void setReferer(String referer) {
 		this.referer = referer;
 	}
 
+	/**
+	 * @return the isActive
+	 */
 	public Character getIsActive() {
 		return isActive;
 	}
 
+	/**
+	 * @param isActive the isActive to set
+	 */
 	public void setIsActive(Character isActive) {
 		this.isActive = isActive;
 	}
+
+
 	
 	
 }

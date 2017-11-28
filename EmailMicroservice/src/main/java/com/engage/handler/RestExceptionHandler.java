@@ -11,6 +11,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+/**
+ * Handles exception thrown in controllers. Used in the place of a try-catch
+ * block. Making this a centralized exception handling mechanism.
+ * 
+ * @author mindtechlabs
+ *
+ */
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -26,45 +33,39 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	 */
 
 	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<Object> handleAccessDeniedException(
-			AccessDeniedException ex, WebRequest request) {
-		WebRequest req =  request;
-	
-		LOGGER.info("Handling "+ex.getClass().getName());
-		if(req.getUserPrincipal()!=null){
-			
-			LOGGER.info("Invalid access by "+req.getUserPrincipal().getName() );
-			LOGGER.error("Invalid access by "+req.getUserPrincipal().getName()+" on "+req.getContextPath());
+	public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+		WebRequest req = request;
+
+		LOGGER.info("Handling " + ex.getClass().getName());
+		if (req.getUserPrincipal() != null) {
+
+			LOGGER.info("Invalid access by " + req.getUserPrincipal().getName());
+			LOGGER.error("Invalid access by " + req.getUserPrincipal().getName() + " on " + req.getContextPath());
+		} else {
+			LOGGER.error("Invalid access of " + req.getContextPath());
 		}
-		else{
-			LOGGER.error("Invalid access of "+req.getContextPath());
-		}
-		
-		return handleExceptionInternal(ex, "Unauthorized access", new HttpHeaders(),
-				HttpStatus.PRECONDITION_FAILED, request);
-	}
-	
-	
-	@Override
-	//@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<Object>  handleHttpMessageNotReadable(
-			HttpMessageNotReadableException ex,
-			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		WebRequest req =  request;
-	
-		LOGGER.info("Handling "+ex.getClass().getName());
-		if(req.getUserPrincipal()!=null){
-			
-			LOGGER.info("Invalid access by "+req.getUserPrincipal().getName() );
-			LOGGER.error("Invalid access by "+req.getUserPrincipal().getName()+" on "+req.getContextPath());
-		}
-		else{
-			LOGGER.error("Invalid access of "+req.getContextPath());
-		}
-		
-		return handleExceptionInternal(ex, "Invalid Request Format", new HttpHeaders(),
-				HttpStatus.PRECONDITION_FAILED, request);
+
+		return handleExceptionInternal(ex, "Unauthorized access", new HttpHeaders(), HttpStatus.PRECONDITION_FAILED,
+				request);
 	}
 
+	@Override
+	// @ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
+		WebRequest req = request;
+
+		LOGGER.info("Handling " + ex.getClass().getName());
+		if (req.getUserPrincipal() != null) {
+
+			LOGGER.info("Invalid access by " + req.getUserPrincipal().getName());
+			LOGGER.error("Invalid access by " + req.getUserPrincipal().getName() + " on " + req.getContextPath());
+		} else {
+			LOGGER.error("Invalid access of " + req.getContextPath());
+		}
+
+		return handleExceptionInternal(ex, "Invalid Request Format", new HttpHeaders(), HttpStatus.PRECONDITION_FAILED,
+				request);
+	}
 
 }
